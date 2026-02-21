@@ -1,3 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.banner1{
+ display: flex;
+justify-content: center;
+}

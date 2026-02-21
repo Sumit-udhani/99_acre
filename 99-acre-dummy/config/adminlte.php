@@ -339,6 +339,22 @@ return [
             'icon' => 'fas fa-fw fa-lock',
         ],
         [
+            'text' => 'Settings',
+            'icon' => 'fas fa-cogs',
+            'submenu' => [
+                [
+                    'text' => 'Logo',
+                    'url'  => 'admin/logo',
+                    'icon' => 'fas fa-image',
+                ],
+            ],
+        ],
+        [
+    'text' => 'Banner',
+    'route'  => 'banner.create',
+    'icon' => 'fas fa-images',
+],
+        [
             'text' => 'multilevel',
             'icon' => 'fas fa-fw fa-share',
             'submenu' => [
