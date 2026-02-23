@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\Admin\BannerController;
+use App\Http\Controllers\Admin\PropertyController;
 use App\Http\Controllers\LogoController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PropertyPurposeController;
 use App\Models\Banner;
 use Illuminate\Support\Facades\Route;
 
@@ -23,6 +25,7 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth', 'admin'])
     ->prefix('admin')
+      ->name('admin.')  
     ->group(function () {
 
         Route::get('/dashboard', function () {
@@ -37,6 +40,11 @@ Route::middleware(['auth', 'admin'])
 
             //banner 
              Route::resource('banner', BannerController::class);
+
+             //Form 
+              Route::resource('properties', PropertyController::class);
+               Route::resource('purposes', PropertyPurposeController::class);
+
 
 
 });

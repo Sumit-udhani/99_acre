@@ -351,8 +351,19 @@ return [
         ],
         [
     'text' => 'Banner',
-    'route'  => 'banner.create',
+    'route'  => 'admin.banner.index',
     'icon' => 'fas fa-images',
+],
+[
+    'text' => 'Property',
+    'icon' => 'fas fa-building',
+    'submenu' => [
+        [
+            'text' => 'Purposes',
+            'route' => 'admin.purposes.index',
+            'icon' => 'fas fa-bullseye',
+        ],
+    ],
 ],
         [
             'text' => 'multilevel',

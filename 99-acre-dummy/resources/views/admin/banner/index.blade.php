@@ -5,7 +5,7 @@
 <div class="container">
     <h2>Banner List</h2>
 
-    <a href="{{ route('banner.create') }}" class="btn btn-primary mb-3">
+    <a href="{{ route('admin.banner.create') }}" class="btn btn-primary mb-3">
         Add Banner
     </a>
 
@@ -39,11 +39,11 @@
                     <td>{{ $banner->subtitle }}</td>
                     <td>{{ $banner->button_text }}</td>
                     <td>
-                        <a href="{{ route('banner.edit', $banner->id) }}" class="btn btn-sm btn-warning">
+                        <a href="{{ route('admin.banner.edit', $banner->id) }}" class="btn btn-sm btn-warning">
                             Edit
                         </a>
 
-                        <form action="{{ route('banner.destroy', $banner->id) }}" 
+                        <form action="{{ route('admin.banner.destroy', $banner->id) }}" 
                               method="POST" 
                               style="display:inline-block">
                             @csrf
