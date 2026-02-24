@@ -2,6 +2,9 @@
 
 @section('content')
 
-<h1>Property purpose </h1>
+<x-master-crud 
+    title="Purpose"
+    :data="$purposes"
+    routePrefix="admin.purposes" />
 
 @endsection

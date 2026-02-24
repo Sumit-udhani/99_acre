@@ -4,7 +4,9 @@ use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\PropertyController;
 use App\Http\Controllers\LogoController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PropertyCategoryController;
 use App\Http\Controllers\PropertyPurposeController;
+use App\Http\Controllers\PropertyTypeController;
 use App\Models\Banner;
 use Illuminate\Support\Facades\Route;
 
@@ -44,6 +46,10 @@ Route::middleware(['auth', 'admin'])
              //Form 
               Route::resource('properties', PropertyController::class);
                Route::resource('purposes', PropertyPurposeController::class);
+               Route::resource('categories', PropertyCategoryController::class);
+               Route::resource('types', PropertyTypeController::class);
+
+
 
 
 

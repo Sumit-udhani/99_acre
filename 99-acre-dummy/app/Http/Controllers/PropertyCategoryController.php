@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\PropertyPurpose;
+use App\Models\PropertyCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
-
-class PropertyPurposeController extends Controller
+class PropertyCategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,8 +14,8 @@ class PropertyPurposeController extends Controller
     public function index()
     {
         //
-        $purposes = PropertyPurpose::all();
-        return view('admin.property.purposes.index', compact('purposes'));
+         $categories = PropertyCategory::all();
+        return view('admin.property.categories.index', compact('categories'));
     }
 
     /**
@@ -33,9 +32,9 @@ class PropertyPurposeController extends Controller
     public function store(Request $request)
     {
         //
-        $request->validate(['name' => 'required']);
+          $request->validate(['name' => 'required']);
 
-        PropertyPurpose::create([
+        PropertyCategory::create([
             'name' => $request->name,
             'slug' => Str::slug($request->name)
         ]);
@@ -62,12 +61,12 @@ class PropertyPurposeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request,  $id)
+    public function update(Request $request, string $id)
     {
         //
-        $purpose = PropertyPurpose::findOrFail($id);
+         $categories = PropertyCategory::findOrFail($id);
 
-        $purpose->update([
+        $categories->update([
             'name' => $request->name,
             'slug' => Str::slug($request->name)
         ]);
@@ -80,7 +79,7 @@ class PropertyPurposeController extends Controller
     public function destroy(string $id)
     {
         //
-          PropertyPurpose::findOrFail($id)->delete();
+         PropertyCategory::findOrFail($id)->delete();
     return back();
     }
 }

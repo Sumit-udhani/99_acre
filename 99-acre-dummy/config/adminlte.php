@@ -363,6 +363,18 @@ return [
             'route' => 'admin.purposes.index',
             'icon' => 'fas fa-bullseye',
         ],
+         [
+            'text' => 'Categories',
+            'route' => 'admin.categories.index',
+            'icon' => 'fas fa-list',
+        ],
+         [
+            'text' => 'Types',
+            'route' => 'admin.types.index',
+            'icon' => 'fas fa-tags',
+        ],
+
+
     ],
 ],
         [
@@ -457,7 +469,7 @@ return [
 
     'plugins' => [
         'Datatables' => [
-            'active' => false,
+            'active' => true,
             'files' => [
                 [
                     'type' => 'js',

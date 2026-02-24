@@ -7,4 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class PropertyPurpose extends Model
 {
     //
+    protected $fillable = [
+        'name',
+        'slug'
+    ];
 }
