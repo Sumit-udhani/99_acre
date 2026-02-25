@@ -1,3 +1,5 @@
+{{ dd($locationTypes) }}
+
 <div class="container">
     <h2>{{ $title }}</h2>
 
@@ -8,62 +10,92 @@
     <table id="crudTable" class="table table-bordered">
         <thead>
             <tr>
-                <th>#</th>
-                <th>Name</th>
-                <th>Slug</th>
+              
+@if($mode == 'property')
 
-                @if($categories)
-                    <th>Category</th>
-                @endif
+    <th>Purpose</th>
+    <th>Category</th>
+    <th>Type</th>
+    <th>Location Type</th> {{-- NEW --}}
+    <th>Title</th>
+    <th>Description</th>
+    <th>Action</th>
 
-                @if($purposes)
-                    <th>Purpose</th>
-                @endif
+@else
 
-                <th>Action</th>
+    <th>#</th>
+    <th>Name</th>
+    <th>Slug</th>
+
+    @if($categories)
+        <th>Category</th>
+    @endif
+
+    @if($purposes)
+        <th>Purpose</th>
+    @endif
+
+    <th>Action</th>
+
+@endif
+
             </tr>
         </thead>
 
         <tbody>
             @forelse($items as $key => $item)
-                <tr>
-                    <td>{{ $key+1 }}</td>
-                    <td>{{ $item->name }}</td>
-                    <td>{{ $item->slug }}</td>
+            <tr>
+              
+@if($mode == 'property')
 
-                    @if($categories)
-                        <td>{{ $item->category->name ?? '' }}</td>
-                    @endif
+    <td>{{ $item->purpose->name ?? '' }}</td>
+    <td>{{ $item->category->name ?? '' }}</td>
+    <td>{{ $item->type->name ?? '' }}</td>
+     <td>{{ $item->locationType->name ?? '' }}</td> 
+    <td>{{ $item->title }}</td>
+    <td>{{ $item->description }}</td>
 
-                    @if($purposes)
-                        <td>{{ $item->purpose->name ?? '' }}</td>
-                    @endif
+@else
 
-                    <td>
-                        <button class="btn btn-sm btn-warning"
-                            data-toggle="modal"
-                            data-target="#editModal{{ $item->id }}">
-                            Edit
+    <td>{{ $key+1 }}</td>
+    <td>{{ $item->name }}</td>
+    <td>{{ $item->slug }}</td>
+
+    @if($categories)
+        <td>{{ $item->category->name ?? '' }}</td>
+    @endif
+
+    @if($purposes)
+        <td>{{ $item->purpose->name ?? '' }}</td>
+    @endif
+
+@endif
+
+                <td>
+                    <button class="btn btn-sm btn-warning"
+                        data-toggle="modal"
+                        data-target="#editModal{{ $item->id }}">
+                        Edit
+                    </button>
+
+                    <form action="{{ route($routePrefix.'.destroy', $item->id) }}"
+                        method="POST"
+                        style="display:inline">
+                        @csrf
+                        @method('DELETE')
+                        <button class="btn btn-sm btn-danger"
+                            onclick="return confirm('Are you sure?')">
+                            Delete
                         </button>
-
-                        <form action="{{ route($routePrefix.'.destroy', $item->id) }}"
-                            method="POST"
-                            style="display:inline">
-                            @csrf
-                            @method('DELETE')
-                            <button class="btn btn-sm btn-danger"
-                                onclick="return confirm('Are you sure?')">
-                                Delete
-                            </button>
-                        </form>
-                    </td>
-                </tr>
+                    </form>
+                </td>
+            </tr>
             @empty
-                <tr>
-                    <td colspan="6" class="text-center">
-                        No data found
-                    </td>
-                </tr>
+            <tr>
+                <td colspan="6" class="text-center">
+                    No data found
+                </td>
+            </tr>
             @endforelse
         </tbody>
     </table>
@@ -114,10 +146,10 @@
                         <label>Select Category</label>
                         <select name="category_id" class="form-control" required>
                             @foreach($categories as $category)
-                                <option value="{{ $category->id }}"
-                                    {{ $item->category_id == $category->id ? 'selected' : '' }}>
-                                    {{ $category->name }}
-                                </option>
+                            <option value="{{ $category->id }}"
+                                {{ $item->category_id == $category->id ? 'selected' : '' }}>
+                                {{ $category->name }}
+                            </option>
                             @endforeach
                         </select>
                     </div>
@@ -128,10 +160,10 @@
                         <label>Select Purpose</label>
                         <select name="purpose_id" class="form-control" required>
                             @foreach($purposes as $purpose)
-                                <option value="{{ $purpose->id }}"
-                                    {{ $item->purpose_id == $purpose->id ? 'selected' : '' }}>
-                                    {{ $purpose->name }}
-                                </option>
+                            <option value="{{ $purpose->id }}"
+                                {{ $item->purpose_id == $purpose->id ? 'selected' : '' }}>
+                                {{ $purpose->name }}
+                            </option>
                             @endforeach
                         </select>
                     </div>
@@ -155,6 +187,7 @@
 {{-- ===================== --}}
 
 <div class="modal fade" id="createModal" tabindex="-1">
+    
     <div class="modal-dialog">
         <form method="POST" action="{{ route($routePrefix.'.store') }}">
             @csrf
@@ -166,54 +199,105 @@
                         <span>&times;</span>
                     </button>
                 </div>
+<div class="modal-body">
 
-                <div class="modal-body">
+@if($mode == 'property')
 
-                    <div class="form-group mb-3">
-                        <label>{{ $title }} Name</label>
-                        <input type="text"
-                            name="name"
-                            class="form-control"
-                            required>
-                    </div>
+    {{-- PROPERTY MODE FIELDS --}}
 
-                    <div class="form-group">
-                        <label>Slug</label>
-                        <input type="text"
-                            name="slug"
-                            class="form-control"
-                            required>
-                    </div>
+    <div class="form-group mb-3">
+        <label>Select Purpose</label>
+        <select name="purpose_id" class="form-control" required>
+            <option value="">-- Select Purpose --</option>
+            @foreach($purposes as $purpose)
+                <option value="{{ $purpose->id }}">{{ $purpose->name }}</option>
+            @endforeach
+        </select>
+    </div>
 
-                    @if($purposes)
-                    <div class="form-group mb-3">
-                        <label>Select Purpose</label>
-                        <select name="purpose_id" class="form-control" required>
-                            <option value="">-- Select Purpose --</option>
-                            @foreach($purposes as $purpose)
-                                <option value="{{ $purpose->id }}">
-                                    {{ $purpose->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                    @endif
+    <div class="form-group mb-3">
+        <label>Select Category</label>
+        <select name="category_id" class="form-control" required>
+            <option value="">-- Select Category --</option>
+            @foreach($categories as $category)
+                <option value="{{ $category->id }}">{{ $category->name }}</option>
+            @endforeach
+        </select>
+    </div>
 
-                    @if($categories)
-                    <div class="form-group mb-3">
-                        <label>Select Category</label>
-                        <select name="category_id" class="form-control" required>
-                            <option value="">-- Select Category --</option>
-                            @foreach($categories as $category)
-                                <option value="{{ $category->id }}">
-                                    {{ $category->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                    @endif
+    <div class="form-group mb-3">
+        <label>Select Type</label>
+        <select name="type_id" class="form-control" required>
+            <option value="">-- Select Type --</option>
+            @foreach($types as $type)
+                <option value="{{ $type->id }}">{{ $type->name }}</option>
+            @endforeach
+        </select>
+    </div>
+  <div class="form-group mb-3">
+        <label>Select Location Type</label>
+        <select name="location_type_id" class="form-control" required>
+            <option value="">-- Select Location Type --</option>
+         @if($locationTypes)
+    @foreach($locationTypes as $locationType)
+                <option value="{{ $locationType->id }}">
+                    {{ $locationType->name }}
+                </option>
+            @endforeach
+            @endif
+        </select>
+    </div>
+    <div class="form-group mb-3">
+        <label>Title</label>
+        <input type="text" name="title" class="form-control" required>
+    </div>
 
-                </div>
+    <div class="form-group mb-3">
+        <label>Description</label>
+        <textarea name="description" class="form-control" required></textarea>
+    </div>
+
+@else
+
+    {{-- NORMAL CRUD MODE FIELDS --}}
+
+    <div class="form-group mb-3">
+        <label>{{ $title }} Name</label>
+        <input type="text" name="name" class="form-control" required>
+    </div>
+
+    <div class="form-group mb-3">
+        <label>Slug</label>
+        <input type="text" name="slug" class="form-control" required>
+    </div>
+
+    @if($purposes)
+        <div class="form-group mb-3">
+            <label>Select Purpose</label>
+            <select name="purpose_id" class="form-control" required>
+                <option value="">-- Select Purpose --</option>
+                @foreach($purposes as $purpose)
+                    <option value="{{ $purpose->id }}">{{ $purpose->name }}</option>
+                @endforeach
+            </select>
+        </div>
+    @endif
+    @if($categories)
+        <div class="form-group mb-3">
+            <label>Select Category</label>
+            <select name="category_id" class="form-control" required>
+                <option value="">-- Select Category --</option>
+                @foreach($categories as $category)
+                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                @endforeach
+            </select>
+        </div>
+    @endif
+
+
+@endif
+
+</div>
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">
@@ -234,16 +318,16 @@
 {{-- ===================== --}}
 @section('js')
 <script>
-$(document).ready(function () {
-    console.log("DataTable script loaded");
+    $(document).ready(function() {
+        console.log("DataTable script loaded");
 
-    if (typeof $.fn.DataTable === 'function') {
-        $('#crudTable').DataTable({
-            pageLength: 10
-        });
-    } else {
-        console.error("DataTable JS not loaded");
-    }
-});
+        if (typeof $.fn.DataTable === 'function') {
+            $('#crudTable').DataTable({
+                pageLength: 10
+            });
+        } else {
+            console.error("DataTable JS not loaded");
+        }
+    });
 </script>
 @endsection

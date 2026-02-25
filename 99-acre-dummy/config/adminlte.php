@@ -373,6 +373,17 @@ return [
             'route' => 'admin.types.index',
             'icon' => 'fas fa-tags',
         ],
+        [
+    'text' => 'Location Types',
+    'route' => 'admin.location-types.index',
+    'icon' => 'fas fa-map-marker-alt',
+],
+         [
+            'text' => 'All Properties',
+            'route' => 'admin.properties.index',
+            'icon' => 'fas fa-home',
+        ],
+
 
 
     ],

@@ -1,10 +1,11 @@
 <?php
 
 use App\Http\Controllers\Admin\BannerController;
-use App\Http\Controllers\Admin\PropertyController;
+use App\Http\Controllers\PropertyController;
 use App\Http\Controllers\LogoController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PropertyCategoryController;
+use App\Http\Controllers\PropertyLocationTypeController;
 use App\Http\Controllers\PropertyPurposeController;
 use App\Http\Controllers\PropertyTypeController;
 use App\Models\Banner;
@@ -32,7 +33,7 @@ Route::middleware(['auth', 'admin'])
 
         Route::get('/dashboard', function () {
             return view('admin.dashboard');
-        })->name('admin.dashboard');
+        })->name('dashboard');
 
           Route::get('/logo', [LogoController::class, 'create'])
             ->name('admin.logo.create');
@@ -48,6 +49,7 @@ Route::middleware(['auth', 'admin'])
                Route::resource('purposes', PropertyPurposeController::class);
                Route::resource('categories', PropertyCategoryController::class);
                Route::resource('types', PropertyTypeController::class);
+               Route::resource('location-types', PropertyLocationTypeController::class);
 
 
 
