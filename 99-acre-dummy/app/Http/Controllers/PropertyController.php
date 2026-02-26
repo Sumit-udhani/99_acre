@@ -18,7 +18,7 @@ class PropertyController extends Controller
     public function index()
     {
         //
-        $properties = Property::with(['purpose', 'category', 'type','locationType'])->get();
+        $properties = Property::with(['purpose', 'category', 'type', 'locationType'])->get();
 
         $purposes = PropertyPurpose::all();
         $categories = PropertyCategory::all();
@@ -26,13 +26,13 @@ class PropertyController extends Controller
         $locationTypes = PropertyLocationType::all();
 
         return view('admin.property.properties.index', compact(
-        'properties',
-        'purposes',
-        'categories',
-        'types',
-        'locationTypes'
-        
-    ));
+            'properties',
+            'purposes',
+            'categories',
+            'types',
+            'locationTypes'
+
+        ));
     }
 
     /**
@@ -49,23 +49,30 @@ class PropertyController extends Controller
     public function store(Request $request)
     {
         //
-          $request->validate([
+        $request->validate([
             // 'title' => 'required|string|max:255',
-            'price' => 'required|numeric',
-            'property_purpose_id' => 'required|exists:property_purposes,id',
-            'property_category_id' => 'required|exists:property_categories,id',
-            'property_type_id' => 'required|exists:property_types,id',
-            'property_location_type_id' => 'required|exists:property_location_types,id',
-            // 'description' => 'nullable|string',
+            'purpose_id' => 'required',
+            'category_id' => 'required',
+            'type_id' => 'required',
+            'description' => 'nullable',
         ]);
+        // Conditional validation
+$category = PropertyCategory::find($request->category_id);
+$type = PropertyType::find($request->type_id);
+
+if ($category->name === 'Commercial' && $type->name === 'Retail') {
+    $request->validate([
+        'location_type_id' => 'required'
+    ]);
+}
 
         Property::create([
-            'title' => $request->title,
-            'price' => $request->price,
-            'property_purpose_id' => $request->property_purpose_id,
-            'property_category_id' => $request->property_category_id,
-            'property_type_id' => $request->property_type_id,
-            'property_location_type_id' => $request->property_location_type_id,
+            // 'title' => $request->title,
+            // 'price' => $request->price,
+            'purpose_id' => $request->purpose_id,
+            'category_id' => $request->category_id,
+            'type_id' => $request->type_id,
+            'location_type_id' => $request->location_type_id,
             // 'description' => $request->description,
         ]);
 
@@ -94,6 +101,20 @@ class PropertyController extends Controller
     public function update(Request $request, string $id)
     {
         //
+        $property = Property::findOrFail($id);
+        $request->validate([
+              'purpose_id' => 'required',
+            'category_id' => 'required',
+            'type_id' => 'required',
+            'location_type_id' => 'required'
+        ]);
+        $property->update([
+              'purpose_id' => $request->purpose_id,
+            'category_id' => $request->category_id,
+            'type_id' => $request->type_id,
+            'location_type_id' => $request->location_type_id,
+        ]);
+         return back()->with('success', 'Property updated successfully');
     }
 
     /**
@@ -102,5 +123,7 @@ class PropertyController extends Controller
     public function destroy(string $id)
     {
         //
+        $property = Property::findOrFail($id);
+        $property->delete();
     }
 }

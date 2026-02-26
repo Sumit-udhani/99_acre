@@ -12,9 +12,6 @@ class PropertyCategory extends Model
         'name',
         'slug'
         ];
-        public function locationTypes()
-        {
-            return $this->hasMany(PropertyLocationType::class, 'category_id');
-        }
+       
         }
         

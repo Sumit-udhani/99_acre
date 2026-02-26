@@ -9,8 +9,9 @@ class PropertyLocationType extends Model
     //
     protected $fillable = ['category_id', 'name','slug'];
 
-public function category()
+
+public function propertyType()
 {
-    return $this->belongsTo(PropertyCategory::class);
+    return $this->belongsTo(PropertyType::class);
 }
 }

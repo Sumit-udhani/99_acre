@@ -301,6 +301,12 @@ return [
     'menu' => [
         // Navbar items:
         [
+    'text' => 'Website',
+    'url'  => '/',
+    'icon' => 'fas fa-globe',
+    'target' => '_blank', // optional (open in new tab)
+],
+        [
             'type' => 'navbar-search',
             'text' => 'search',
             'topnav_right' => true,
@@ -387,6 +393,7 @@ return [
 
 
     ],
+
 ],
         [
             'text' => 'multilevel',

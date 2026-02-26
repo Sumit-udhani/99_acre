@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\PropertyCategory;
 use App\Models\PropertyLocationType;
+use App\Models\PropertyType;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -15,12 +16,13 @@ class PropertyLocationTypeController extends Controller
     public function index()
     {
         //
-        $locationTypes = PropertyLocationType::with('category')->get();
-        $categories = PropertyCategory::all();
+        $locationTypes = PropertyLocationType::with('propertyType')->get();
+        $types = PropertyType::all();
          return view('admin.property.location-types.index', compact(
             'locationTypes',
-            'categories'
+            'types'
         ));
+       
     }
 
     /**
@@ -37,16 +39,16 @@ class PropertyLocationTypeController extends Controller
     public function store(Request $request)
     {
         //
-        $request->validate([
-            'category_id' => 'required|exists:property_categories,id',
+         $request->validate([
+            'property_type_id' => 'required|exists:property_types,id',
             'name' => 'required|string|max:255',
             'slug' => 'required|string|max:255|unique:property_location_types,slug',
         ]);
 
         PropertyLocationType::create([
-            'category_id' => $request->category_id,
+            'property_type_id' => $request->property_type_id,
             'name' => $request->name,
-            'slug'=> $request->slug
+            'slug' => $request->slug,
         ]);
 
         return redirect()

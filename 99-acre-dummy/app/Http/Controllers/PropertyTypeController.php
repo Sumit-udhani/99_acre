@@ -44,8 +44,8 @@ class PropertyTypeController extends Controller
          $request->validate([
             'name' => 'required|string|max:255',
             'slug' => 'required|string|max:255',
-            'category_id' => 'required|exists:categories,id',
-            'purpose_id' => 'required|exists:purposes,id',
+            'category_id' => 'required|exists:property_categories,id',
+            'purpose_id' => 'required|exists:property_purposes,id',
         ]);
 
         PropertyType::create([

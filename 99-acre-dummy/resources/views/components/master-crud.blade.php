@@ -1,4 +1,4 @@
-{{ dd($locationTypes) }}
+
 
 <div class="container">
     <h2>{{ $title }}</h2>
@@ -17,8 +17,7 @@
     <th>Category</th>
     <th>Type</th>
     <th>Location Type</th> {{-- NEW --}}
-    <th>Title</th>
-    <th>Description</th>
+   
     <th>Action</th>
 
 @else
@@ -52,9 +51,7 @@
     <td>{{ $item->category->name ?? '' }}</td>
     <td>{{ $item->type->name ?? '' }}</td>
      <td>{{ $item->locationType->name ?? '' }}</td> 
-    <td>{{ $item->title }}</td>
-    <td>{{ $item->description }}</td>
-
+   
 @else
 
     <td>{{ $key+1 }}</td>
@@ -104,12 +101,11 @@
 {{-- ===================== --}}
 {{-- EDIT MODALS OUTSIDE TABLE --}}
 {{-- ===================== --}}
-
 @foreach($items as $item)
 <div class="modal fade" id="editModal{{ $item->id }}" tabindex="-1">
     <div class="modal-dialog">
         <form method="POST"
-            action="{{ route($routePrefix.'.update', $item->id) }}">
+              action="{{ route($routePrefix.'.update', $item->id) }}">
             @csrf
             @method('PUT')
 
@@ -123,65 +119,102 @@
 
                 <div class="modal-body">
 
-                    <div class="form-group mb-3">
-                        <label>{{ $title }} Name</label>
-                        <input type="text"
-                            name="name"
-                            value="{{ $item->name }}"
-                            class="form-control"
-                            required>
-                    </div>
+@if($mode == 'property')
 
-                    <div class="form-group">
-                        <label>Slug</label>
-                        <input type="text"
-                            name="slug"
-                            value="{{ $item->slug }}"
-                            class="form-control"
-                            required>
-                    </div>
+    {{-- PURPOSE --}}
+    <div class="form-group mb-3">
+        <label>Select Purpose</label>
+        <select name="purpose_id" class="form-control" required>
+            @foreach($purposes as $purpose)
+                <option value="{{ $purpose->id }}"
+                    {{ $item->purpose_id == $purpose->id ? 'selected' : '' }}>
+                    {{ $purpose->name }}
+                </option>
+            @endforeach
+        </select>
+    </div>
 
-                    @if($categories)
-                    <div class="form-group mb-3">
-                        <label>Select Category</label>
-                        <select name="category_id" class="form-control" required>
-                            @foreach($categories as $category)
-                            <option value="{{ $category->id }}"
-                                {{ $item->category_id == $category->id ? 'selected' : '' }}>
-                                {{ $category->name }}
-                            </option>
-                            @endforeach
-                        </select>
-                    </div>
-                    @endif
+    {{-- CATEGORY --}}
+    <div class="form-group mb-3">
+        <label>Select Category</label>
+        <select name="category_id" class="form-control" required>
+            @foreach($categories as $category)
+                <option value="{{ $category->id }}"
+                    {{ $item->category_id == $category->id ? 'selected' : '' }}>
+                    {{ $category->name }}
+                </option>
+            @endforeach
+        </select>
+    </div>
 
-                    @if($purposes)
-                    <div class="form-group mb-3">
-                        <label>Select Purpose</label>
-                        <select name="purpose_id" class="form-control" required>
-                            @foreach($purposes as $purpose)
-                            <option value="{{ $purpose->id }}"
-                                {{ $item->purpose_id == $purpose->id ? 'selected' : '' }}>
-                                {{ $purpose->name }}
-                            </option>
-                            @endforeach
-                        </select>
-                    </div>
-                    @endif
+    {{-- TYPE --}}
+    <div class="form-group mb-3">
+        <label>Select Type</label>
+        <select name="type_id" class="form-control" required>
+            @foreach($types as $type)
+                <option value="{{ $type->id }}"
+                    {{ $item->type_id == $type->id ? 'selected' : '' }}>
+                    {{ $type->name }}
+                </option>
+            @endforeach
+        </select>
+    </div>
+
+    {{-- LOCATION TYPE --}}
+    <div class="form-group mb-3">
+        <label>Select Location Type</label>
+        <select name="location_type_id" class="form-control">
+            <option value="">-- Select Location Type --</option>
+            @foreach($locationTypes as $locationType)
+                <option value="{{ $locationType->id }}"
+                    {{ $item->location_type_id == $locationType->id ? 'selected' : '' }}>
+                    {{ $locationType->name }}
+                </option>
+            @endforeach
+        </select>
+    </div>
+
+@else
+
+    {{-- NORMAL CRUD MODE --}}
+    <div class="form-group mb-3">
+        <label>{{ $title }} Name</label>
+        <input type="text"
+               name="name"
+               value="{{ $item->name }}"
+               class="form-control"
+               required>
+    </div>
+
+    <div class="form-group mb-3">
+        <label>Slug</label>
+        <input type="text"
+               name="slug"
+               value="{{ $item->slug }}"
+               class="form-control"
+               required>
+    </div>
+
+@endif
 
                 </div>
 
                 <div class="modal-footer">
+                    <button type="button"
+                            class="btn btn-secondary"
+                            data-dismiss="modal">
+                        Cancel
+                    </button>
                     <button class="btn btn-success">
                         Update
                     </button>
                 </div>
             </div>
+
         </form>
     </div>
 </div>
 @endforeach
-
 {{-- ===================== --}}
 {{-- CREATE MODAL --}}
 {{-- ===================== --}}
@@ -234,20 +267,21 @@
             @endforeach
         </select>
     </div>
-  <div class="form-group mb-3">
+ <div id="locationSection" style="display:none;">
+    <div class="form-group mb-3">
         <label>Select Location Type</label>
-        <select name="location_type_id" class="form-control" required>
+        <select name="location_type_id" class="form-control">
             <option value="">-- Select Location Type --</option>
-         @if($locationTypes)
-    @foreach($locationTypes as $locationType)
-                <option value="{{ $locationType->id }}">
+            @foreach($locationTypes as $locationType)
+                <option value="{{ $locationType->id }}"
+                        data-type="{{ $locationType->property_type_id }}">
                     {{ $locationType->name }}
                 </option>
             @endforeach
-            @endif
         </select>
     </div>
-    <div class="form-group mb-3">
+</div>
+    <!-- <div class="form-group mb-3">
         <label>Title</label>
         <input type="text" name="title" class="form-control" required>
     </div>
@@ -255,7 +289,7 @@
     <div class="form-group mb-3">
         <label>Description</label>
         <textarea name="description" class="form-control" required></textarea>
-    </div>
+    </div> -->
 
 @else
 
@@ -316,18 +350,42 @@
 {{-- ===================== --}}
 {{-- DATATABLE SCRIPT --}}
 {{-- ===================== --}}
+
 @section('js')
 <script>
-    $(document).ready(function() {
-        console.log("DataTable script loaded");
+$(document).ready(function () {
 
-        if (typeof $.fn.DataTable === 'function') {
-            $('#crudTable').DataTable({
-                pageLength: 10
-            });
+    function checkLocationVisibility() {
+
+        let selectedTypeId = $('select[name="type_id"]').val();
+        let selectedCategoryId = $('select[name="category_id"]').val();
+console.log(selectedCategoryId, selectedTypeId);
+        // IMPORTANT: replace these IDs with your actual DB IDs
+        let commercialCategoryId = "2";   // <-- put Commercial ID here
+        let retailTypeId = "2";           // <-- put Retail ID here
+
+        if (selectedCategoryId == commercialCategoryId && selectedTypeId == retailTypeId) {
+            $('#locationSection').show();
         } else {
-            console.error("DataTable JS not loaded");
+            $('#locationSection').hide();
+            $('select[name="location_type_id"]').val('');
         }
-    });
+
+        // Filter location dropdown by selected type
+        $('select[name="location_type_id"] option').each(function () {
+            let optionType = $(this).data('type');
+
+            if (!optionType || optionType == selectedTypeId) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
+    }
+
+    $('select[name="category_id"]').change(checkLocationVisibility);
+    $('select[name="type_id"]').change(checkLocationVisibility);
+
+});
 </script>
 @endsection

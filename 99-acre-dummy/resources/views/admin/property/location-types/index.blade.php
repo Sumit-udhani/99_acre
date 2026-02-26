@@ -8,7 +8,7 @@
     title="Location Types"
     :data="$locationTypes"
     routePrefix="admin.location-types"
-    :categories="$categories"
+    
     mode="location"
 />
 

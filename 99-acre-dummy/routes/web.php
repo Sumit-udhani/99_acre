@@ -9,11 +9,13 @@ use App\Http\Controllers\PropertyLocationTypeController;
 use App\Http\Controllers\PropertyPurposeController;
 use App\Http\Controllers\PropertyTypeController;
 use App\Models\Banner;
+use App\Models\PropertyPurpose;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
       $banner = Banner::latest()->first();
-    return view('welcome', compact('banner'));
+       $purposes = PropertyPurpose::take(3)->get(); // only first 3
+    return view('welcome', compact('banner','purposes'));
 });
 
 Route::get('/dashboard', function () {

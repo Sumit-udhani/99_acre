@@ -23,4 +23,8 @@ public function purpose()
 {
     return $this->belongsTo(PropertyPurpose::class);
 }
+public function locationTypes()
+{
+    return $this->hasMany(PropertyLocationType::class);
+}
 }

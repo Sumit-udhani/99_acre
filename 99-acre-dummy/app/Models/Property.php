@@ -13,7 +13,7 @@ class Property extends Model
         'type_id',
         'title',
         'description',
-        'property_location_type_id',
+        'location_type_id',
     ];
 
      public function purpose()
