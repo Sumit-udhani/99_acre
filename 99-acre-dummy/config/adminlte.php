@@ -356,6 +356,20 @@ return [
             ],
         ],
         [
+    'text' => 'Users',
+    'icon' => 'fas fa-users',
+    'submenu' => [
+        [
+            'text' => 'Members',
+            'route' => 'admin.users.index',
+        ],
+           [
+            'text' => 'Roles',
+            'route' => 'admin.roles.index',
+        ],
+        ] ]
+        ,
+        [
     'text' => 'Banner',
     'route'  => 'admin.banner.index',
     'icon' => 'fas fa-images',

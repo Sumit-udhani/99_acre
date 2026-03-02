@@ -15,7 +15,7 @@ class propertyForm extends Component
     public function __construct($purposes=null)
     {
         //
-        $this->$purposes= $purposes;
+        $this->purposes= $purposes;
     }
 
     /**

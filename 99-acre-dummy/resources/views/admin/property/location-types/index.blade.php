@@ -13,11 +13,3 @@
 />
 
 @endsection
-
-@section('js')
-<script>
-$(document).ready(function () {
-    $('#crudTable').DataTable();
-});
-</script>
-@endsection

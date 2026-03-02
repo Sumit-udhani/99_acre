@@ -6,3 +6,44 @@
  display: flex;
 justify-content: center;
 }
+/* Property Form Styling */
+
+.property-card {
+    border-radius: 12px;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    background: #fff;
+}
+
+.purpose-btn {
+    border-radius: 20px;
+    padding: 6px 18px;
+    font-size: 14px;
+    border: 1px solid #d0d0d0;
+    background: #f8f9fa;
+}
+
+.purpose-btn:hover {
+    background: #e9f2ff;
+    border-color: #1976d2;
+    color: #1976d2;
+}
+
+.purpose-btn.active {
+    background: #1976d2;
+    color: #fff;
+    border-color: #1976d2;
+}
+
+.start-btn {
+    background: #1976d2;
+    color: #fff;
+    padding: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 6px;
+}
+
+.start-btn:hover {
+    background: #125aa3;
+}

@@ -19,12 +19,33 @@
     <th>Location Type</th> {{-- NEW --}}
    
     <th>Action</th>
+@elseif($mode == 'user')
 
+    <th>#</th>
+    <th>Name</th>
+    <th>Email</th>
+    <th>Role</th>
+    <th>Action</th>
+
+  @elseif($mode == 'normal')
+
+<th>#</th>
+<th>Name</th>
+<th>Slug</th>
+
+@if($categories)
+    <th>Category</th>
+@endif
+
+@if($purposes)
+    <th>Purpose</th>
+@endif
+
+<th>Action</th>
 @else
 
     <th>#</th>
     <th>Name</th>
-    <th>Slug</th>
 
     @if($categories)
         <th>Category</th>
@@ -51,13 +72,30 @@
     <td>{{ $item->category->name ?? '' }}</td>
     <td>{{ $item->type->name ?? '' }}</td>
      <td>{{ $item->locationType->name ?? '' }}</td> 
-   
+ @elseif($mode == 'user')
+
+    <td>{{ $key+1 }}</td>
+    <td>{{ $item->name }}</td>
+    <td>{{ $item->email }}</td>
+  <td>
+    @if($item->roles->isNotEmpty())
+        @foreach($item->roles as $role)
+            <span class="badge bg-success">
+                {{ ucfirst($role->name) }}
+            </span>
+        @endforeach
+    @else
+        <span class="badge bg-secondary">No Role</span>
+    @endif
+</td>
+
 @else
 
     <td>{{ $key+1 }}</td>
     <td>{{ $item->name }}</td>
+  @if(isset($item->slug))
     <td>{{ $item->slug }}</td>
-
+@endif
     @if($categories)
         <td>{{ $item->category->name ?? '' }}</td>
     @endif
@@ -173,7 +211,37 @@
             @endforeach
         </select>
     </div>
+@elseif($mode == 'user')
 
+    <div class="form-group mb-3">
+        <label>Name</label>
+        <input type="text"
+               name="name"
+               value="{{ $item->name ?? '' }}"
+               class="form-control"
+               required>
+    </div>
+
+    <div class="form-group mb-3">
+        <label>Email</label>
+        <input type="email"
+               name="email"
+               value="{{ $item->email ?? '' }}"
+               class="form-control"
+               required>
+    </div>
+
+    <div class="form-group mb-3">
+        <label>Select Role</label>
+        <select name="role" class="form-control">
+            @foreach($roles as $role)
+                <option value="{{ $role->role }}"
+                    {{ isset($item) && $item->hasRole($role->role) ? 'selected' : '' }}>
+                    {{ ucfirst($role->role) }}
+                </option>
+            @endforeach
+        </select>
+    </div>
 @else
 
     {{-- NORMAL CRUD MODE --}}
@@ -281,6 +349,35 @@
         </select>
     </div>
 </div>
+@elseif($mode == 'user')
+
+    <div class="form-group mb-3">
+        <label>Name</label>
+        <input type="text"
+               name="name"
+               class="form-control"
+               required>
+    </div>
+
+    <div class="form-group mb-3">
+        <label>Email</label>
+        <input type="email"
+               name="email"
+               class="form-control"
+               required>
+    </div>
+
+    <div class="form-group mb-3">
+        <label>Select Role</label>
+        <select name="role" class="form-control">
+            @foreach($roles as $role)
+                <option value="{{ $role->role }}"
+                    {{ isset($item) && $item->hasRole($role->role) ? 'selected' : '' }}>
+                    {{ ucfirst($role->role) }}
+                </option>
+            @endforeach
+        </select>
+    </div>
     <!-- <div class="form-group mb-3">
         <label>Title</label>
         <input type="text" name="title" class="form-control" required>
@@ -354,7 +451,14 @@
 @section('js')
 <script>
 $(document).ready(function () {
+     if ($('#crudTable').length) {
 
+        if ($.fn.DataTable.isDataTable('#crudTable')) {
+            $('#crudTable').DataTable().destroy();
+        }
+
+        $('#crudTable').DataTable();
+    }
     function checkLocationVisibility() {
 
         let selectedTypeId = $('select[name="type_id"]').val();

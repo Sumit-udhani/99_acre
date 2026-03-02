@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Admin\BannerController;
+use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\PropertyController;
 use App\Http\Controllers\LogoController;
 use App\Http\Controllers\ProfileController;
@@ -54,7 +56,9 @@ Route::middleware(['auth', 'admin'])
                Route::resource('location-types', PropertyLocationTypeController::class);
 
 
-
+    //Users management 
+     Route::resource('users', UserController::class);
+      Route::resource('roles', RoleController::class);
 
 
 });

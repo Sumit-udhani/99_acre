@@ -10,14 +10,4 @@
     :purposes="$purposes"
     />
     @endsection
-@section('js')
-<script>
-$(document).ready(function () {
-    console.log("Datatable init running...");
 
-    $('#crudTable').DataTable({
-        pageLength: 10
-    });
-});
-</script>
-@endsection
