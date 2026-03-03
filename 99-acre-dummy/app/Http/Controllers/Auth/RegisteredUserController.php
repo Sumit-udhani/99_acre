@@ -3,12 +3,15 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Mail\AdminUserRegisteredMail;
+use App\Mail\UserRegisteredMail;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 
@@ -40,12 +43,13 @@ class RegisteredUserController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
-
+    Mail::to($user->email)->send(new UserRegisteredMail($user));
+    Mail::to(env('ADMIN_EMAIL'))->send(new AdminUserRegisteredMail($user));
         event(new Registered($user));
 
       
 
-        return redirect()->route('login')
-        ->with('status', 'Registration successful. Please login.');
+       return redirect()->route('login')
+    ->with('status', 'Registration successful! Mail is sent to your email id');
     }
 }

@@ -11,7 +11,7 @@
     :data="$users"
     routePrefix="admin.users"
     mode="user"
-    :roles="$users"
+     :roles="$roles"
 />
 
 @endsection

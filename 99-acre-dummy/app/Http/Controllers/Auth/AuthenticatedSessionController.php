@@ -19,19 +19,30 @@ class AuthenticatedSessionController extends Controller
         return view('auth.login');
     }   
 
-    public function store(LoginRequest $request): RedirectResponse
+public function store(LoginRequest $request): RedirectResponse
 {
     $request->authenticate();
-
     $request->session()->regenerate();
 
-   $user = $request->user();
+    $user = $request->user();
 
-if ($user->isAdmin()) {
-    return redirect()->route('admin.dashboard');
-}
+    // ✅ Admin can always login
+    if ($user->isAdmin()) {
+        return redirect()->route('admin.dashboard');
+    }
 
-    return redirect()->route('dashboard'); 
+    // 🚫 Only normal users must be approved
+    if (! $user->isApproved()) {
+
+       Auth::logout();
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+        return back()->withErrors([
+            'email' => 'Your account is not approved yet.',
+        ]);
+    }
+
+    return redirect()->route('dashboard');
 }
     /**
      * Destroy an authenticated session.

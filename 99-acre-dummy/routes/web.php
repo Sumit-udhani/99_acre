@@ -55,8 +55,10 @@ Route::middleware(['auth', 'admin'])
                Route::resource('types', PropertyTypeController::class);
                Route::resource('location-types', PropertyLocationTypeController::class);
 
-
-    //Users management 
+                //User status update 
+               Route::patch('users/{user}/status', [UserController::class, 'updateStatus'])
+               ->name('users.updateStatus');
+               //Users management 
      Route::resource('users', UserController::class);
       Route::resource('roles', RoleController::class);
 

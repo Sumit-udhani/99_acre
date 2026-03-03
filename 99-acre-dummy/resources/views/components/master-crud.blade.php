@@ -1,4 +1,9 @@
-
+@if(session('success'))
+    <div class="alert alert-success" 
+         style="background-color: lightgreen; color: white; width:auto;">
+        {{ session('success') }}
+    </div>
+@endif
 
 <div class="container">
     <h2>{{ $title }}</h2>
@@ -25,6 +30,7 @@
     <th>Name</th>
     <th>Email</th>
     <th>Role</th>
+    <th>Status</th>
     <th>Action</th>
 
   @elseif($mode == 'normal')
@@ -44,18 +50,22 @@
 <th>Action</th>
 @else
 
-    <th>#</th>
-    <th>Name</th>
+<th>#</th>
+<th>Name</th>
 
-    @if($categories)
-        <th>Category</th>
-    @endif
+@if(isset($items[0]) && isset($items[0]->slug))
+    <th>Slug</th>
+@endif
 
-    @if($purposes)
-        <th>Purpose</th>
-    @endif
+@if($categories)
+    <th>Category</th>
+@endif
 
-    <th>Action</th>
+@if($purposes)
+    <th>Purpose</th>
+@endif
+
+<th>Action</th>
 
 @endif
 
@@ -88,13 +98,24 @@
         <span class="badge bg-secondary">No Role</span>
     @endif
 </td>
+<td>
+<form action="{{ route('admin.users.updateStatus', $item->id) }}" method="POST">
+    @csrf
+    @method('PATCH')
 
+    <select name="status" onchange="this.form.submit()">
+        <option value="pending" {{ $item->status == 'pending' ? 'selected' : '' }}>Pending</option>
+        <option value="approved" {{ $item->status == 'approved' ? 'selected' : '' }}>Approved</option>
+        <option value="rejected" {{ $item->status == 'rejected' ? 'selected' : '' }}>Rejected</option>
+    </select>
+</form>
+</td>
 @else
 
     <td>{{ $key+1 }}</td>
     <td>{{ $item->name }}</td>
   @if(isset($item->slug))
-    <td>{{ $item->slug }}</td>
+   <td>{{ $item->slug ?? '' }}</td>
 @endif
     @if($categories)
         <td>{{ $item->category->name ?? '' }}</td>
@@ -213,6 +234,8 @@
     </div>
 @elseif($mode == 'user')
 
+    {{-- USER FIELDS --}}
+
     <div class="form-group mb-3">
         <label>Name</label>
         <input type="text"
@@ -232,16 +255,25 @@
     </div>
 
     <div class="form-group mb-3">
+        <label>Password (leave blank if not changing)</label>
+        <input type="password"
+               name="password"
+               class="form-control">
+    </div>
+
+    <div class="form-group mb-3">
         <label>Select Role</label>
         <select name="role" class="form-control">
             @foreach($roles as $role)
-                <option value="{{ $role->role }}"
-                    {{ isset($item) && $item->hasRole($role->role) ? 'selected' : '' }}>
-                    {{ ucfirst($role->role) }}
+                <option value="{{ $role->name }}"
+                    {{ $item->hasRole($role->name) ? 'selected' : '' }}>
+                    {{ ucfirst($role->name) }}
                 </option>
             @endforeach
         </select>
     </div>
+
+
 @else
 
     {{-- NORMAL CRUD MODE --}}
@@ -255,12 +287,15 @@
     </div>
 
     <div class="form-group mb-3">
+        @if ($item->slug)
+            
         <label>Slug</label>
         <input type="text"
                name="slug"
                value="{{ $item->slug }}"
                class="form-control"
                required>
+        @endif
     </div>
 
 @endif
@@ -366,14 +401,22 @@
                class="form-control"
                required>
     </div>
+    <!-- ✅ ADD THIS -->
+    <div class="form-group mb-3">
+        <label>Password</label>
+        <input type="password"
+               name="password"
+               class="form-control"
+               required>
+    </div>
 
     <div class="form-group mb-3">
         <label>Select Role</label>
         <select name="role" class="form-control">
             @foreach($roles as $role)
-                <option value="{{ $role->role }}"
-                    {{ isset($item) && $item->hasRole($role->role) ? 'selected' : '' }}>
-                    {{ ucfirst($role->role) }}
+                <option value="{{ $role->name }}"
+                    {{ isset($item) && $item->hasRole($role->name) ? 'selected' : '' }}>
+                    {{ ucfirst($role->name) }}
                 </option>
             @endforeach
         </select>
@@ -398,8 +441,10 @@
     </div>
 
     <div class="form-group mb-3">
+         @if ($item->slug)
         <label>Slug</label>
         <input type="text" name="slug" class="form-control" required>
+        @endif
     </div>
 
     @if($purposes)
@@ -443,15 +488,14 @@
         </form>
     </div>
 </div>
-
-{{-- ===================== --}}
-{{-- DATATABLE SCRIPT --}}
-{{-- ===================== --}}
-
 @section('js')
 <script>
 $(document).ready(function () {
-     if ($('#crudTable').length) {
+
+    // =====================
+    // DATATABLE
+    // =====================
+    if ($('#crudTable').length) {
 
         if ($.fn.DataTable.isDataTable('#crudTable')) {
             $('#crudTable').DataTable().destroy();
@@ -459,14 +503,17 @@ $(document).ready(function () {
 
         $('#crudTable').DataTable();
     }
+
+    // =====================
+    // LOCATION VISIBILITY
+    // =====================
     function checkLocationVisibility() {
 
         let selectedTypeId = $('select[name="type_id"]').val();
         let selectedCategoryId = $('select[name="category_id"]').val();
-console.log(selectedCategoryId, selectedTypeId);
-        // IMPORTANT: replace these IDs with your actual DB IDs
-        let commercialCategoryId = "2";   // <-- put Commercial ID here
-        let retailTypeId = "2";           // <-- put Retail ID here
+
+        let commercialCategoryId = "2";
+        let retailTypeId = "2";
 
         if (selectedCategoryId == commercialCategoryId && selectedTypeId == retailTypeId) {
             $('#locationSection').show();
@@ -475,7 +522,6 @@ console.log(selectedCategoryId, selectedTypeId);
             $('select[name="location_type_id"]').val('');
         }
 
-        // Filter location dropdown by selected type
         $('select[name="location_type_id"] option').each(function () {
             let optionType = $(this).data('type');
 
@@ -489,6 +535,32 @@ console.log(selectedCategoryId, selectedTypeId);
 
     $('select[name="category_id"]').change(checkLocationVisibility);
     $('select[name="type_id"]').change(checkLocationVisibility);
+
+    // =====================
+    // USER STATUS UPDATE (AJAX)
+    // =====================
+    $('.statusDropdown').change(function () {
+
+        let userId = $(this).data('id');
+        let status = $(this).val();
+
+        $.ajax({
+            url: "{{ route('admin.users.updateStatus', ':id') }}".replace(':id', userId),
+            type: "POST",
+            data: {
+                _token: "{{ csrf_token() }}",
+                _method: "PATCH",
+                status: status
+            },
+            success: function () {
+                alert('User status updated successfully');
+            },
+            error: function () {
+                alert('Something went wrong');
+            }
+        });
+
+    });
 
 });
 </script>
