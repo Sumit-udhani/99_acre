@@ -22,6 +22,7 @@ class PropertyController extends Controller
 
         $purposes = PropertyPurpose::all();
         $categories = PropertyCategory::all();
+       
         $types = PropertyType::all();
         $locationTypes = PropertyLocationType::all();
 

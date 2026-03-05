@@ -18,7 +18,7 @@
             @if($logo)
             <img src="{{ asset('storage/'.$logo->image_path) }}"
                 alt="{{ $logo->title }}"
-                style="height:45px;">
+                style="height:95px;">
             @else
             <h2 style="color:white; margin:0;">My Website</h2>
             @endif

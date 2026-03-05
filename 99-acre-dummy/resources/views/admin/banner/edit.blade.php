@@ -5,11 +5,11 @@
 <div class="container">
     <h2>Edit Banner</h2>
 
-    <a href="{{ route('banner.index') }}" class="btn btn-secondary mb-3">
+    <a href="{{ route('admin.banner.index') }}" class="btn btn-secondary mb-3">
         Back
     </a>
 
-    <form action="{{ route('banner.update', $banner->id) }}" 
+    <form action="{{ route('admin.banner.update', $banner->id) }}" 
           method="POST" 
           enctype="multipart/form-data">
         @csrf

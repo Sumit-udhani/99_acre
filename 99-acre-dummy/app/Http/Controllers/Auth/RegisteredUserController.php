@@ -43,6 +43,7 @@ class RegisteredUserController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
+        $user->assignRole('user');
     Mail::to($user->email)->send(new UserRegisteredMail($user));
     Mail::to(env('ADMIN_EMAIL'))->send(new AdminUserRegisteredMail($user));
         event(new Registered($user));

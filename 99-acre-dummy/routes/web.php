@@ -11,13 +11,17 @@ use App\Http\Controllers\PropertyLocationTypeController;
 use App\Http\Controllers\PropertyPurposeController;
 use App\Http\Controllers\PropertyTypeController;
 use App\Models\Banner;
+use App\Models\PropertyCategory;
 use App\Models\PropertyPurpose;
+use App\Models\PropertyType;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
       $banner = Banner::latest()->first();
-       $purposes = PropertyPurpose::take(3)->get(); // only first 3
-    return view('welcome', compact('banner','purposes'));
+       $purposes = PropertyPurpose::take(3)->get();
+        $categories = PropertyCategory::all();
+        $types = PropertyType::all();
+    return view('welcome', compact('banner','purposes','categories','types'));
 });
 
 Route::get('/dashboard', function () {
@@ -43,7 +47,7 @@ Route::middleware(['auth', 'admin'])
             ->name('admin.logo.create');
 
         Route::post('/logo', [LogoController::class, 'store'])
-            ->name('admin.logo.store');
+            ->name('logo.store');
 
             //banner 
              Route::resource('banner', BannerController::class);

@@ -1,10 +1,11 @@
+
 @if(session('success'))
     <div class="alert alert-success" 
          style="background-color: lightgreen; color: white; width:auto;">
         {{ session('success') }}
     </div>
 @endif
-
+<div id="ajax-success"></div>
 <div class="container">
     <h2>{{ $title }}</h2>
 
@@ -99,16 +100,12 @@
     @endif
 </td>
 <td>
-<form action="{{ route('admin.users.updateStatus', $item->id) }}" method="POST">
-    @csrf
-    @method('PATCH')
-
-    <select name="status" onchange="this.form.submit()">
-        <option value="pending" {{ $item->status == 'pending' ? 'selected' : '' }}>Pending</option>
-        <option value="approved" {{ $item->status == 'approved' ? 'selected' : '' }}>Approved</option>
-        <option value="rejected" {{ $item->status == 'rejected' ? 'selected' : '' }}>Rejected</option>
-    </select>
-</form>
+<select class="form-control statusDropdown"
+        data-id="{{ $item->id }}">
+    <option value="pending" {{ $item->status == 'pending' ? 'selected' : '' }}>Pending</option>
+    <option value="approved" {{ $item->status == 'approved' ? 'selected' : '' }}>Approved</option>
+    <option value="rejected" {{ $item->status == 'rejected' ? 'selected' : '' }}>Rejected</option>
+</select>
 </td>
 @else
 
@@ -273,30 +270,60 @@
         </select>
     </div>
 
-
 @else
 
-    {{-- NORMAL CRUD MODE --}}
-    <div class="form-group mb-3">
-        <label>{{ $title }} Name</label>
-        <input type="text"
-               name="name"
-               value="{{ $item->name }}"
-               class="form-control"
-               required>
-    </div>
+{{-- NORMAL CRUD MODE --}}
+<div class="form-group mb-3">
+    <label>{{ $title }} Name</label>
+    <input type="text"
+           name="name"
+           value="{{ $item->name }}"
+           class="form-control"
+           required>
+</div>
 
-    <div class="form-group mb-3">
-        @if ($item->slug)
-            
-        <label>Slug</label>
-        <input type="text"
-               name="slug"
-               value="{{ $item->slug }}"
-               class="form-control"
-               required>
-        @endif
-    </div>
+@if(isset($item->slug))
+<div class="form-group mb-3">
+    <label>Slug</label>
+    <input type="text"
+           name="slug"
+           value="{{ $item->slug }}"
+           class="form-control"
+           required>
+</div>
+@endif
+
+{{-- PURPOSE --}}
+@if($purposes)
+<div class="form-group mb-3">
+    <label>Select Purpose</label>
+    <select name="purpose_id" class="form-control">
+        <option value="">-- Select Purpose --</option>
+        @foreach($purposes as $purpose)
+            <option value="{{ $purpose->id }}"
+                {{ $item->purpose_id == $purpose->id ? 'selected' : '' }}>
+                {{ $purpose->name }}
+            </option>
+        @endforeach
+    </select>
+</div>
+@endif
+
+{{-- CATEGORY --}}
+@if($categories)
+<div class="form-group mb-3">
+    <label>Select Category</label>
+    <select name="category_id" class="form-control">
+        <option value="">-- Select Category --</option>
+        @foreach($categories as $category)
+            <option value="{{ $category->id }}"
+                {{ $item->category_id == $category->id ? 'selected' : '' }}>
+                {{ $category->name }}
+            </option>
+        @endforeach
+    </select>
+</div>
+@endif
 
 @endif
 
@@ -552,11 +579,24 @@ $(document).ready(function () {
                 _method: "PATCH",
                 status: status
             },
-            success: function () {
-                alert('User status updated successfully');
-            },
+            success: function (response) {
+
+            $('#ajax-success').html(
+                `<div class="alert alert-success">
+                    ${response.message}
+                </div>`
+            );
+
+            setTimeout(function(){
+                $('#ajax-success').html('');
+            },3000);
+        },
             error: function () {
-                alert('Something went wrong');
+                  $('#ajax-success').html(
+                `<div class="alert alert-danger">
+                    Something went wrong
+                </div>`
+            );
             }
         });
 

@@ -6,23 +6,24 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class propertyForm extends Component
+class Banner extends Component
 {
     /**
      * Create a new component instance.
      */
+      public $banner;
     public $purposes;
     public $categories;
-    public $types;
+       public $types;
 
-
-    public function __construct($purposes=null,$categories=null,$types=null)
+    public function __construct($banner,$purposes,$categories,$types)
     {
         //
-        $this->purposes= $purposes;
-        $this->categories= $categories;
-        $this->types= $types;
 
+        $this->banner = $banner;
+        $this->purposes = $purposes;
+        $this->categories = $categories;
+        $this->types = $types;
 
     }
 
@@ -31,6 +32,6 @@ class propertyForm extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.property-form');
+        return view('components.banner');
     }
 }

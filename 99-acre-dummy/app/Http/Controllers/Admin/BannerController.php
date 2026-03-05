@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Banner;
+use App\Models\PropertyCategory;
+use App\Models\PropertyPurpose;
+use App\Models\PropertyType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -16,7 +19,11 @@ class BannerController extends Controller
     {
         //
       $banners = Banner::latest()->get();
-        return view('admin.banner.index', compact('banners'));
+       $purposes = PropertyPurpose::all();
+     $categories = PropertyCategory::all();
+     $types = PropertyType::all();
+       
+        return view('admin.banner.index', compact('banners', 'purposes','categories','types'));
 
     }
 
@@ -112,7 +119,7 @@ class BannerController extends Controller
             'image_path' => $imagePath,
         ]);
 
-        return redirect()->route('banner.index')
+        return redirect()->route('admin.banner.index')
             ->with('success', 'Banner updated successfully');
     }
 

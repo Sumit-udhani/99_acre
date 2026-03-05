@@ -5,45 +5,84 @@
 .banner1{
  display: flex;
 justify-content: center;
-}
-/* Property Form Styling */
-
-.property-card {
+}/* Property Card */
+    .property-card {
     border-radius: 12px;
-    border: 1px solid #e0e0e0;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-    background: #fff;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    border: none;
+    max-width: 424px;
+    }
+    /* Property Card */
+    .property-card{
+    border-radius:12px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.08);
+    border:none;
+    }
+
+    /* Purpose + Type Buttons */
+    .purpose-btn{
+    border:1px solid #dcdcdc;
+    background:#fff;
+    padding:7px 18px;
+    font-size:14px;
+    border-radius:20px;
+    transition:all .2s ease;
+    white-space:nowrap;
+    }
+
+    .purpose-btn:hover{
+    border-color:#0078db;
+    color:#0078db;
+    }
+
+    .purpose-btn.active{
+    background:#0078db;
+    color:#fff;
+    border-color:#0078db;
+    }
+
+    /* Category Radio */
+    .category-radio-group{
+    display:flex;
+    gap:30px;
+    margin-bottom:10px;
+    }
+
+    .category-radio{
+    accent-color:#0078db;
+    cursor:pointer;
+    }
+
+    .form-check-label{
+    font-size:14px;
+    cursor:pointer;
+    margin-left:4px;
+    }
+
+    /* Start Button */
+    .start-btn{
+    background:#0078db;
+    color:white;
+    font-weight:600;
+    padding:11px;
+    border-radius:6px;
+    border:none;
+    transition:0.2s;
+    }
+  .types-wrapper{
+display:flex;
+flex-wrap:wrap;
+gap:10px;
 }
 
-.purpose-btn {
-    border-radius: 20px;
-    padding: 6px 18px;
-    font-size: 14px;
-    border: 1px solid #d0d0d0;
-    background: #f8f9fa;
+/* Type Buttons Flexible */
+.type-btn{
+display:inline-flex;
+align-items:center;
+justify-content:center;
+white-space:nowrap;
+padding:7px 16px;
 }
-
-.purpose-btn:hover {
-    background: #e9f2ff;
-    border-color: #1976d2;
-    color: #1976d2;
-}
-
-.purpose-btn.active {
-    background: #1976d2;
-    color: #fff;
-    border-color: #1976d2;
-}
-
-.start-btn {
-    background: #1976d2;
-    color: #fff;
-    padding: 10px;
-    font-size: 16px;
-    font-weight: 600;
-    border-radius: 6px;
-}
-
-.start-btn:hover {
-    background: #125aa3;
-}
+    .start-btn:hover{
+    background:#0066c2;
+    }

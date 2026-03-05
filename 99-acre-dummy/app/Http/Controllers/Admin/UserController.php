@@ -36,10 +36,30 @@ class UserController extends Controller
     }
 
     }
-    public function update(Request $request, User $user)
+   public function update(Request $request, User $user)
 {
+    $request->validate([
+        'name'  => 'required|string|max:255',
+        'email' => 'required|email|max:255|unique:users,email,' . $user->id,
+        'password' => 'nullable|min:6',
+        'role' => 'required'
+    ]);
+
+    // Update basic fields
+    $user->name  = $request->name;
+    $user->email = $request->email;
+
+    // Update password only if entered
+    if($request->filled('password')){
+        $user->password = bcrypt($request->password);
+    }
+
+    $user->save();
+
+    // Update role
     $user->syncRoles([$request->role]);
-    return back()->with('success','Role updated');
+
+    return back()->with('success','User updated successfully');
 }
 public function destroy(string $id){
     $users = User::findOrFail($id);
@@ -64,6 +84,9 @@ public function updateStatus(Request $request, User $user)
         Mail::to($user->email)->send(new UserRejectedMail($user));
     }
 
-    return back()->with('success', 'User status updated successfully.');
+    return response()->json([
+        'status' => true,
+        'message' => 'User status updated successfully.'
+    ]);
 }
 }
