@@ -11,15 +11,20 @@ Start posting your property, it’s free
 <label class="fw-semibold mb-2">You're looking to ...</label>
 
 <div class="d-flex gap-2 flex-wrap mb-3">
+
 @foreach($purposes as $purpose)
 
-<button type="button"
+<button
+type="button"
 class="btn purpose-btn"
-data-id="{{ $purpose->id }}">
+data-id="{{ $purpose->id }}"
+data-name="{{ strtolower($purpose->name) }}"
+>
 {{ $purpose->name }}
 </button>
 
 @endforeach
+
 </div>
 
 
@@ -39,6 +44,7 @@ class="form-check-input category-radio"
 type="radio"
 name="category_id"
 id="category{{ $category->id }}"
+data-name="{{ strtolower($category->name) }}"
 value="{{ $category->id }}"
 >
 
@@ -52,7 +58,7 @@ for="category{{ $category->id }}">
 
 @endforeach
 
-</div> {{-- CLOSE RADIO GROUP --}}
+</div>
 
 
 {{-- PROPERTY TYPES --}}
@@ -60,17 +66,19 @@ for="category{{ $category->id }}">
 
 @foreach($types as $type)
 
-<button type="button"
-class="btn purpose-btn"
-data-id="{{ $type->id }}">
+<button
+type="button"
+class="btn purpose-btn type-btn btn type-btn"
+data-id="{{ $type->id }}"
+data-name="{{ strtolower($type->name) }}"
+data-category="{{ $type->category_id }}"
+>
 {{ $type->name }}
 </button>
 
 @endforeach
 
 </div>
-
-
 
 
 <label class="fw-semibold mt-2">
