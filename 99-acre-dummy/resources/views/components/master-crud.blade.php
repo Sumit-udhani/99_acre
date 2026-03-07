@@ -33,43 +33,30 @@
     <th>Role</th>
     <th>Status</th>
     <th>Action</th>
-
-  @elseif($mode == 'normal')
+@elseif($mode == 'normal')
 
 <th>#</th>
 <th>Name</th>
+
+@if($types)
+<th>Type</th>
+@endif
+
+@if($hasSlug)
 <th>Slug</th>
-
-@if($categories)
-    <th>Category</th>
-@endif
-
-@if($purposes)
-    <th>Purpose</th>
-@endif
-
-<th>Action</th>
-@else
-
-<th>#</th>
-<th>Name</th>
-
-@if(isset($items[0]) && isset($items[0]->slug))
-    <th>Slug</th>
 @endif
 
 @if($categories)
-    <th>Category</th>
+<th>Category</th>
 @endif
 
 @if($purposes)
-    <th>Purpose</th>
+<th>Purpose</th>
 @endif
 
 <th>Action</th>
 
 @endif
-
             </tr>
         </thead>
 
@@ -109,21 +96,26 @@
 </td>
 @else
 
-    <td>{{ $key+1 }}</td>
-    <td>{{ $item->name }}</td>
-  @if(isset($item->slug))
-   <td>{{ $item->slug ?? '' }}</td>
-@endif
-    @if($categories)
-        <td>{{ $item->category->name ?? '' }}</td>
-    @endif
+<td>{{ $key+1 }}</td>
+<td>{{ $item->name }}</td>
 
-    @if($purposes)
-        <td>{{ $item->purpose->name ?? '' }}</td>
-    @endif
-
+@if($types)
+<td>{{ $item->type->name ?? '' }}</td>
 @endif
 
+@if($hasSlug)
+<td>{{ $item->slug ?? '' }}</td>
+@endif
+
+@if($categories)
+<td>{{ $item->category->name ?? '' }}</td>
+@endif
+
+@if($purposes)
+<td>{{ $item->purpose->name ?? '' }}</td>
+@endif
+
+@endif
                 <td>
                     <button class="btn btn-sm btn-warning"
                         data-toggle="modal"
@@ -281,7 +273,29 @@
            class="form-control"
            required>
 </div>
+@if($types)
 
+<div class="form-group mb-3">
+<label>Select Type</label>
+
+<select name="type_id" class="form-control">
+
+@foreach($types as $type)
+
+<option value="{{ $type->id }}"
+{{ $item->type_id == $type->id ? 'selected' : '' }}>
+
+{{ $type->name }}
+
+</option>
+
+@endforeach
+
+</select>
+
+</div>
+
+@endif
 @if(isset($item->slug))
 <div class="form-group mb-3">
     <label>Slug</label>
@@ -466,13 +480,30 @@
         <label>{{ $title }} Name</label>
         <input type="text" name="name" class="form-control" required>
     </div>
+@if($types)
+<div class="form-group mb-3">
+<label>Select Type</label>
 
-    <div class="form-group mb-3">
-         @if ($item->slug)
-        <label>Slug</label>
-        <input type="text" name="slug" class="form-control" required>
-        @endif
-    </div>
+<select name="type_id" class="form-control">
+
+<option value="">-- Select Type --</option>
+
+@foreach($types as $type)
+<option value="{{ $type->id }}">
+{{ $type->name }}
+</option>
+@endforeach
+
+</select>
+
+</div>
+@endif
+    @if($hasSlug)
+<div class="form-group mb-3">
+    <label>Slug</label>
+    <input type="text" name="slug" class="form-control" required>
+</div>
+@endif
 
     @if($purposes)
         <div class="form-group mb-3">

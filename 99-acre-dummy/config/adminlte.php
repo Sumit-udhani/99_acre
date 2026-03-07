@@ -394,6 +394,11 @@ return [
             'icon' => 'fas fa-tags',
         ],
         [
+    'text' => 'Sub Types',
+    'route' => 'admin.subtypes.index',
+    'icon' => 'fas fa-sitemap',
+],
+        [
     'text' => 'Location Types',
     'route' => 'admin.location-types.index',
     'icon' => 'fas fa-map-marker-alt',

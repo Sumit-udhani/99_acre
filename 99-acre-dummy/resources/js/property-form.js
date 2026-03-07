@@ -30,7 +30,12 @@ selectedCategoryName = $(this).data('name');
 
 });
 
+$('.purpose-btn[data-name="sell"]').trigger('click');
 
+// DEFAULT CATEGORY
+$('.category-radio[data-name="residential"]')
+.prop('checked', true)
+.trigger('change');
 // FILTER PURPOSES
 function filterPurposes(){
 
@@ -124,5 +129,59 @@ function applyPurposeRules(){
     }
 
 }
+// TYPE CLICK
+$(document).on('click','.type-btn',function(){
 
+    $('.type-btn').removeClass('active');
+    $(this).addClass('active');
+
+    let typeId = $(this).data('id');
+  let typeName = $(this).data('name');
+
+    
+    $('#subtype-label').text('Your ' + typeName + ' type is ...');
+    loadSubTypes(typeId);
+
+
+});
+function loadSubTypes(typeId){
+
+$.ajax({
+
+    url:'/get-subtypes/'+typeId,
+    type:'GET',
+
+    success:function(response){
+
+        let html = '';
+
+        if(response.length > 0){
+
+            response.forEach(function(subtype){
+
+                html += `
+                <button 
+                type="button"
+                class="btn purpose-btn subtype-btn"
+                data-id="${subtype.id}">
+                ${subtype.name}
+                </button>
+                `;
+
+            });
+
+            $('.subtype-list').html(html);
+            $('.subtypes-wrapper').show();
+
+        }else{
+
+            $('.subtypes-wrapper').hide();
+
+        }
+
+    }
+
+});
+
+}
 });

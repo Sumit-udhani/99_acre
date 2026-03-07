@@ -68,7 +68,7 @@ for="category{{ $category->id }}">
 
 <button
 type="button"
-class="btn purpose-btn type-btn btn type-btn"
+class="btn purpose-btn type-btn"
 data-id="{{ $type->id }}"
 data-name="{{ strtolower($type->name) }}"
 data-category="{{ $type->category_id }}"
@@ -79,7 +79,18 @@ data-category="{{ $type->category_id }}"
 @endforeach
 
 </div>
+{{-- SUB TYPES --}}
+<div class="subtypes-wrapper mb-3" style="display:none;">
 
+<label class="fw-semibold mb-2" id="subtype-label">
+Your type is ...
+</label>
+
+<div class="subtype-list d-flex gap-2 flex-wrap">
+
+</div>
+
+</div>
 
 <label class="fw-semibold mt-2">
 Your contact details for the buyer to reach you

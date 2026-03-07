@@ -27,4 +27,8 @@ public function locationTypes()
 {
     return $this->hasMany(PropertyLocationType::class);
 }
+public function subTypes()
+{
+    return $this->hasMany(PropertySubType::class);
+}
 }
