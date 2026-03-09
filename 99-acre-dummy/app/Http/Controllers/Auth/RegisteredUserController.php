@@ -30,29 +30,48 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request): RedirectResponse
-    {
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'phone'=>'required|digits:10|unique:users',
-            'password' => ['required', Rules\Password::defaults()],
-        ]);
+   public function store(Request $request): RedirectResponse
+{
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'phone'=>'required|digits:10|unique:users',
-            'password' => Hash::make($request->password),
-        ]);
-        $user->assignRole('user');
-    Mail::to($user->email)->send(new UserRegisteredMail($user));
-    Mail::to(env('ADMIN_EMAIL'))->send(new AdminUserRegisteredMail($user));
-        event(new Registered($user));
+$request->validate([
+'name' => ['required','string','max:255'],
+'email' => ['required','string','lowercase','email','max:255','unique:'.User::class],
+'country_code' => ['required','in:+91,+61'],
+'phone' => ['required','numeric'],
+'password' => ['required', Rules\Password::defaults()],
+]);
 
-      
+// country specific validation
 
-       return redirect()->route('login')
-    ->with('status', 'Registration successful! Mail is sent to your email id');
-    }
+if($request->country_code == '+91'){
+$request->validate([
+'phone' => ['digits:10','unique:users,phone']
+]);
+}
+
+if($request->country_code == '+61'){
+$request->validate([
+'phone' => ['digits_between:9,10','unique:users,phone']
+]);
+}
+
+$user = User::create([
+'name' => $request->name,
+'email' => $request->email,
+'country_code' => $request->country_code,
+'phone' => $request->phone,
+'password' => Hash::make($request->password),
+]);
+
+$user->assignRole('user');
+
+Mail::to($user->email)->send(new UserRegisteredMail($user));
+Mail::to(env('ADMIN_EMAIL'))->send(new AdminUserRegisteredMail($user));
+
+event(new Registered($user));
+
+return redirect()->route('login')
+->with('status','Registration successful! Mail is sent to your email id');
+
+}
 }
