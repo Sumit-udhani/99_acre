@@ -100,7 +100,7 @@
 <td>{{ $item->name }}</td>
 
 @if($types)
-<td>{{ $item->type->name ?? '' }}</td>
+<td>{{ $item->propertyType->name ?? '' }}</td>
 @endif
 
 @if($hasSlug)
@@ -115,8 +115,27 @@
 <td>{{ $item->purpose->name ?? '' }}</td>
 @endif
 
+<td>
+    <button class="btn btn-sm btn-warning"
+        data-toggle="modal"
+        data-target="#editModal{{ $item->id }}">
+        Edit
+    </button>
+
+    <form action="{{ route($routePrefix.'.destroy', $item->id) }}"
+        method="POST"
+        style="display:inline">
+        @csrf
+        @method('DELETE')
+        <button class="btn btn-sm btn-danger"
+            onclick="return confirm('Are you sure?')">
+            Delete
+        </button>
+    </form>
+</td>
+
 @endif
-                <td>
+                <!-- <td>
                     <button class="btn btn-sm btn-warning"
                         data-toggle="modal"
                         data-target="#editModal{{ $item->id }}">
@@ -133,7 +152,7 @@
                             Delete
                         </button>
                     </form>
-                </td>
+                </td> -->
             </tr>
             @empty
             <tr>
@@ -278,7 +297,7 @@
 <div class="form-group mb-3">
 <label>Select Type</label>
 
-<select name="type_id" class="form-control">
+<select name="property_type_id" class="form-control">
 
 @foreach($types as $type)
 
@@ -484,7 +503,7 @@
 <div class="form-group mb-3">
 <label>Select Type</label>
 
-<select name="type_id" class="form-control">
+<select name="property_type_id" class="form-control">
 
 <option value="">-- Select Type --</option>
 

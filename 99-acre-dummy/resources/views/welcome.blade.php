@@ -20,6 +20,9 @@
         @endif
       
     </head>
+        <script>
+    window.isAuthenticated = {{ auth()->check() ? 'true' : 'false' }};
+    </script>
     <body >
        <x-header/>
      

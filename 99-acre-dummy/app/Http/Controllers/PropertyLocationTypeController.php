@@ -79,7 +79,7 @@ class PropertyLocationTypeController extends Controller
     {
         //
         $request->validate([
-            'category_id' => 'required|exists:property_categories,id',
+            'property_type_id' => 'required|exists:property_types,id',
             'name' => 'required|string|max:255',
             'slug' => [
             'required',
@@ -91,7 +91,7 @@ class PropertyLocationTypeController extends Controller
         ]);
 
         $location_type->update([
-            'category_id' => $request->category_id,
+            'property_type_id' => $request->property_type_id,
             'name' => $request->name,
             'slug'=>$request->slug,
         ]);

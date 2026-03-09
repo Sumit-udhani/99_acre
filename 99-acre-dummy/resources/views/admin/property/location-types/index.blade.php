@@ -8,8 +8,10 @@
     title="Location Types"
     :data="$locationTypes"
     routePrefix="admin.location-types"
+    :types="$types"
     
-    mode="location"
+    mode="normal"
+    :hasSlug="true"
 />
 
 @endsection

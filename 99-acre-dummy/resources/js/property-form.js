@@ -1,187 +1,225 @@
 import $ from 'jquery';
 
-$(document).ready(function(){
+$(function () {
 
-let selectedPurpose = null;
-let selectedCategory = null;
-let selectedCategoryName = null;
+let selectedPurpose=null,
+    selectedCategory=null,
+    selectedCategoryName=null,
+    selectedTypeId=null;
+
+const $types=$('.type-btn'),
+      $subWrap=$('.subtypes-wrapper'),
+      $subList=$('.subtype-list'),
+      $locWrap=$('.location-wrapper'),
+      $locList=$('.location-list');
+
+
+// INIT DEFAULT SELECTION
+initDefaults();
+
 
 // PURPOSE CLICK
-$('.purpose-btn').click(function(){
+$(document).on('click','.purpose-group .purpose-btn',function(){
 
-    $('.purpose-btn').removeClass('active');
+    $('.purpose-group .purpose-btn').removeClass('active');
     $(this).addClass('active');
 
-    selectedPurpose = $(this).data('name');
-   filterCategories();  
+    selectedPurpose=$(this).data('name');
+
+    filterCategories();
+    filterPurposes();
+    filterTypes();
+
+}); 
+
+// CATEGORY CHANGE
+$(document).on('change','.category-radio',function(){
+
+    selectedCategory=$(this).val();
+    selectedCategoryName=$(this).data('name');
+
     filterPurposes();
     filterTypes();
 
 });
 
 
-// CATEGORY SELECT
-$('.category-radio').change(function(){
-
-    selectedCategory = $(this).val();
-selectedCategoryName = $(this).data('name');
-    filterPurposes();
-    filterTypes();
-
-});
-
-$('.purpose-btn[data-name="sell"]').trigger('click');
-
-// DEFAULT CATEGORY
-$('.category-radio[data-name="residential"]')
-.prop('checked', true)
-.trigger('change');
-// FILTER PURPOSES
-function filterPurposes(){
-
-    $('.purpose-btn').show();
-
-    if(selectedCategory === 'commercial'){
-
-        $('.purpose-btn').each(function(){
-
-            let purpose = $(this).data('name');
-
-            if(purpose === 'pg'){
-                $(this).hide();
-            }
-
-        });
-
-    }
-
-}
-function filterCategories(){
-
-    // enable all categories first
-    $('.category-radio').prop('disabled', false);
-
-    // if purpose = PG
-    if(selectedPurpose === 'pg'){
-
-        $('.category-radio').each(function(){
-
-            let category = $(this).data('name');
-
-            if(category === 'commercial'){
-                $(this).prop('disabled', true);
-            }
-
-        });
-
-    }
-
-}
-
-// FILTER TYPES
-function filterTypes(){
-
-    $('.type-btn').hide();
-
-    $('.type-btn').each(function(){
-
-        let typeCategory = $(this).data('category');
-
-        if(typeCategory == selectedCategory){
-            $(this).show();
-        }
-
-    });
-
-    applyPurposeRules();
-
-}
-function applyPurposeRules(){
-
-    // RENT + RESIDENTIAL
-   if(selectedPurpose === 'rent / lease' && selectedCategoryName === 'residential'){
-
-        $('.type-btn').each(function(){
-
-            let type = $(this).data('name');
-
-            if(type === 'plot / land'){
-                $(this).hide();
-            }
-
-        });
-
-    }
-
-    // PG
-    if(selectedPurpose === 'pg'){
-
-        $('.type-btn').each(function(){
-
-            let type = $(this).data('name');
-
-            if(type === 'plot / land' || type === 'farmhouse'){
-                $(this).hide();
-            }
-
-        });
-
-    }
-
-}
 // TYPE CLICK
 $(document).on('click','.type-btn',function(){
 
     $('.type-btn').removeClass('active');
     $(this).addClass('active');
 
-    let typeId = $(this).data('id');
-  let typeName = $(this).data('name');
+    selectedTypeId=$(this).data('id');
 
-    
-    $('#subtype-label').text('Your ' + typeName + ' type is ...');
-    loadSubTypes(typeId);
+    $('#subtype-label').text('Your '+$(this).data('name')+' type is ...');
 
+    resetLocations();
+
+    loadSubTypes(selectedTypeId);
 
 });
+
+
+// SUBTYPE CLICK
+$(document).on('click','.subtype-btn',function(){
+
+    $('.subtype-btn').removeClass('active');
+    $(this).addClass('active');
+
+    loadLocations(selectedTypeId);
+
+});
+$(document).on('click','.location-btn',function(){
+
+    $('.location-btn').removeClass('active');
+    $(this).addClass('active');
+
+});
+const isAuthenticated =
+document.getElementById('propertyApp').dataset.auth === '1';
+
+$(document).on('click', '.phone-field, .start-btn', function(e){
+
+
+
+if(!isAuthenticated){
+
+e.preventDefault()
+
+window.dispatchEvent(
+new CustomEvent('open-modal', { detail: 'auth-modal' })
+)
+
+}
+
+})
+// DEFAULT INIT
+function initDefaults(){
+
+    let $purpose=$('.purpose-btn[data-name="sell"]');
+    let $category=$('.category-radio[data-name="residential"]');
+
+    $purpose.addClass('active');
+    selectedPurpose=$purpose.data('name');
+
+    $category.prop('checked',true);
+    selectedCategory=$category.val();
+    selectedCategoryName=$category.data('name');
+
+    filterCategories();
+    filterPurposes();
+    filterTypes();
+}
+
+
+// FILTER PURPOSES
+function filterPurposes(){
+
+    $('.purpose-btn').show();
+
+    if(selectedCategory==='commercial'){
+        $('.purpose-btn[data-name="pg"]').hide();
+    }
+
+}
+
+
+// FILTER CATEGORIES
+function filterCategories(){
+
+    $('.category-radio').prop('disabled',false);
+
+    if(selectedPurpose==='pg'){
+        $('.category-radio[data-name="commercial"]').prop('disabled',true);
+    }
+
+}
+
+
+// FILTER TYPES
+function filterTypes(){
+
+    $types.hide().filter(function(){
+        return $(this).data('category')==selectedCategory;
+    }).show();
+
+    applyPurposeRules();
+
+}
+
+
+// PURPOSE RULES
+function applyPurposeRules(){
+
+    if(selectedPurpose==='rent / lease' && selectedCategoryName==='residential'){
+        $types.filter('[data-name="plot / land"]').hide();
+    }
+
+    if(selectedPurpose==='pg'){
+        $types.filter('[data-name="plot / land"],[data-name="farmhouse"],[data-name="other"]').hide();
+    }
+
+}
+
+
+// LOAD SUBTYPES
 function loadSubTypes(typeId){
 
-$.ajax({
+$.get('/get-subtypes/'+typeId,function(res){
 
-    url:'/get-subtypes/'+typeId,
-    type:'GET',
-
-    success:function(response){
-
-        let html = '';
-
-        if(response.length > 0){
-
-            response.forEach(function(subtype){
-
-                html += `
-                <button 
-                type="button"
-                class="btn purpose-btn subtype-btn"
-                data-id="${subtype.id}">
-                ${subtype.name}
-                </button>
-                `;
-
-            });
-
-            $('.subtype-list').html(html);
-            $('.subtypes-wrapper').show();
-
-        }else{
-
-            $('.subtypes-wrapper').hide();
-
-        }
-
+    if(!res.length){
+        $subWrap.hide();
+        return;
     }
+
+    let html=res.map(s=>`
+        <button type="button"
+        class="btn purpose-btn subtype-btn"
+        data-id="${s.id}">
+        ${s.name}
+        </button>
+    `).join('');
+
+    $subList.html(html);
+    $subWrap.show();
+    resetLocations();
 
 });
 
 }
+
+
+// LOAD LOCATIONS
+function loadLocations(typeId){
+
+$.get('/get-location-types/'+typeId,function(res){
+
+    if(!res.length){
+        resetLocations();
+        return;
+    }
+
+    let html=res.map(l=>`
+        <button type="button"
+        class="btn purpose-btn location-btn"
+        data-id="${l.id}">
+        ${l.name}
+        </button>
+    `).join('');
+
+    $locList.html(html);
+    $locWrap.show();
+
+});
+
+}
+
+
+// RESET LOCATION
+function resetLocations(){
+    $locWrap.hide();
+    $locList.html('');
+}
+
 });

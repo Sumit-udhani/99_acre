@@ -13,6 +13,7 @@ use App\Http\Controllers\PropertySubTypeController;
 use App\Http\Controllers\PropertyTypeController;
 use App\Models\Banner;
 use App\Models\PropertyCategory;
+use App\Models\PropertyLocationType;
 use App\Models\PropertyPurpose;
 use App\Models\PropertySubType;
 use App\Models\PropertyType;
@@ -26,9 +27,16 @@ Route::get('/', function () {
            $subtypes = PropertySubType::all();
     return view('welcome', compact('banner','purposes','categories','types','subtypes'));
 });
+//Route to get the subtypes by types id
 Route::get('/get-subtypes/{type}', function($type){
 
     return PropertySubType::where('type_id',$type)->get();
+
+});
+//Route to get the locationtypes  by types id
+Route::get('/get-location-types/{type}', function($type){
+
+    return PropertyLocationType::where('property_type_id',$type)->get();
 
 });
 Route::get('/dashboard', function () {
