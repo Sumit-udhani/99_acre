@@ -28,7 +28,7 @@ class UserApprovedMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Your Account Has Been Approved - 99Acres',
+            subject: 'Your Account Has Been Approved - 29Acres',
         );
     }
 

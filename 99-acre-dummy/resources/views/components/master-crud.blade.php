@@ -72,20 +72,22 @@
      <td>{{ $item->locationType->name ?? '' }}</td> 
  @elseif($mode == 'user')
 
-    <td>{{ $key+1 }}</td>
-    <td>{{ $item->name }}</td>
-    <td>{{ $item->email }}</td>
-  <td>
-    @if($item->roles->isNotEmpty())
-        @foreach($item->roles as $role)
-            <span class="badge bg-success">
-                {{ ucfirst($role->name) }}
-            </span>
-        @endforeach
-    @else
-        <span class="badge bg-secondary">No Role</span>
-    @endif
+<td>{{ $key+1 }}</td>
+<td>{{ $item->name }}</td>
+<td>{{ $item->email }}</td>
+
+<td>
+@if($item->roles->isNotEmpty())
+    @foreach($item->roles as $role)
+        <span class="badge bg-success">
+            {{ ucfirst($role->name) }}
+        </span>
+    @endforeach
+@else
+    <span class="badge bg-secondary">No Role</span>
+@endif
 </td>
+
 <td>
 <select class="form-control statusDropdown"
         data-id="{{ $item->id }}">
@@ -93,6 +95,25 @@
     <option value="approved" {{ $item->status == 'approved' ? 'selected' : '' }}>Approved</option>
     <option value="rejected" {{ $item->status == 'rejected' ? 'selected' : '' }}>Rejected</option>
 </select>
+</td>
+
+<td>
+<button class="btn btn-sm btn-warning"
+    data-toggle="modal"
+    data-target="#editModal{{ $item->id }}">
+    Edit
+</button>
+
+<form action="{{ route($routePrefix.'.destroy', $item->id) }}"
+    method="POST"
+    style="display:inline">
+    @csrf
+    @method('DELETE')
+    <button class="btn btn-sm btn-danger"
+        onclick="return confirm('Are you sure?')">
+        Delete
+    </button>
+</form>
 </td>
 @else
 
@@ -616,20 +637,20 @@ $(document).ready(function () {
     // =====================
     // USER STATUS UPDATE (AJAX)
     // =====================
-    $('.statusDropdown').change(function () {
+   $(document).on('change', '.statusDropdown', function (e) {
+ e.preventDefault(); 
+    let userId = $(this).data('id');
+    let status = $(this).val();
 
-        let userId = $(this).data('id');
-        let status = $(this).val();
-
-        $.ajax({
-            url: "{{ route('admin.users.updateStatus', ':id') }}".replace(':id', userId),
-            type: "POST",
-            data: {
-                _token: "{{ csrf_token() }}",
-                _method: "PATCH",
-                status: status
-            },
-            success: function (response) {
+    $.ajax({
+        url: "/admin/users/" + userId + "/status",
+        method: "POST",   // use POST
+        data: {
+            _token: "{{ csrf_token() }}",
+            _method: "PATCH",  // Laravel converts POST → PATCH
+            status: status
+        },
+        success: function (response) {
 
             $('#ajax-success').html(
                 `<div class="alert alert-success">
@@ -641,16 +662,19 @@ $(document).ready(function () {
                 $('#ajax-success').html('');
             },3000);
         },
-            error: function () {
-                  $('#ajax-success').html(
+        error: function (xhr) {
+
+            console.log(xhr.responseText);
+
+            $('#ajax-success').html(
                 `<div class="alert alert-danger">
                     Something went wrong
                 </div>`
             );
-            }
-        });
-
+        }
     });
+
+});
 
 });
 </script>

@@ -1,6 +1,7 @@
-<form method="POST" action="{{ route('register') }}">
+ <x-auth-session-status class="mb-4" :status="session('status')" />
+<form id="registerForm" method="POST" action="{{ route('register') }}">
 @csrf
-
+<input type="hidden" name="from_modal" value="1">
 <x-input-label for="name" :value="__('Name')" />
 <x-text-input id="name" class="block mt-1 w-full"
 type="text" name="name" :value="old('name')" required />
@@ -31,7 +32,7 @@ required />
 
 </div>
 <x-input-error :messages="$errors->get('phone')" class="mt-2" />
-<x-input-label class="mt-4" for="password" :value="__('Password')" />
+<x-input-label class="mt-4" for="password" name="password" />
 <x-text-input id="password" class="block mt-1 w-full"
 type="password" name="password" :value="old('password')" required />
 <x-input-error :messages="$errors->get('password')" class="mt-2" />

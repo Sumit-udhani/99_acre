@@ -30,7 +30,7 @@ class UserRegisteredMail extends Mailable
     public function envelope(): Envelope
     {
       return new Envelope(
-            subject: 'Welcome to 99Acres',
+            subject: 'Welcome to 29Acres',
         );
     }
 

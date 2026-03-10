@@ -1,4 +1,4 @@
-<h2>Thank you for registering in 99Acres</h2>
+<h2>Thank you for registering in 29Acres</h2>
 
 <p>Hello {{ $user->name }},</p>
 

@@ -76,3 +76,14 @@ $maxWidth = [
         {{ $slot }}
     </div>
 </div>
+@if ($errors->any() || session('showLoginModal'))
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+window.dispatchEvent(
+new CustomEvent('open-modal', { detail: 'auth-modal' })
+);
+
+});
+</script>
+@endif

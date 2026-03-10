@@ -68,6 +68,7 @@ public function destroy(string $id){
 }
 public function updateStatus(Request $request, User $user)
 {
+   
     $request->validate([
         'status' => 'required|in:pending,approved,rejected'
     ]);
@@ -89,4 +90,6 @@ public function updateStatus(Request $request, User $user)
         'message' => 'User status updated successfully.'
     ]);
 }
+
+
 }

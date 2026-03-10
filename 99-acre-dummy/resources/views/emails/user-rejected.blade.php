@@ -12,6 +12,6 @@
 
     <br>
 
-    <p>Regards,<br>99Acres Team</p>
+    <p>Regards,<br>29Acres Team</p>
 </body>
 </html>

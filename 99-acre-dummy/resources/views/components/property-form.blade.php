@@ -120,7 +120,10 @@ Start now
 </div>
 <x-modal name="auth-modal" focusable maxWidth="md">
 
-<div class="p-6" x-data="{ form:'login' }">
+<div class="p-6"
+x-data="{
+form: '{{ session('showLoginModal') ? 'login' : ($errors->any() ? 'register' : 'login') }}'
+}">
 
 <h2 class="text-lg font-semibold mb-4">
 Login / Register

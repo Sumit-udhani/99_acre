@@ -161,7 +161,19 @@ function applyPurposeRules(){
     }
 
 }
+document.addEventListener("DOMContentLoaded", function () {
 
+    const params = new URLSearchParams(window.location.search);
+
+    if (params.get("openLoginModal") === "1") {
+
+        window.dispatchEvent(
+            new CustomEvent('open-modal', { detail: 'auth-modal' })
+        );
+
+    }
+
+});
 
 // LOAD SUBTYPES
 function loadSubTypes(typeId){

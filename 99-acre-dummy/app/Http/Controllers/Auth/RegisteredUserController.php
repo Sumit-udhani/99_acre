@@ -32,28 +32,18 @@ class RegisteredUserController extends Controller
      */
    public function store(Request $request): RedirectResponse
 {
-
 $request->validate([
 'name' => ['required','string','max:255'],
-'email' => ['required','string','lowercase','email','max:255','unique:'.User::class],
+'email' => ['required','string','email','max:255','unique:users,email'],
 'country_code' => ['required','in:+91,+61'],
-'phone' => ['required','numeric'],
+'phone' => [
+'required',
+'numeric',
+$request->country_code == '+91' ? 'digits:10' : 'digits_between:9,10',
+'unique:users,phone'
+],
 'password' => ['required', Rules\Password::defaults()],
 ]);
-
-// country specific validation
-
-if($request->country_code == '+91'){
-$request->validate([
-'phone' => ['digits:10','unique:users,phone']
-]);
-}
-
-if($request->country_code == '+61'){
-$request->validate([
-'phone' => ['digits_between:9,10','unique:users,phone']
-]);
-}
 
 $user = User::create([
 'name' => $request->name,
@@ -70,8 +60,14 @@ Mail::to(env('ADMIN_EMAIL'))->send(new AdminUserRegisteredMail($user));
 
 event(new Registered($user));
 
-return redirect()->route('login')
-->with('status','Registration successful! Mail is sent to your email id');
+  if ($request->from_modal) {
+        return redirect()->back()
+            ->with('showLoginModal', true)
+            ->with('status', 'Registered successfully! Please verify your email from your mail.');
+    }
 
+    // 🔹 Normal register page
+    return redirect()->back()
+        ->with('status', 'Registered successfully! Please verify your email from your mail.');
 }
 }

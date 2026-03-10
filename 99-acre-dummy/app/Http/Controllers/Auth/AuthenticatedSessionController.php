@@ -23,9 +23,19 @@ public function store(LoginRequest $request): RedirectResponse
 {
     $request->authenticate();
     $request->session()->regenerate();
+$user = $request->user();
 
-    $user = $request->user();
+// if (!$user->hasVerifiedEmail()) {
 
+//     Auth::logout();
+
+//     $request->session()->invalidate();
+//     $request->session()->regenerateToken();
+
+//     return back()->withErrors([
+//         'email' => 'Please verify your email before logging in.'
+//     ]);
+// }
     // ✅ Admin can always login
     if ($user->isAdmin()) {
         return redirect()->route('admin.dashboard');
@@ -42,7 +52,7 @@ public function store(LoginRequest $request): RedirectResponse
         ]);
     }
 
-    return redirect()->route('dashboard');
+   return redirect()->intended(route('dashboard'));
 }
     /**
      * Destroy an authenticated session.
