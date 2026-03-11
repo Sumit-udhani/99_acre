@@ -32,7 +32,7 @@ required />
 
 </div>
 <x-input-error :messages="$errors->get('phone')" class="mt-2" />
-<x-input-label class="mt-4" for="password" name="password" />
+<x-input-label class="mt-4" for="password" name="password" :value="__('Password')"  />
 <x-text-input id="password" class="block mt-1 w-full"
 type="password" name="password" :value="old('password')" required />
 <x-input-error :messages="$errors->get('password')" class="mt-2" />
@@ -43,14 +43,7 @@ type="password" name="password" :value="old('password')" required />
 {{ __('Register') }}
 </x-primary-button>
 
-<p class="text-sm text-gray-600">
-Already have an account?
-<a href="#"
-class="text-blue-600 hover:underline"
-@click.prevent="form='login'">
-Login
-</a>
-</p>
+
 
 </div>
 

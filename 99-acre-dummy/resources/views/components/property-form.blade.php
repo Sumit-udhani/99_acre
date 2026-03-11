@@ -2,14 +2,33 @@
 <div class="card property-card">
 <div class="card-body p-4">
 
+@auth
+
+<h1 class="fw-semibold fs-2  mb-3">
+Welcome back {{ auth()->user()->name }}, Fill out basic details
+</h1>
+
+@else
+
 <h5 class="fw-semibold fs-5 mb-3">
 Start posting your property, it’s free
 </h5>
 
 <p class="text-muted small mb-2">Add Basic Details</p>
 
+@endauth
+<p class="text-muted small mb-2">Add Basic Details</p>
+
 {{-- PURPOSE --}}
-<label class="fw-semibold mb-2">You're looking to ...</label>
+<label class="fw-semibold mb-2">
+
+@auth
+I'm looking to ...
+@else
+You're looking to ...
+@endauth
+
+</label>
 <div class="purpose-group d-flex gap-2 flex-wrap mb-3">
 
 @foreach($purposes as $purpose)
@@ -103,6 +122,7 @@ Your shop is located inside ?
 </div>
 
 </div>
+@guest
 <label class="fw-semibold mt-2">
 Your contact details for the buyer to reach you
 </label>
@@ -113,8 +133,13 @@ class="form-control mt-2 mb-3 phone-field"
 placeholder="Enter mobile number"
 >
 
+@endguest
 <button class="btn start-btn w-100">
-Start now
+@auth
+    Continue
+@else
+    Start now
+@endauth
 </button>
 
 </div>
@@ -122,28 +147,17 @@ Start now
 
 <div class="p-6"
 x-data="{
-form: '{{ session('showLoginModal') ? 'login' : ($errors->any() ? 'register' : 'login') }}'
+form: 'register'
 }">
 
 <h2 class="text-lg font-semibold mb-4">
-Login / Register
+Register to Continue
 </h2>
 
-{{-- LOGIN FORM --}}
-<div x-show="form==='login'">
-
-@include('auth.partials.login-form')
-
-
-</div>
-
-
-{{-- REGISTER FORM --}}
-<div x-show="form==='register'">
+{{-- REGISTER FORM ONLY --}}
+<div>
 
 @include('auth.partials.register-form')
-
-
 
 </div>
 

@@ -9,12 +9,14 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PropertyCategoryController;
 use App\Http\Controllers\PropertyLocationTypeController;
 use App\Http\Controllers\PropertyPurposeController;
+use App\Http\Controllers\PropertyStepController;
 use App\Http\Controllers\PropertySubTypeController;
 use App\Http\Controllers\PropertyTypeController;
 use App\Models\Banner;
 use App\Models\PropertyCategory;
 use App\Models\PropertyLocationType;
 use App\Models\PropertyPurpose;
+use App\Models\PropertyStep;
 use App\Models\PropertySubType;
 use App\Models\PropertyType;
 use Illuminate\Support\Facades\Route;
@@ -40,7 +42,18 @@ Route::get('/get-location-types/{type}', function($type){
 
 });
 Route::get('/dashboard', function () {
-    return view('dashboard');
+      $purposes = PropertyPurpose::all();
+    $categories = PropertyCategory::all();
+    $types = PropertyType::all();
+     $steps = PropertyStep::where('active',1)
+            ->orderBy('order')
+            ->get();
+    return view('dashboard',compact(
+        'purposes',
+        'categories',
+        'types',
+        'steps'
+    ));
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
@@ -82,6 +95,7 @@ Route::middleware(['auth', 'admin'])
      Route::resource('users', UserController::class);
       Route::resource('roles', RoleController::class);
 
-
+            //Propert steps['basic details','location details']
+            Route::resource('property-steps', PropertyStepController::class);
 });
 require __DIR__.'/auth.php';

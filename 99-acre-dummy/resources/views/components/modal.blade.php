@@ -73,6 +73,15 @@ $maxWidth = [
         x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
         x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
     >
+    <!-- CLOSE BUTTON -->
+  <button
+    @click="show = false"
+    class="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
+>
+<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+</svg>
+</button>
         {{ $slot }}
     </div>
 </div>

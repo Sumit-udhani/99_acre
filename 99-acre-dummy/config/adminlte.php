@@ -379,6 +379,11 @@ return [
     'icon' => 'fas fa-building',
     'submenu' => [
         [
+    'text' => 'Property Steps',
+    'route' => 'admin.property-steps.index',
+    'icon' => 'fas fa-list',
+],
+        [
             'text' => 'Purposes',
             'route' => 'admin.purposes.index',
             'icon' => 'fas fa-bullseye',

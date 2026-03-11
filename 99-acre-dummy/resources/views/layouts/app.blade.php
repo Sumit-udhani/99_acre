@@ -9,39 +9,34 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
 
-    <!-- Scripts -->
+  
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
+   
     <!-- DataTables CSS -->
     <!-- <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
 
     <!-- DataTables JS -->
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script> --> -->
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 </head>
 
 <body class="font-sans antialiased">
     <div class="min-h-screen bg-gray-100">
-        @include('layouts.navigation')
+       
 
-        <!-- Page Heading -->
+       
         @isset($header)
-        <header class="bg-white shadow">
-            <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                {{ $header }}
-            </div>
-        </header>
+      <x-header />
         @endisset
 
-        <!-- Page Content -->
+       
         <main>
             {{ $slot }}
 
             <script src="{{ asset('js/property-form.js') }}"></script>
         </main>
     </div>
-    <!-- @stack('scripts') -->
+    
 </body>
 
 </html>

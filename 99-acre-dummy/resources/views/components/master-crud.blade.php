@@ -1,4 +1,10 @@
-
+@props([
+'title',
+'data',
+'routePrefix',
+'mode' => 'normal',
+'hasOrderStatus' => false
+])
 @if(session('success'))
     <div class="alert alert-success" 
          style="background-color: lightgreen; color: white; width:auto;">
@@ -53,7 +59,10 @@
 @if($purposes)
 <th>Purpose</th>
 @endif
-
+@if($hasOrderStatus)
+<th>Order</th>
+<th>Status</th>
+@endif
 <th>Action</th>
 
 @endif
@@ -118,7 +127,7 @@
 @else
 
 <td>{{ $key+1 }}</td>
-<td>{{ $item->name }}</td>
+<td>{{ $item->title ?? $item->name }}</td>
 
 @if($types)
 <td>{{ $item->propertyType->name ?? '' }}</td>
@@ -135,7 +144,16 @@
 @if($purposes)
 <td>{{ $item->purpose->name ?? '' }}</td>
 @endif
-
+@if($hasOrderStatus)
+<td>{{ $item->order }}</td>
+<td>
+@if($item->active)
+<span class="badge bg-success">Active</span>
+@else
+<span class="badge bg-danger">Inactive</span>
+@endif
+</td>
+@endif
 <td>
     <button class="btn btn-sm btn-warning"
         data-toggle="modal"
@@ -306,13 +324,48 @@
 
 {{-- NORMAL CRUD MODE --}}
 <div class="form-group mb-3">
-    <label>{{ $title }} Name</label>
-    <input type="text"
-           name="name"
-           value="{{ $item->name }}"
-           class="form-control"
-           required>
+
+<label>
+{{ $hasOrderStatus ? $title.' Title' : $title.' Name' }}
+</label>
+
+<input
+type="text"
+name="{{ $hasOrderStatus ? 'title' : 'name' }}"
+value="{{ $hasOrderStatus ? $item->title : $item->name }}"
+class="form-control"
+required
+>
+
 </div>
+@if($hasOrderStatus)
+
+<div class="form-group mb-3">
+<label>Order</label>
+<input type="number"
+       name="order"
+       value="{{ $item->order }}"
+       class="form-control">
+</div>
+
+<div class="form-group mb-3">
+<label>Status</label>
+
+<select name="active" class="form-control">
+
+<option value="1" {{ $item->active ? 'selected' : '' }}>
+Active
+</option>
+
+<option value="0" {{ !$item->active ? 'selected' : '' }}>
+Inactive
+</option>
+
+</select>
+
+</div>
+
+@endif
 @if($types)
 
 <div class="form-group mb-3">
@@ -516,10 +569,37 @@
 
     {{-- NORMAL CRUD MODE FIELDS --}}
 
-    <div class="form-group mb-3">
-        <label>{{ $title }} Name</label>
-        <input type="text" name="name" class="form-control" required>
-    </div>
+  <div class="form-group mb-3">
+
+<label>
+{{ $hasOrderStatus ? $title.' Title' : $title.' Name' }}
+</label>
+
+<input
+    type="text"
+    name="{{ $hasOrderStatus ? 'title' : 'name' }}"
+    class="form-control"
+    required
+>
+
+</div>
+    @if($hasOrderStatus)
+<div class="form-group mb-3">
+<label>Order</label>
+<input type="number" name="order" class="form-control" value="1">
+</div>
+@endif
+
+{{-- ACTIVE FIELD --}}
+@if($hasOrderStatus)
+<div class="form-group mb-3">
+<label>Status</label>
+<select name="active" class="form-control">
+<option value="1">Active</option>
+<option value="0">Inactive</option>
+</select>
+</div>
+@endif
 @if($types)
 <div class="form-group mb-3">
 <label>Select Type</label>
