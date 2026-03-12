@@ -75,10 +75,34 @@
               
 @if($mode == 'property')
 
-    <td>{{ $item->purpose->name ?? '' }}</td>
-    <td>{{ $item->category->name ?? '' }}</td>
-    <td>{{ $item->type->name ?? '' }}</td>
-     <td>{{ $item->locationType->name ?? '' }}</td> 
+<td>{{ $item->purpose->name ?? '' }}</td>
+<td>{{ $item->category->name ?? '' }}</td>
+<td>{{ $item->type->name ?? '' }}</td>
+<td>{{ $item->locationType->name ?? '-' }}</td>
+
+<td>
+<button class="btn btn-sm btn-warning"
+    data-toggle="modal"
+    data-target="#editModal{{ $item->id }}">
+    Edit
+</button>
+
+<form action="{{ route($routePrefix.'.destroy', $item->id) }}"
+    method="POST"
+    style="display:inline">
+
+    @csrf
+    @method('DELETE')
+
+    <button class="btn btn-sm btn-danger"
+        onclick="return confirm('Are you sure?')">
+        Delete
+    </button>
+
+</form>
+</td>
+
+
  @elseif($mode == 'user')
 
 <td>{{ $key+1 }}</td>

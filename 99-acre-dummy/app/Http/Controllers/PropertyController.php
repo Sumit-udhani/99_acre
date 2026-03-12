@@ -83,6 +83,28 @@ if ($category->name === 'Commercial' && $type->name === 'Retail') {
     /**
      * Display the specified resource.
      */
+
+    public function saveLocation(Request $request,$id)
+{
+    $request->validate([
+        'city'=>'required',
+        'locality'=>'required',
+        'address'=>'required'
+    ]);
+
+    $property = Property::findOrFail($id);
+
+    $property->update([
+        'city'=>$request->city,
+        'locality'=>$request->locality,
+        'sub_locality'=>$request->sub_locality,
+        'address'=>$request->address,
+        'latitude'=>$request->latitude,
+        'longitude'=>$request->longitude
+    ]);
+
+    return redirect()->route('dashboard');
+}
     public function show(string $id)
     {
         //
@@ -126,5 +148,6 @@ if ($category->name === 'Commercial' && $type->name === 'Retail') {
         //
         $property = Property::findOrFail($id);
         $property->delete();
+        return redirect()->back()->with('success','Property updated successfully');
     }
 }

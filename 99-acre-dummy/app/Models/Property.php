@@ -8,12 +8,17 @@ class Property extends Model
 {
     //
      protected $fillable = [
-        'purpose_id',
-        'category_id',
-        'type_id',
-        'title',
-        'description',
-        'location_type_id',
+      'user_id',
+    'purpose_id',
+    'category_id',
+    'type_id',
+    'location_type_id',
+    'city',
+    'locality',
+    'sub_locality',
+    'address',
+    'latitude',
+    'longitude'
     ];
 
      public function purpose()

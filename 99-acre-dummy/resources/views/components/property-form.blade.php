@@ -1,34 +1,37 @@
+
+<form method="POST" action="{{ route('property.store') }}">
+@csrf
+
 <div id="propertyApp" data-auth="{{ auth()->check() ? '1' : '0' }}">
 <div class="card property-card">
 <div class="card-body p-4">
 
 @auth
-
-<h1 class="fw-semibold fs-2  mb-3">
+<h1 class="text-lg font-semibold mb-3">
 Welcome back {{ auth()->user()->name }}, Fill out basic details
 </h1>
-
 @else
-
 <h5 class="fw-semibold fs-5 mb-3">
 Start posting your property, it’s free
 </h5>
-
-<p class="text-muted small mb-2">Add Basic Details</p>
-
 @endauth
-<p class="text-muted small mb-2">Add Basic Details</p>
+
+
+{{-- HIDDEN INPUTS (important for controller) --}}
+<input type="hidden" name="purpose_id" id="purpose_id">
+<input type="hidden" name="type_id" id="type_id">
+<input type="hidden" name="location_type_id" id="location_type_id">
+
 
 {{-- PURPOSE --}}
 <label class="fw-semibold mb-2">
-
 @auth
 I'm looking to ...
 @else
 You're looking to ...
 @endauth
-
 </label>
+
 <div class="purpose-group d-flex gap-2 flex-wrap mb-3">
 
 @foreach($purposes as $purpose)
@@ -98,6 +101,8 @@ data-category="{{ $type->category_id }}"
 @endforeach
 
 </div>
+
+
 {{-- SUB TYPES --}}
 <div class="subtypes-wrapper mb-3" style="display:none;">
 
@@ -106,10 +111,11 @@ Your type is ...
 </label>
 
 <div class="subtype-list d-flex gap-2 flex-wrap">
-
 </div>
 
 </div>
+
+
 {{-- LOCATION TYPES --}}
 <div class="location-wrapper mb-3" style="display:none;">
 
@@ -118,10 +124,11 @@ Your shop is located inside ?
 </label>
 
 <div class="location-list d-flex gap-2 flex-wrap">
-
 </div>
 
 </div>
+
+
 @guest
 <label class="fw-semibold mt-2">
 Your contact details for the buyer to reach you
@@ -132,17 +139,24 @@ type="text"
 class="form-control mt-2 mb-3 phone-field"
 placeholder="Enter mobile number"
 >
-
 @endguest
-<button class="btn start-btn w-100">
+
+
+<button type="submit" class="btn start-btn w-100">
 @auth
-    Continue
+Continue
 @else
-    Start now
+Start now
 @endauth
 </button>
 
 </div>
+</div>
+</div>
+
+</form>
+
+
 <x-modal name="auth-modal" focusable maxWidth="md">
 
 <div class="p-6"
@@ -154,15 +168,8 @@ form: 'register'
 Register to Continue
 </h2>
 
-{{-- REGISTER FORM ONLY --}}
-<div>
-
 @include('auth.partials.register-form')
 
 </div>
 
-</div>
-
 </x-modal>
-</div>
-</div>

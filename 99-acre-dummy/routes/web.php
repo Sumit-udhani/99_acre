@@ -12,6 +12,7 @@ use App\Http\Controllers\PropertyPurposeController;
 use App\Http\Controllers\PropertyStepController;
 use App\Http\Controllers\PropertySubTypeController;
 use App\Http\Controllers\PropertyTypeController;
+use App\Http\Controllers\UserPropertyController;
 use App\Models\Banner;
 use App\Models\PropertyCategory;
 use App\Models\PropertyLocationType;
@@ -60,6 +61,23 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    //UserPropertyCreation
+    Route::post('/property/store',
+    [UserPropertyController::class,'store']
+)->name('property.store');
+//Getlocation page
+Route::get('/property/{id}/location',
+    [UserPropertyController::class,'location']
+)->name('property.location');
+
+//User property Location creation
+
+Route::post(
+'/property/{id}/location',
+[UserPropertyController::class,'saveLocation']
+)->name('property.location.store');
+
 });
 
 Route::middleware(['auth', 'admin'])

@@ -36,7 +36,7 @@
             <script src="{{ asset('js/property-form.js') }}"></script>
         </main>
     </div>
-    
+    @stack('scripts')
 </body>
 
 </html>
