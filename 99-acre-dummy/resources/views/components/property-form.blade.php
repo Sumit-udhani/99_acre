@@ -1,5 +1,5 @@
 
-<form method="POST" action="{{ route('property.store') }}">
+<form id="basicPropertyForm" method="POST" action="{{ route('property.store') }}">
 @csrf
 
 <div id="propertyApp" data-auth="{{ auth()->check() ? '1' : '0' }}">

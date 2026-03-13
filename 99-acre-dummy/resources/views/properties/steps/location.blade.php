@@ -1,17 +1,16 @@
-<x-app-layout>
-    @push('scripts')
-    
-    @vite('resources/js/property-location.js')
-    <script
-    src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google_maps.key') }}&libraries=places&callback=initMap"
-    async
-    defer>
-    </script>
-    
-    
-    @endpush
-@section('content')
-<div class="max-w-3xl mx-auto py-8">
+@push('scripts')
+
+@vite('resources/js/property-location.js')
+<script
+src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google_maps.key') }}&libraries=places&callback=initMap"
+async
+defer>
+</script>
+
+
+@endpush
+
+<div class="space-y-6">
 
     <h2 class="text-xl font-semibold mb-6">
         Add Property Location
@@ -116,7 +115,7 @@
 
         </div>
 
-
+<!-- 
         {{-- MAP --}}
         <div>
 
@@ -127,7 +126,7 @@
             </div>
 
         </div>
-
+ -->
 
         {{-- LAT LONG --}}
         <input type="hidden" name="latitude" id="latitude">
@@ -146,4 +145,3 @@
 
 </div>
 
-</x-app-layout>

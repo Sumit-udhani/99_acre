@@ -27,11 +27,21 @@
 {{-- RIGHT SIDE : PROPERTY FORM --}}
 <div class="w-3/4">
 
+{{-- BASIC STEP --}}
+<div id="basicStep">
+
 <x-property-form
 :purposes="$purposes"
 :categories="$categories"
 :types="$types"
 />
+
+</div>
+
+{{-- LOCATION STEP --}}
+<div id="locationStep" style="display:none;">
+
+@include('properties.steps.location')
 
 </div>
 

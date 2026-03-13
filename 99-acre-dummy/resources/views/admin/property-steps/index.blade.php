@@ -11,6 +11,7 @@
     :data="$steps"
     routePrefix="admin.property-steps"
     mode="normal"
+    :hasSlug="true"
   :hasOrderStatus="true"
 />
 

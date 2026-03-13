@@ -33,7 +33,8 @@ class PropertyStepController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'order' => 'required|integer',
-            'active' => 'required|boolean'
+            'active' => 'required|boolean',
+            'slug'=>'required'
         ]);
 
         PropertyStep::create($request->all());
@@ -68,7 +69,8 @@ class PropertyStepController extends Controller
           $request->validate([
             'title' => 'required|string|max:255',
             'order' => 'required|integer',
-            'active' => 'required|boolean'
+            'active' => 'required|boolean',
+            'slug'   =>'required'
         ]);
 
         $property_step->update($request->all());

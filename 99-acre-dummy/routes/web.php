@@ -66,6 +66,16 @@ Route::middleware('auth')->group(function () {
     Route::post('/property/store',
     [UserPropertyController::class,'store']
 )->name('property.store');
+
+//UserPropertyUpdate
+
+Route::get('/property/{id}/basic/edit',
+[UserPropertyController::class,'editBasic'])
+->name('property.basic.edit');
+
+Route::post('/property/{id}/basic/update',
+[UserPropertyController::class,'updateBasic'])
+->name('property.basic.update');
 //Getlocation page
 Route::get('/property/{id}/location',
     [UserPropertyController::class,'location']

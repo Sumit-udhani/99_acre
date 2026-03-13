@@ -1,5 +1,5 @@
 import $ from 'jquery';
-
+console.log("JS Loaded");
 $(function () {
 
 const $app = $('#propertyApp');
@@ -220,7 +220,39 @@ function resetLocations(){
     $locList.html('');
 
 }
+  $(document).ready(function(){
 
+    $('#basicPropertyForm').on('submit', function (e) {
+
+        e.preventDefault();
+
+        let form = $(this);
+        let formData = form.serialize();
+
+        $.ajax({
+            url: form.attr('action'),
+            type: "POST",
+            data: formData,
+            success: function (response) {
+
+                if (response.success) {
+
+                    $('#basicStep').hide();
+                    $('#locationStep').show();
+
+                }
+
+            },
+            error: function (xhr) {
+
+                console.log(xhr.responseText);
+
+            }
+        });
+
+    });
+
+});
 
 // AUTO LOGIN MODAL
 document.addEventListener("DOMContentLoaded",function(){

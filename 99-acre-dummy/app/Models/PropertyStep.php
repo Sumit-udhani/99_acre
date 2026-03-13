@@ -9,6 +9,7 @@ class PropertyStep extends Model
     //
     protected $fillable = [
         'title',
+        'slug',
         'order',
         'active'
     ];
