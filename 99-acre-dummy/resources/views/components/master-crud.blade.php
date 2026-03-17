@@ -11,6 +11,7 @@
         {{ session('success') }}
     </div>
 @endif
+
 <div id="ajax-success"></div>
 <div class="container">
     <h2>{{ $title }}</h2>
@@ -28,6 +29,10 @@
     <th>Purpose</th>
     <th>Category</th>
     <th>Type</th>
+       
+    <th>SubType</th>
+
+
     <th>Location Type</th> {{-- NEW --}}
    
     <th>Action</th>
@@ -78,6 +83,10 @@
 <td>{{ $item->purpose->name ?? '' }}</td>
 <td>{{ $item->category->name ?? '' }}</td>
 <td>{{ $item->type->name ?? '' }}</td>
+
+<td>{{ $item->subtype->name ?? '' }}</td>
+
+
 <td>{{ $item->locationType->name ?? '-' }}</td>
 
 <td>
@@ -289,6 +298,25 @@
             @endforeach
         </select>
     </div>
+     {{-- SUB--TYPE --}}
+  <div class="form-group mb-3">
+    <label>Select Sub Type</label>   
+
+    <select name="sub_type_id" class="form-control" required>
+
+        @foreach($subtypes as $type)
+
+            <option value="{{ $type->id }}"
+                {{ $item->sub_type_id == $type->id ? 'selected' : '' }}>
+                
+                {{ $type->name }}
+
+            </option>
+
+        @endforeach
+
+    </select>
+</div>
 
     {{-- LOCATION TYPE --}}
     <div class="form-group mb-3">

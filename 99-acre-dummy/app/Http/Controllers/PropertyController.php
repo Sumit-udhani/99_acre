@@ -7,6 +7,7 @@ use App\Models\Property;
 use App\Models\PropertyCategory;
 use App\Models\PropertyLocationType;
 use App\Models\PropertyPurpose;
+use App\Models\PropertySubType;
 use App\Models\PropertyType;
 use Illuminate\Http\Request;
 
@@ -25,12 +26,13 @@ class PropertyController extends Controller
        
         $types = PropertyType::all();
         $locationTypes = PropertyLocationType::all();
-
+        $subtypes = PropertySubType::all();
         return view('admin.property.properties.index', compact(
             'properties',
             'purposes',
             'categories',
             'types',
+            'subtypes',
             'locationTypes'
 
         ));
@@ -103,7 +105,10 @@ if ($category->name === 'Commercial' && $type->name === 'Retail') {
         'longitude'=>$request->longitude
     ]);
 
-    return redirect()->route('dashboard');
+   return response()->json([
+    'success' => true,
+    'property_id' => $property->id
+]);
 }
     public function show(string $id)
     {
@@ -129,12 +134,16 @@ if ($category->name === 'Commercial' && $type->name === 'Retail') {
               'purpose_id' => 'required',
             'category_id' => 'required',
             'type_id' => 'required',
-            'location_type_id' => 'required'
+            'sub_type_id' => 'required',
+
+            'location_type_id' => 'nullable'
         ]);
         $property->update([
               'purpose_id' => $request->purpose_id,
             'category_id' => $request->category_id,
             'type_id' => $request->type_id,
+            'sub_type_id' => $request->sub_type_id,
+
             'location_type_id' => $request->location_type_id,
         ]);
          return back()->with('success', 'Property updated successfully');
@@ -148,6 +157,6 @@ if ($category->name === 'Commercial' && $type->name === 'Retail') {
         //
         $property = Property::findOrFail($id);
         $property->delete();
-        return redirect()->back()->with('success','Property updated successfully');
+        return redirect()->back()->with('success','Property deleted successfully');
     }
 }

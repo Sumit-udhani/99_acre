@@ -44,7 +44,9 @@
 @include('properties.steps.location')
 
 </div>
-
+<div id="profileStep" style="display:none;">
+    @include('properties.steps.propertyProfile')
+</div>
 </div>
 
 </div>

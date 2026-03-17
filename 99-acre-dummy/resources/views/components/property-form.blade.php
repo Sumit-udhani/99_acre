@@ -5,7 +5,8 @@
 <div id="propertyApp" data-auth="{{ auth()->check() ? '1' : '0' }}">
 <div class="card property-card">
 <div class="card-body p-4">
-
+    <input type="hidden" id="property_id" name="property_id">
+<input type="hidden" name="sub_type_id" id="sub_type_id">
 @auth
 <h1 class="text-lg font-semibold mb-3">
 Welcome back {{ auth()->user()->name }}, Fill out basic details

@@ -12,6 +12,7 @@ class Property extends Model
     'purpose_id',
     'category_id',
     'type_id',
+    'sub_type_id',
     'location_type_id',
     'city',
     'locality',
@@ -38,4 +39,8 @@ class Property extends Model
     {
         return $this->belongsTo(PropertyType::class, 'type_id');
     }
+    public function subtype()
+{
+    return $this->belongsTo(PropertySubType::class, 'sub_type_id');
+}
 }

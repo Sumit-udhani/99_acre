@@ -108,7 +108,7 @@ $(document).on('click','.type-btn',function(){
 $(document).on('click','.subtype-btn',function(){
 
     setActive($('.subtype-btn'), $(this));
-
+  $('#sub_type_id').val($(this).data('id'));
     loadOptions(`/get-location-types/${selectedTypeId}`, $locWrap, $locList, 'location-btn');
 
 });
@@ -220,6 +220,38 @@ function resetLocations(){
     $locList.html('');
 
 }
+window.goToLocation = function(propertyId) {
+    document.getElementById('basicStep').style.display = 'none';
+    document.getElementById('locationStep').style.display = 'block';
+
+    document.getElementById('property_id').value = propertyId;
+};
+
+window.goToBasic = function() {
+    document.getElementById('locationStep').style.display = 'none';
+    document.getElementById('basicStep').style.display = 'block';
+
+    // update sidebar active state
+    document.querySelectorAll('[data-step]').forEach(el => {
+        el.classList.remove('text-blue-600');
+        el.classList.add('text-gray-700');
+    });
+
+    document.querySelector('[data-step="basic"]').classList.add('text-blue-600');
+};
+window.editBasicStep = function(el) {
+
+    let propertyId = el.getAttribute('data-id');
+
+    if (!propertyId) return;
+
+    goToBasic();
+
+    $('#property_id').val(propertyId);
+
+    let updateUrl = `/property/${propertyId}/basic/update`;
+    $('#basicPropertyForm').attr('action', updateUrl);
+};
   $(document).ready(function(){
 
     $('#basicPropertyForm').on('submit', function (e) {
@@ -233,16 +265,23 @@ function resetLocations(){
             url: form.attr('action'),
             type: "POST",
             data: formData,
-            success: function (response) {
+  success: function (response) {
 
-                if (response.success) {
+    
 
-                    $('#basicStep').hide();
-                    $('#locationStep').show();
+    if (response.success) {
 
-                }
+        goToLocation(response.property_id);
 
-            },
+        const btn = document.getElementById('editBasicBtn');
+
+        if (btn) {
+            btn.classList.remove('hidden');
+            btn.setAttribute('data-id', response.property_id);
+        }
+
+    }
+},
             error: function (xhr) {
 
                 console.log(xhr.responseText);

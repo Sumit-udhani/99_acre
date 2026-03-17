@@ -20,9 +20,13 @@ use App\Models\PropertyPurpose;
 use App\Models\PropertyStep;
 use App\Models\PropertySubType;
 use App\Models\PropertyType;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
+      if (Auth::check()) {
+        return redirect()->route('dashboard');
+    }
       $banner = Banner::latest()->first();
        $purposes = PropertyPurpose::take(3)->get();
         $categories = PropertyCategory::all();

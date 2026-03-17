@@ -18,11 +18,13 @@ class MasterCrud extends Component
     public $categories;
     public $purposes;
     public $types;
+    public $subtypes;
+
     public $mode;
 public $locationTypes;
 public $roles;
 public $hasSlug;
-    public function __construct($title, $data, $routePrefix, $categories = null, $purposes = null,   $types = null, $locationTypes = null,$mode = null,$roles=null,$hasSlug=null)
+    public function __construct($title, $data, $routePrefix, $categories = null, $purposes = null,   $types = null,$subtypes=  null ,$locationTypes = null,$mode = null,$roles=null,$hasSlug=null)
     {
         //
 
@@ -33,6 +35,8 @@ public $hasSlug;
         $this->categories = $categories;
         $this->purposes = $purposes;
           $this->types = $types;
+          $this->subtypes = $subtypes;
+
           $this->locationTypes = $locationTypes;
     $this->mode = $mode;
     $this->roles=$roles;

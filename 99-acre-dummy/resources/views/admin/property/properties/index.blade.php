@@ -11,6 +11,7 @@
     :categories="$categories"
     :purposes="$purposes"
     :types="$types"
+    :subtypes="$subtypes"
     :locationTypes="$locationTypes" 
     mode="property"
 />

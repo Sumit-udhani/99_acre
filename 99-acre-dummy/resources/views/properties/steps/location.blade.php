@@ -9,19 +9,40 @@ defer>
 
 
 @endpush
+<div class="flex items-center gap-2 mb-4 cursor-pointer"
+     onclick="goToBasic()">
 
+    <!-- SVG Arrow -->
+    <svg xmlns="http://www.w3.org/2000/svg"
+         fill="none"
+         viewBox="0 0 24 24"
+         stroke-width="2"
+         stroke="currentColor"
+         class="w-5 h-5 text-gray-600 hover:text-blue-600 transition">
+
+        <path stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M15.75 19.5L8.25 12l7.5-7.5" />
+    </svg>
+
+    <!-- Text -->
+    <span class="text-sm text-gray-600 hover:text-blue-600 transition">
+        Back
+    </span>
+
+</div>
 <div class="space-y-6">
 
     <h2 class="text-xl font-semibold mb-6">
         Add Property Location
     </h2>
 
-    <form method="POST"
-        action="{{ route('property.location.store',$property->id) }}"
+    <form id="locationForm" method="POST"
+        action=""
         class="space-y-6">
 
         @csrf
-
+<input type="hidden" name="property_id" id="property_id">
         {{-- CITY --}}
         <div>
             <x-input-label for="city" value="City" />

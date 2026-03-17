@@ -4,52 +4,44 @@
 Property Steps
 </h3>
 
-<ul class="space-y-3">
+<ul class="space-y-4">
 
-@foreach($steps as $step)
+@foreach($steps as $s)
 
-<li class="p-3 rounded-md border
-@if($step->slug == $step) 
-bg-blue-50 border-blue-400
-@else 
-bg-gray-50 
-@endif
-">
+<li>
 
-<div class="flex justify-between items-center">
+<div class="flex justify-between items-start">
 
-<span class="font-medium">
-{{ $step->title }}
+<div>
+<span 
+data-step="{{ $s->slug }}"
+class="font-medium text-gray-700"
+>
+{{ $s->title }}
 </span>
 
-{{-- SHOW EDIT BUTTON ONLY IF STEP COMPLETED --}}
-@if(isset($property) && $step->slug == 'basic' && $property->purpose_id)
-
-<a href="{{ route('property.basic.edit',$property->id) }}"
-class="text-blue-600 text-sm hover:underline">
-Edit
-</a>
-
-@endif
-
-</div>
-
-
-{{-- SHOW BASIC DETAILS SUMMARY --}}
-@if(isset($property) && $step->slug == 'basic' && $property->purpose)
-
+{{-- SUMMARY --}}
+@if(isset($property) && $s->slug == 'basic' && $property->purpose)
 <div class="text-sm text-gray-500 mt-1">
-
-{{ $property->purpose->name }}
-•
-{{ $property->category->name }}
-•
+{{ $property->purpose->name }} •
+{{ $property->category->name }} •
 {{ $property->type->name }}
-
+</div>
+@endif
 </div>
 
+{{-- EDIT BUTTON --}}
+@if($s->slug == 'basic' )
+<button 
+type="button"
+data-id=""
+onclick="editBasicStep(this)"
+class="text-blue-600 text-sm hover:underline hidden"
+id="editBasicBtn">
+Edit
+</button>
 @endif
-
+</div>
 
 </li>
 
