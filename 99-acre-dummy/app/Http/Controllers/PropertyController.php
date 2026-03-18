@@ -23,7 +23,7 @@ class PropertyController extends Controller
 
         $purposes = PropertyPurpose::all();
         $categories = PropertyCategory::all();
-       
+
         $types = PropertyType::all();
         $locationTypes = PropertyLocationType::all();
         $subtypes = PropertySubType::all();
@@ -60,14 +60,14 @@ class PropertyController extends Controller
             'description' => 'nullable',
         ]);
         // Conditional validation
-$category = PropertyCategory::find($request->category_id);
-$type = PropertyType::find($request->type_id);
+        $category = PropertyCategory::find($request->category_id);
+        $type = PropertyType::find($request->type_id);
 
-if ($category->name === 'Commercial' && $type->name === 'Retail') {
-    $request->validate([
-        'location_type_id' => 'required'
-    ]);
-}
+        if ($category->name === 'Commercial' && $type->name === 'Retail') {
+            $request->validate([
+                'location_type_id' => 'required'
+            ]);
+        }
 
         Property::create([
             // 'title' => $request->title,
@@ -86,30 +86,30 @@ if ($category->name === 'Commercial' && $type->name === 'Retail') {
      * Display the specified resource.
      */
 
-    public function saveLocation(Request $request,$id)
-{
-    $request->validate([
-        'city'=>'required',
-        'locality'=>'required',
-        'address'=>'required'
-    ]);
+    public function saveLocation(Request $request, $id)
+    {
+        $request->validate([
+            'city' => 'required',
+            'locality' => 'required',
+            'address' => 'required'
+        ]);
 
-    $property = Property::findOrFail($id);
+        $property = Property::findOrFail($id);
 
-    $property->update([
-        'city'=>$request->city,
-        'locality'=>$request->locality,
-        'sub_locality'=>$request->sub_locality,
-        'address'=>$request->address,
-        'latitude'=>$request->latitude,
-        'longitude'=>$request->longitude
-    ]);
+        $property->update([
+            'city' => $request->city,
+            'locality' => $request->locality,
+            'sub_locality' => $request->sub_locality,
+            'address' => $request->address,
+            'latitude' => $request->latitude,
+            'longitude' => $request->longitude
+        ]);
 
-   return response()->json([
-    'success' => true,
-    'property_id' => $property->id
-]);
-}
+        return response()->json([
+            'success' => true,
+            'property_id' => $property->id
+        ]);
+    }
     public function show(string $id)
     {
         //
@@ -126,28 +126,29 @@ if ($category->name === 'Commercial' && $type->name === 'Retail') {
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
-    {
-        //
-        $property = Property::findOrFail($id);
-        $request->validate([
-              'purpose_id' => 'required',
-            'category_id' => 'required',
-            'type_id' => 'required',
-            'sub_type_id' => 'required',
+   public function update(Request $request, string $id)
+{
+    $property = Property::findOrFail($id);
 
-            'location_type_id' => 'nullable'
-        ]);
-        $property->update([
-              'purpose_id' => $request->purpose_id,
-            'category_id' => $request->category_id,
-            'type_id' => $request->type_id,
-            'sub_type_id' => $request->sub_type_id,
+    // ✅ validation (all in one place)
+    $validated = $request->validate([
+        'purpose_id' => 'required',
+        'category_id' => 'required',
+        'type_id' => 'required',
+        'sub_type_id' => 'required',
+        'location_type_id' => 'nullable',
 
-            'location_type_id' => $request->location_type_id,
-        ]);
-         return back()->with('success', 'Property updated successfully');
-    }
+        'city' => 'required',
+        'locality' => 'required',
+        'sub_locality' => 'nullable',
+        'address' => 'required',
+    ]);
+
+    // ✅ DRY update (no repetition)
+    $property->update($validated);
+
+    return back()->with('success', 'Property updated successfully');
+}
 
     /**
      * Remove the specified resource from storage.
@@ -157,6 +158,6 @@ if ($category->name === 'Commercial' && $type->name === 'Retail') {
         //
         $property = Property::findOrFail($id);
         $property->delete();
-        return redirect()->back()->with('success','Property deleted successfully');
+        return redirect()->back()->with('success', 'Property deleted successfully');
     }
 }

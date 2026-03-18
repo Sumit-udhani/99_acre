@@ -8,6 +8,7 @@ use App\Http\Controllers\LogoController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PropertyCategoryController;
 use App\Http\Controllers\PropertyLocationTypeController;
+use App\Http\Controllers\PropertyProfileController;
 use App\Http\Controllers\PropertyPurposeController;
 use App\Http\Controllers\PropertyStepController;
 use App\Http\Controllers\PropertySubTypeController;
@@ -129,5 +130,9 @@ Route::middleware(['auth', 'admin'])
 
             //Propert steps['basic details','location details']
             Route::resource('property-steps', PropertyStepController::class);
+
+            
+               Route::resource('property-profiles', PropertyProfileController::class);
+
 });
 require __DIR__.'/auth.php';
