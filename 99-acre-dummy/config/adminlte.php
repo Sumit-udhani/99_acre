@@ -408,7 +408,22 @@ return [
     'route' => 'admin.location-types.index',
     'icon' => 'fas fa-map-marker-alt',
 ],
-         [
+[
+    'text' => 'Property Profiles',
+    'icon' => 'fas fa-list',
+    'submenu' => [
+        [
+            'text' => 'All Profiles',
+            'route' => 'admin.property-profiles.index',
+            'icon' => 'fas fa-list',
+        ],
+        [
+            'text' => 'Profile Options',
+            'route' => 'admin.property-profiles-option.index',
+            'icon' => 'fas fa-cogs',
+        ],
+    ],
+],     [
             'text' => 'All Properties',
             'route' => 'admin.properties.index',
             'icon' => 'fas fa-home',

@@ -45,7 +45,12 @@
 
 </div>
 <div id="profileStep" style="display:none;">
-    @include('properties.steps.propertyProfile')
+    @include('properties.steps.propertyProfile', [
+    'areaUnits' => $areaUnits,
+    'floors' => $floors,
+    'availability' => $availability,
+    'ownerships' => $ownerships
+])
 </div>
 </div>
 

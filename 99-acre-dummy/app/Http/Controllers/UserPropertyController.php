@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Property;
 use App\Models\PropertyCategory;
+use App\Models\PropertyProfile;
 use App\Models\PropertyPurpose;
 use App\Models\PropertyStep;
 use App\Models\PropertyType;
@@ -97,6 +98,40 @@ class UserPropertyController extends Controller
     'success' => true,
     'property_id' => $property->id
 ]);
+}
+
+//Save property profile form 
+
+
+public function saveProfile(Request $request, $id)
+{
+    $validated = $request->validate([
+        'bedrooms' => 'required',
+        'bathrooms' => 'required',
+        'balconies' => 'required',
+
+        'carpet_area' => 'required|numeric',
+        'area_unit' => 'required',
+
+        'builtup_area' => 'nullable|numeric',
+        'super_builtup_area' => 'nullable|numeric',
+
+        'total_floors' => 'required|integer',
+        'floor_no' => 'required',
+
+        'availability_status' => 'required',
+        'ownership' => 'required',
+    ]);
+
+    // ✅ DRY: no repetition
+    PropertyProfile::updateOrCreate(
+        ['property_id' => $id],
+        $validated
+    );
+
+    return response()->json([
+        'success' => true
+    ]);
 }
     public function updateBasic(Request $request, $id)
     {

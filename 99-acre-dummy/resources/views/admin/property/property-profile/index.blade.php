@@ -5,6 +5,8 @@
 <x-master-crud 
     title="Property Profile"
     :data="$profiles"
-    routePrefix="admin.purposes" />
+    routePrefix="admin.property-profiles" 
+    mode="property-profile"
+    />
 
 @endsection

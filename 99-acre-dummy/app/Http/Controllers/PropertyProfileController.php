@@ -14,7 +14,7 @@ class PropertyProfileController extends Controller
     {
         $profiles = PropertyProfile::latest()->get();
 
-        return view('admin.property-profiles.index', compact('profiles'));
+        return view('admin.property.property-profile.index', compact('profiles'));
     }
 
     /**

@@ -47,6 +47,27 @@
                     <th>Role</th>
                     <th>Status</th>
                     <th>Action</th>
+                    @elseif($mode == 'property-profile')
+                    <th>#</th>
+                    <th>Bedrooms</th>
+                    <th>Bathrooms</th>
+                    <th>Balconies</th>
+                    <th>Carpet Area</th>
+                    <th>Area Unit</th>
+                    <th>Builtup Area</th>
+                    <th>Super Builtup Area</th>
+                    <th>Total Floors</th>
+                    <th>Floor No</th>
+                    <th>Availability</th>
+                    <th>Ownership</th>
+                    <th>Action</th>
+                    @elseif($mode == 'property-profile-option')
+                    <th>#</th>
+                    <th>Area Unit</th>
+                    <th>Floor No</th>
+                    <th>Availability</th>
+                    <th>Ownership</th>
+                    <th>Action</th>
                     @elseif($mode == 'normal')
 
                     <th>#</th>
@@ -147,6 +168,69 @@
                             <option value="rejected" {{ $item->status == 'rejected' ? 'selected' : '' }}>Rejected</option>
                         </select>
                     </td>
+
+                    <td>
+                        <button class="btn btn-sm btn-warning"
+                            data-toggle="modal"
+                            data-target="#editModal{{ $item->id }}">
+                            Edit
+                        </button>
+
+                        <form action="{{ route($routePrefix.'.destroy', $item->id) }}"
+                            method="POST"
+                            style="display:inline">
+                            @csrf
+                            @method('DELETE')
+                            <button class="btn btn-sm btn-danger"
+                                onclick="return confirm('Are you sure?')">
+                                Delete
+                            </button>
+                        </form>
+                    </td>
+                    @elseif($mode == 'property-profile')
+                    <td>{{ $key+1 }}</td>
+                    <td>{{ $item->bedrooms ?? '-' }}</td>
+                    <td>{{ $item->bathrooms ?? '-' }}</td>
+                    <td>{{ $item->balconies ?? '-' }}</td>
+                    <td>{{ $item->carpet_area ?? '-' }}</td>
+                    <td>{{ $item->area_unit ?? '-' }}</td>
+                    <td>{{ $item->builtup_area ?? '-' }}</td>
+                    <td>{{ $item->super_builtup_area ?? '-' }}</td>
+                    <td>{{ $item->total_floors ?? '-' }}</td>
+                    <td>{{ $item->floor_no ?? '-' }}</td>
+                    <td>{{ $item->availability_status ?? '-' }}</td>
+                    <td>{{ $item->ownership ?? '-' }}</td>
+
+                    <td>
+                        <div class="flex gap-2 whitespace-nowrap">
+
+                            <button class="btn btn-sm btn-warning"
+                                data-toggle="modal"
+                                data-target="#editModal{{ $item->id }}">
+                                Edit
+                            </button>
+
+                            <form action="{{ route($routePrefix.'.destroy', $item->id) }}"
+                                method="POST">
+
+                                @csrf
+                                @method('DELETE')
+
+                                <button class="btn btn-sm btn-danger"
+                                    onclick="return confirm('Are you sure?')">
+                                    Delete
+                                </button>
+
+                            </form>
+
+                        </div>
+                    </td>
+                    @elseif($mode == 'property-profile-option')
+                    <td>{{ $key+1 }}</td>
+                    <td>{{ $item->area_unit ?? '-' }}</td>
+                    <td>{{ $item->floor_no ?? '-' }}</td>
+                    <td>{{ $item->availability_status ?? '-' }}</td>
+                    <td>{{ $item->ownership ?? '-' }}</td>
 
                     <td>
                         <button class="btn btn-sm btn-warning"
@@ -379,6 +463,53 @@
                                 required>{{ $item->address }}</textarea>
                         </div>
                     </div>
+                    @elseif($mode == 'property-profile-option')
+
+                    {{-- AREA UNIT --}}
+                    <div class="form-group mb-3">
+                        <label>Area Unit</label>
+                        <input type="text"
+                            name="area_unit"
+                            class="form-control"
+                            value="{{ $item->area_unit }}"
+                            placeholder="e.g. Sq.ft, Sq.yd"
+                            required>
+                    </div>
+
+                    {{-- FLOOR NO --}}
+                    <div class="form-group mb-3">
+                        <label>Floor No</label>
+                        <input type="text"
+                            name="floor_no"
+                            class="form-control"
+                            value="{{ $item->floor_no }}"
+                            placeholder="e.g. Ground, 1st, 2nd"
+                            required>
+                    </div>
+
+                    {{-- AVAILABILITY STATUS --}}
+                    <div class="form-group mb-3">
+                        <label>Availability Status</label>
+                        <input type="text"
+                            name="availability_status"
+                            class="form-control"
+                            value="{{ $item->availability_status }}"
+                            placeholder="e.g. Ready to move, Under construction"
+                           >
+                    </div>
+
+                    {{-- OWNERSHIP --}}
+                    <div class="form-group mb-3">
+                        <label>Ownership</label>
+                        <input type="text"
+                            name="ownership"
+                            class="form-control"
+                            value="{{ $item->ownership }}"
+                            placeholder="e.g. Freehold, Leasehold"
+                            required>
+                    </div>
+
+                    
                     @elseif($mode == 'user')
 
                     {{-- USER FIELDS --}}
@@ -564,9 +695,12 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Add {{ $title }}</h5>
+                    @if ($mode !== 'property-profile')
+
                     <button type="button" class="close" data-dismiss="modal">
                         <span>&times;</span>
                     </button>
+                    @endif
                 </div>
                 <div class="modal-body">
 
@@ -663,6 +797,28 @@
         <label>Description</label>
         <textarea name="description" class="form-control" required></textarea>
     </div> -->
+                    @elseif($mode == 'property-profile-option')
+
+                    <div class="form-group mb-2">
+                        <label>Area Unit</label>
+                        <input type="text" name="area_unit" class="form-control" required>
+                    </div>
+
+                    <div class="form-group mb-2">
+                        <label>Floor No</label>
+                        <input type="text" name="floor_no" class="form-control" required>
+                    </div>
+
+                    <div class="form-group mb-2">
+                        <label>Availability Status</label>
+                        <input type="text" name="availability_status" class="form-control">
+                    </div>
+
+                    <div class="form-group mb-2">
+                        <label>Ownership</label>
+                        <input type="text" name="ownership" class="form-control" required>
+                    </div>
+
 
                     @else
 

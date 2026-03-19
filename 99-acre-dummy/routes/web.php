@@ -9,6 +9,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PropertyCategoryController;
 use App\Http\Controllers\PropertyLocationTypeController;
 use App\Http\Controllers\PropertyProfileController;
+use App\Http\Controllers\PropertyProfileOptionController;
 use App\Http\Controllers\PropertyPurposeController;
 use App\Http\Controllers\PropertyStepController;
 use App\Http\Controllers\PropertySubTypeController;
@@ -17,6 +18,7 @@ use App\Http\Controllers\UserPropertyController;
 use App\Models\Banner;
 use App\Models\PropertyCategory;
 use App\Models\PropertyLocationType;
+use App\Models\PropertyProfileOption;
 use App\Models\PropertyPurpose;
 use App\Models\PropertyStep;
 use App\Models\PropertySubType;
@@ -54,11 +56,19 @@ Route::get('/dashboard', function () {
      $steps = PropertyStep::where('active',1)
             ->orderBy('order')
             ->get();
+      $areaUnits = PropertyProfileOption::whereNotNull('area_unit')->pluck('area_unit');
+$floors = PropertyProfileOption::whereNotNull('floor_no')->pluck('floor_no');
+$availability = PropertyProfileOption::whereNotNull('availability_status')->pluck('availability_status');
+$ownerships = PropertyProfileOption::whereNotNull('ownership')->pluck('ownership');
     return view('dashboard',compact(
         'purposes',
         'categories',
         'types',
-        'steps'
+        'steps',
+        'areaUnits',
+        'floors',
+        'availability',
+        'ownerships'
     ));
 })->middleware(['auth', 'verified'])->name('dashboard');
 
@@ -93,6 +103,8 @@ Route::post(
 [UserPropertyController::class,'saveLocation']
 )->name('property.location.store');
 
+//User Property Profile creation 
+Route::post('/property/{id}/profile', [UserPropertyController::class, 'saveProfile']);
 });
 
 Route::middleware(['auth', 'admin'])
@@ -133,6 +145,8 @@ Route::middleware(['auth', 'admin'])
 
             
                Route::resource('property-profiles', PropertyProfileController::class);
+               Route::resource('property-profiles-option', PropertyProfileOptionController::class);
+
 
 });
 require __DIR__.'/auth.php';
