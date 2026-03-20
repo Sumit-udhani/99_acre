@@ -39,7 +39,7 @@ class PropertyProfileController extends Controller
         $property_profile->update($validated);
 
         return redirect()
-            ->route('property-profiles.index')
+            ->back()
             ->with('success', 'Profile updated successfully');
     }
 
@@ -66,6 +66,9 @@ class PropertyProfileController extends Controller
             'floor_no' => 'required|string|max:50',
             'availability_status' => 'required|string|max:100',
             'ownership' => 'required|string|max:100',
+          
+
+
         ]);
     }
 }

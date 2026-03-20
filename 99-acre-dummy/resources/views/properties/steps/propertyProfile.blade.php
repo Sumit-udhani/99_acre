@@ -1,3 +1,4 @@
+@vite('resources/js/property-profile.js')
 <form id="propertyProfileForm">
    @csrf
    <input type="hidden" id="property_id" name="property_id">
@@ -16,16 +17,61 @@
             class="w-2/3" />
 
          <select name="area_unit"
-            class="w-1/3 h-[42px] px-2 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+            class="area-unit w-1/3 h-[42px] px-2 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
             @foreach($areaUnits as $unit)
             <option value="{{ $unit }}">{{ $unit }}</option>
             @endforeach
          </select>
       </div>
 
-      <div class="mt-2 text-sm text-blue-600 cursor-pointer">
-         + Built-up Area &nbsp;&nbsp; + Super Built-up Area
+     <div class="mt-2 text-sm text-blue-600">
+
+   {{-- TOGGLE LINKS --}}
+   <span class="cursor-pointer mr-4" id="addBuiltup">
+      + Built-up Area
+   </span>
+
+   <span class="cursor-pointer" id="addSuperBuiltup">
+      + Super Built-up Area
+   </span>
+
+   {{-- BUILT-UP INPUT --}}
+   <div id="builtupWrap" class="mt-3 hidden">
+      <div class="flex gap-3 items-center">
+         <x-text-input
+            type="number"
+            name="builtup_area"
+            placeholder="Built-up Area"
+            class="w-2/3" />
+
+         <select
+            class="area-unit w-1/3 h-[42px] px-2 border-gray-300 rounded-md shadow-sm">
+            @foreach($areaUnits as $unit)
+            <option value="{{ $unit }}">{{ $unit }}</option>
+            @endforeach
+         </select>
       </div>
+   </div>
+
+   {{-- SUPER BUILT-UP INPUT --}}
+   <div id="superBuiltupWrap" class="mt-3 hidden">
+      <div class="flex gap-3 items-center">
+         <x-text-input
+            type="number"
+            name="super_builtup_area"
+            placeholder="Super Built-up Area"
+            class="w-2/3" />
+
+         <select 
+            class="area-unit w-1/3 h-[42px] px-2 border-gray-300 rounded-md shadow-sm">
+            @foreach($areaUnits as $unit)
+            <option value="{{ $unit }}">{{ $unit }}</option>
+            @endforeach
+         </select>
+      </div>
+   </div>
+
+</div>
    </div>
 
    {{-- ROOM DETAILS --}}
@@ -83,6 +129,7 @@
          <input type="hidden" name="balconies">
       </div>
    </div>
+{{-- FURNISHING --}}
 
    {{-- FLOOR DETAILS --}}
    <div>
@@ -106,7 +153,128 @@
          </select>
       </div>
    </div>
+   <div id="rentSection" class="mt-6 hidden">
 
+   <div class="mt-5">
+    <h3 class="font-medium mb-2 flex items-center gap-2">
+        Furnishing
+        <span class="text-red-500">*</span>
+    </h3>
+
+    <div class="flex gap-3 flex-wrap">
+        @foreach($furnishings as $item)
+        <button type="button"
+            data-group="furnishing"
+            data-value="{{ $item }}"
+            class="chip-btn">
+            {{ $item }}
+        </button>
+        @endforeach
+    </div>
+
+    <input type="hidden" name="furnishing">
+</div>
+
+   
+   {{-- AGE OF PROPERTY --}}
+<div>
+    <h3 class="font-medium mb-2">Age of property</h3>
+
+    <div class="flex gap-3 flex-wrap">
+        
+        @php
+            $ages = ['0-1 years','1-5 years','5-10 years','10+ years'];
+        @endphp
+
+        @foreach($ages as $item)
+        <button type="button"
+            data-group="property_age"
+            data-value="{{ $item }}"
+            class="chip-btn">
+            {{ $item }}
+        </button>
+        @endforeach
+
+    </div>
+
+    <input type="hidden" name="property_age">
+</div>
+
+    {{-- AVAILABLE FROM --}}
+    <div class="mt-4">
+        <h3 class="font-medium mb-2">Available from</h3>
+
+        <x-text-input 
+            type="date"
+            name="property_date"
+            class="w-1/2" />
+    </div>
+
+  
+
+    {{-- AGREEMENT TYPE --}}
+    <div class="mt-4">
+        <h3 class="font-medium mb-2">Preferred agreement type</h3>
+
+        <div class="flex gap-3 flex-wrap">
+            @foreach($agreementTypes as $item)
+            <button type="button"
+                data-group="agreement_type"
+                data-value="{{ $item }}"
+                class="chip-btn">
+                {{ $item }}
+            </button>
+            @endforeach
+        </div>
+
+        <input type="hidden" name="agreement_type">
+    </div>
+
+    {{-- BROKER CONTACT --}}
+    <div class="mt-4">
+        <h3 class="font-medium mb-2 flex items-center gap-2">
+            Are you ok with brokers contacting you?
+        </h3>
+
+        <div class="flex gap-3">
+            <button type="button"
+                data-group="broker_contact"
+                data-value="yes"
+                class="chip-btn">
+                Yes
+            </button>
+
+            <button type="button"
+                data-group="broker_contact"
+                data-value="no"
+                class="chip-btn">
+                No
+            </button>
+        </div>
+
+        <input type="hidden" name="broker_contact">
+    </div>
+
+</div>
+<div class="mt-5">
+    <h3 class="font-medium mb-2 flex items-center gap-2">
+        Willing to rent out to
+        <span class="text-red-500">*</span>
+    </h3>
+
+    <div class="flex gap-3 flex-wrap">
+        @foreach($rentout as $item)
+        <button type="button"
+            data-group="rentout"
+            data-value="{{ $item }}"
+            class="chip-btn">
+            {{ $item }}
+        </button>
+        @endforeach
+    </div>
+
+    <input type="hidden" name="rentout">
+</div>
    
    {{-- AVAILABILITY --}}
 <div>

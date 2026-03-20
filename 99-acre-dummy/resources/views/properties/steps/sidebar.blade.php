@@ -41,6 +41,15 @@ id="editBasicBtn">
 Edit
 </button>
 @endif
+@if($s->slug == 'location')
+<button 
+    type="button"
+    onclick="editLocationStep()"
+    class="text-blue-600 text-sm hover:underline hidden"
+    id="editLocationBtn">
+    Edit
+</button>
+@endif
 </div>
 
 </li>

@@ -59,6 +59,27 @@ $(document).ready(function () {
     // ================================
     // FORM SUBMIT (AJAX)
     // ================================
+    window.editLocationStep = function() {
+
+    $('#profileStep').hide();
+    $('#locationStep').show();
+
+};
+$(document).ready(function () {
+
+    // SHOW BUILT-UP FIELD
+    $('#addBuiltup').on('click', function () {
+        $('#builtupWrap').removeClass('hidden');
+        $(this).hide(); // hide text after click
+    });
+
+    // SHOW SUPER BUILT-UP FIELD
+    $('#addSuperBuiltup').on('click', function () {
+        $('#superBuiltupWrap').removeClass('hidden');
+        $(this).hide(); // hide text after click
+    });
+
+});
     $('#propertyProfileForm').on('submit', function (e) {
 
         e.preventDefault();

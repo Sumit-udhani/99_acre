@@ -67,6 +67,9 @@
                     <th>Floor No</th>
                     <th>Availability</th>
                     <th>Ownership</th>
+                    <th>Furnishing</th>
+                    <th>Rentout</th>
+
                     <th>Action</th>
                     @elseif($mode == 'normal')
 
@@ -117,28 +120,22 @@
                     <td>{{ $item->sub_locality ?? '-' }}</td>
                     <td>{{ $item->address ?? '-' }}</td>
                     <td>
-                        <div class="flex gap-2 whitespace-nowrap">
+                        <button class="btn btn-sm btn-warning"
+                            data-toggle="modal"
+                            data-target="#editModal{{ $item->id }}">
+                            Edit
+                        </button>
 
-                            <button class="btn btn-sm btn-warning"
-                                data-toggle="modal"
-                                data-target="#editModal{{ $item->id }}">
-                                Edit
+                        <form action="{{ route($routePrefix.'.destroy', $item->id) }}"
+                            method="POST"
+                            style="display:inline">
+                            @csrf
+                            @method('DELETE')
+                            <button class="btn btn-sm btn-danger"
+                                onclick="return confirm('Are you sure?')">
+                                Delete
                             </button>
-
-                            <form action="{{ route($routePrefix.'.destroy', $item->id) }}"
-                                method="POST">
-
-                                @csrf
-                                @method('DELETE')
-
-                                <button class="btn btn-sm btn-danger"
-                                    onclick="return confirm('Are you sure?')">
-                                    Delete
-                                </button>
-
-                            </form>
-
-                        </div>
+                        </form>
                     </td>
 
 
@@ -201,29 +198,23 @@
                     <td>{{ $item->availability_status ?? '-' }}</td>
                     <td>{{ $item->ownership ?? '-' }}</td>
 
-                    <td>
-                        <div class="flex gap-2 whitespace-nowrap">
+                     <td>
+                        <button class="btn btn-sm btn-warning"
+                            data-toggle="modal"
+                            data-target="#editModal{{ $item->id }}">
+                            Edit
+                        </button>
 
-                            <button class="btn btn-sm btn-warning"
-                                data-toggle="modal"
-                                data-target="#editModal{{ $item->id }}">
-                                Edit
+                        <form action="{{ route($routePrefix.'.destroy', $item->id) }}"
+                            method="POST"
+                            style="display:inline">
+                            @csrf
+                            @method('DELETE')
+                            <button class="btn btn-sm btn-danger"
+                                onclick="return confirm('Are you sure?')">
+                                Delete
                             </button>
-
-                            <form action="{{ route($routePrefix.'.destroy', $item->id) }}"
-                                method="POST">
-
-                                @csrf
-                                @method('DELETE')
-
-                                <button class="btn btn-sm btn-danger"
-                                    onclick="return confirm('Are you sure?')">
-                                    Delete
-                                </button>
-
-                            </form>
-
-                        </div>
+                        </form>
                     </td>
                     @elseif($mode == 'property-profile-option')
                     <td>{{ $key+1 }}</td>
@@ -231,6 +222,8 @@
                     <td>{{ $item->floor_no ?? '-' }}</td>
                     <td>{{ $item->availability_status ?? '-' }}</td>
                     <td>{{ $item->ownership ?? '-' }}</td>
+                    <td>{{ $item->furnishing ?? '-' }}</td>
+                    <td>{{ $item->rent_out ?? '-' }}</td>
 
                     <td>
                         <button class="btn btn-sm btn-warning"
@@ -494,8 +487,7 @@
                             name="availability_status"
                             class="form-control"
                             value="{{ $item->availability_status }}"
-                            placeholder="e.g. Ready to move, Under construction"
-                           >
+                            placeholder="e.g. Ready to move, Under construction">
                     </div>
 
                     {{-- OWNERSHIP --}}
@@ -508,8 +500,26 @@
                             placeholder="e.g. Freehold, Leasehold"
                             required>
                     </div>
+                    <div class="form-group mb-3">
+                        <label>Furnishing</label>
+                        <input type="text"
+                            name="furnishing"
+                            class="form-control"
+                            value="{{ $item->furnishing }}"
+                            placeholder="e.g. Ground, 1st, 2nd"
+                            required>
+                    </div>
 
-                    
+                    <div class="form-group mb-3">
+                        <label>Rentout</label>
+                        <input type="text"
+                            name="rent_out"
+                            class="form-control"
+                            value="{{ $item->rent_out }}"
+                            placeholder="e.g. Ground, 1st, 2nd"
+                            required>
+                    </div>
+
                     @elseif($mode == 'user')
 
                     {{-- USER FIELDS --}}
@@ -818,7 +828,14 @@
                         <label>Ownership</label>
                         <input type="text" name="ownership" class="form-control" required>
                     </div>
-
+                    <div class="form-group mb-2">
+                        <label>Furnishing</label>
+                        <input type="text" name="furnishing" class="form-control">
+                    </div>
+                    <div class="form-group mb-2">
+                        <label>Rentout</label>
+                        <input type="text" name="rent_out" class="form-control">
+                    </div>
 
                     @else
 

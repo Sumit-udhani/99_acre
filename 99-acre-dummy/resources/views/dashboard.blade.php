@@ -49,7 +49,9 @@
     'areaUnits' => $areaUnits,
     'floors' => $floors,
     'availability' => $availability,
-    'ownerships' => $ownerships
+    'ownerships' => $ownerships,
+    'furnishings'=> $furnishings,
+    'rentout'=>$rentout
 ])
 </div>
 </div>

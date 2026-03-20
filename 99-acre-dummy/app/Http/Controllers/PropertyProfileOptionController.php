@@ -34,13 +34,17 @@ class PropertyProfileOptionController extends Controller
             'floor_no' => 'nullable|string|max:50',
             'availability_status' => 'nullable|string|max:100',
             'ownership' => 'nullable|string|max:100',
+              'furnishing' => 'required|string|max:100',
+            'rent_out' => 'required|string|max:100',
         ]);
 
         PropertyProfileOption::create($request->only([
             'area_unit',
             'floor_no',
             'availability_status',
-            'ownership'
+            'ownership',
+             'furnishing',
+        'rent_out'
         ]));
 
         return back()->with('success', 'Option added');
@@ -76,13 +80,17 @@ class PropertyProfileOptionController extends Controller
             'floor_no' => 'nullable|string|max:50',
             'availability_status' => 'nullable|string|max:100',
             'ownership' => 'nullable|string|max:100',
+              'furnishing' => 'required|string|max:100',
+            'rent_out' => 'required|string|max:100',
         ]);
 
         $option->update($request->only([
             'area_unit',
             'floor_no',
             'availability_status',
-            'ownership'
+            'ownership',
+             'furnishing',
+        'rent_out'
         ]));
 
         return back()->with('success', 'Option Updated');

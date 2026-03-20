@@ -176,7 +176,7 @@ $(document).ready(function(){
             success: function(response){
 
                 if(response.success){
-
+                      $('#editLocationBtn').removeClass('hidden');
                     // 👉 go to next step (property profile)
                     goToProfile(response.property_id);
 
@@ -201,4 +201,5 @@ window.goToProfile = function(propertyId) {
 
     // optional: set property id again
     $('#property_id').val(propertyId);
+    $('#editLocationBtn').removeClass('hidden');
 };

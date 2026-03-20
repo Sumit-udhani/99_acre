@@ -10,6 +10,8 @@ class PropertyProfileOption extends Model
         'area_unit',
         'floor_no',
         'availability_status',
-        'ownership'
+        'ownership',
+        'furnishing',
+        'rent_out'
     ];
 }
