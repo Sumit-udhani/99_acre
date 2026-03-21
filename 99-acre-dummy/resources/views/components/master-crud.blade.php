@@ -60,6 +60,18 @@
                     <th>Floor No</th>
                     <th>Availability</th>
                     <th>Ownership</th>
+                 
+
+                
+                 
+                   
+                    <th>Furnishing</th>
+                    <th>Property Age</th>
+                    <th>Available From</th>
+                    <th>Agreement Type</th>
+                    <th>Broker Contact</th>
+                    <th>Rent Out</th>
+                 
                     <th>Action</th>
                     @elseif($mode == 'property-profile-option')
                     <th>#</th>
@@ -197,8 +209,17 @@
                     <td>{{ $item->floor_no ?? '-' }}</td>
                     <td>{{ $item->availability_status ?? '-' }}</td>
                     <td>{{ $item->ownership ?? '-' }}</td>
+              
 
-                     <td>
+                   
+                    <td>{{ $item->furnishing ?? '-' }}</td>
+                    <td>{{ $item->property_age ?? '-' }}</td>
+                    <td>{{ $item->property_date ?? '-' }}</td>
+                    <td>{{ $item->agreement_type ?? '-' }}</td>
+                    <td>{{ $item->broker_contact ?? '-' }}</td>
+                    <td>{{ $item->rent_out ?? '-' }}</td>
+                   
+                    <td>
                         <button class="btn btn-sm btn-warning"
                             data-toggle="modal"
                             data-target="#editModal{{ $item->id }}">

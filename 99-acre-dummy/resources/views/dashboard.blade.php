@@ -5,7 +5,7 @@
 {{ __('Dashboard') }}
 </h2>
 </x-slot>
-
+<input type="hidden" id="global_purpose_id" name="purpose_id">
 <div class="py-12">
 
 <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">

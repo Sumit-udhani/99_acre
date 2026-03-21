@@ -20,6 +20,12 @@ class PropertyProfile extends Model
         'floor_no',
         'availability_status',
         'ownership',
+        'property_age',
+        'property_date',
+        'rent_out',
+        'agreement_type',
+        'broker_contact',
+        'furnishing'
     ];
     public function property(){
         return $this->belongsTo(Property::class);

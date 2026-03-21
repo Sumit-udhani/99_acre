@@ -213,22 +213,32 @@
   
 
     {{-- AGREEMENT TYPE --}}
-    <div class="mt-4">
-        <h3 class="font-medium mb-2">Preferred agreement type</h3>
+   {{-- AGREEMENT TYPE --}}
+<div class="mt-4">
+    <h3 class="font-medium mb-2">Preferred agreement type</h3>
 
-        <div class="flex gap-3 flex-wrap">
-            @foreach($agreementTypes as $item)
-            <button type="button"
-                data-group="agreement_type"
-                data-value="{{ $item }}"
-                class="chip-btn">
-                {{ $item }}
-            </button>
-            @endforeach
-        </div>
+    <div class="flex gap-3 flex-wrap">
 
-        <input type="hidden" name="agreement_type">
+        @php
+            $agreements = [
+                'Company lease agreement',
+                'Any'
+            ];
+        @endphp
+
+        @foreach($agreements as $item)
+        <button type="button"
+            data-group="agreement_type"
+            data-value="{{ $item }}"
+            class="chip-btn">
+            {{ $item }}
+        </button>
+        @endforeach
+
     </div>
+
+    <input type="hidden" name="agreement_type">
+</div>
 
     {{-- BROKER CONTACT --}}
     <div class="mt-4">
@@ -255,25 +265,25 @@
         <input type="hidden" name="broker_contact">
     </div>
 
-</div>
-<div class="mt-5">
-    <h3 class="font-medium mb-2 flex items-center gap-2">
-        Willing to rent out to
-        <span class="text-red-500">*</span>
-    </h3>
-
-    <div class="flex gap-3 flex-wrap">
-        @foreach($rentout as $item)
-        <button type="button"
-            data-group="rentout"
-            data-value="{{ $item }}"
-            class="chip-btn">
-            {{ $item }}
-        </button>
-        @endforeach
+    <div class="mt-5">
+        <h3 class="font-medium mb-2 flex items-center gap-2">
+            Willing to rent out to
+            <span class="text-red-500">*</span>
+        </h3>
+    
+        <div class="flex gap-3 flex-wrap">
+            @foreach($rentout as $item)
+            <button type="button"
+                data-group="rent_out"
+                data-value="{{ $item }}"
+                class="chip-btn">
+                {{ $item }}
+            </button>
+            @endforeach
+        </div>
+    
+        <input type="hidden" name="rent_out">
     </div>
-
-    <input type="hidden" name="rentout">
 </div>
    
    {{-- AVAILABILITY --}}

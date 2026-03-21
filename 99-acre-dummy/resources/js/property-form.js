@@ -63,7 +63,7 @@ $(document).on('click','.purpose-group .purpose-btn',function(){
 
     selectedPurpose = $btn.data('name');
 
-    $('#purpose_id').val($btn.data('id'));
+   $('#purpose_id').val($btn.data('id'));
 
     filterCategories();
     filterPurposes();

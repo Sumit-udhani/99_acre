@@ -105,7 +105,10 @@ class UserPropertyController extends Controller
 
 public function saveProfile(Request $request, $id)
 {
-    $validated = $request->validate([
+ $property = \App\Models\Property::findOrFail($id);
+$purposeSlug = $property->purpose->slug ?? null;
+   
+    $rules = [
         'bedrooms' => 'required',
         'bathrooms' => 'required',
         'balconies' => 'required',
@@ -121,12 +124,37 @@ public function saveProfile(Request $request, $id)
 
         'availability_status' => 'required',
         'ownership' => 'required',
-    ]);
+    ];
 
-    // ✅ DRY: no repetition
+    if ($purposeSlug === 'rent-lease') {
+        $rules = array_merge($rules, [
+            'property_age'   => 'required',
+            'property_date'  => 'required|date',
+            'rent_out'        => 'required',
+            'agreement_type' => 'required',
+            'broker_contact' => 'required',
+            'furnishing'     => 'required',
+        ]);
+    }
+
+    $validated = $request->validate($rules);
+
+    $data = $validated;
+
+    if ($purposeSlug !== 'rent-lease') {
+        unset(
+            $data['property_age'],
+            $data['property_date'],
+            $data['rent_out'],
+            $data['agreement_type'],
+            $data['broker_contact'],
+            $data['furnishing']
+        );
+    }
+
     PropertyProfile::updateOrCreate(
         ['property_id' => $id],
-        $validated
+        $data
     );
 
     return response()->json([

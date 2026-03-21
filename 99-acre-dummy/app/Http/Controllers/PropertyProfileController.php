@@ -12,7 +12,7 @@ class PropertyProfileController extends Controller
      */
     public function index()
     {
-        $profiles = PropertyProfile::latest()->get();
+      $profiles = PropertyProfile::with('property.purpose')->get();
 
         return view('admin.property.property-profile.index', compact('profiles'));
     }

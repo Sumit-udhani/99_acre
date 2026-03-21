@@ -193,13 +193,3 @@ $(document).ready(function(){
     });
 
 });
-window.goToProfile = function(propertyId) {
-
-    document.getElementById('locationStep').style.display = 'none';
-
-    document.getElementById('profileStep').style.display = 'block';
-
-    // optional: set property id again
-    $('#property_id').val(propertyId);
-    $('#editLocationBtn').removeClass('hidden');
-};

@@ -31,38 +31,61 @@ $(document).ready(function () {
     // ================================
     // CHIP BUTTONS (Availability & Ownership)
     // ================================
-    $(document).on('click', '.chip-btn', function () {
+  $(document).on('click', '.chip-btn', function () {
 
-        const $btn = $(this);
-        const field = $btn.attr('onclick')?.includes('availability_status')
-            ? 'availability_status'
-            : 'ownership';
+    const $btn = $(this);
+    const group = $btn.data('group'); // ✅ dynamic field name
+    const value = $btn.data('value');
 
-        // better way: detect by closest section
-        if ($btn.closest('div').prev('h3').text().includes('Availability')) {
-            setActive($('.chip-btn').filter(function () {
-                return $(this).closest('div').prev('h3').text().includes('Availability');
-            }), $btn);
+    // get all buttons of same group
+    const groupBtns = $(`.chip-btn[data-group="${group}"]`);
 
-            $('input[name="availability_status"]').val($btn.text());
-        } else {
-            setActive($('.chip-btn').filter(function () {
-                return $(this).closest('div').prev('h3').text().includes('Ownership');
-            }), $btn);
+    // set active
+    groupBtns.removeClass('active');
+    $btn.addClass('active');
 
-            $('input[name="ownership"]').val($btn.text());
-        }
+    // set hidden input value
+    $(`input[name="${group}"]`).val(value);
 
-    });
-
+});
 
     // ================================
     // FORM SUBMIT (AJAX)
     // ================================
+    window.showStep = function(step) {
+
+    $('#basicStep').hide();
+    $('#locationStep').hide();
+    $('#profileStep').hide();
+
+    if (step === 'basic') {
+        $('#basicStep').show();
+    }
+
+    if (step === 'location') {
+        $('#locationStep').show();
+    }
+
+    if (step === 'profile') {
+        $('#profileStep').show();
+    }
+};
+window.editBasicStep = function(el) {
+
+    let propertyId = el.getAttribute('data-id');
+
+    if (!propertyId) return;
+showStep('basic');
+    goToBasic();
+
+    $('#property_id').val(propertyId);
+
+    let updateUrl = `/property/${propertyId}/basic/update`;
+    $('#basicPropertyForm').attr('action', updateUrl);
+};
     window.editLocationStep = function() {
 
-    $('#profileStep').hide();
-    $('#locationStep').show();
+    showStep('location');
 
 };
 $(document).ready(function () {
@@ -79,6 +102,31 @@ $(document).ready(function () {
         $(this).hide(); // hide text after click
     });
 
+});
+window.goToProfile = function(propertyId) {
+
+    document.getElementById('locationStep').style.display = 'none';
+    document.getElementById('profileStep').style.display = 'block';
+
+    $('#property_id').val(propertyId);
+
+    // ✅ IMPORTANT: re-check after step switch
+    checkPurposeAndToggleRent();
+};
+function checkPurposeAndToggleRent() {
+
+    let purpose = parseInt($('#purpose_id').val());
+
+   
+    if (purpose === 4) {
+        $('#rentSection').removeClass('hidden');
+    } else {
+        $('#rentSection').addClass('hidden');
+    }
+}
+// call on page load
+$(document).ready(function () {
+    checkPurposeAndToggleRent();
 });
     $('#propertyProfileForm').on('submit', function (e) {
 
