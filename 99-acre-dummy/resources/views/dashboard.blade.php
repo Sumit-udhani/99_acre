@@ -51,6 +51,7 @@
     'availability' => $availability,
     'ownerships' => $ownerships,
     'furnishings'=> $furnishings,
+    'furnishingItems'=>$furnishingItems,
     'rentout'=>$rentout
 ])
 </div>

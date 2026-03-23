@@ -31,24 +31,52 @@ $(document).ready(function () {
     // ================================
     // CHIP BUTTONS (Availability & Ownership)
     // ================================
-  $(document).on('click', '.chip-btn', function () {
+// CHIP BUTTON CLICK (UPDATED)
+$(document).on('click', '.chip-btn', function () {
 
     const $btn = $(this);
-    const group = $btn.data('group'); // ✅ dynamic field name
+    const group = $btn.data('group');
     const value = $btn.data('value');
 
-    // get all buttons of same group
     const groupBtns = $(`.chip-btn[data-group="${group}"]`);
 
-    // set active
     groupBtns.removeClass('active');
     $btn.addClass('active');
 
-    // set hidden input value
     $(`input[name="${group}"]`).val(value);
 
-});
+    // ✅ SHOW DROPDOWN ONLY FOR furnishing / semi-furnished
+    if (group === 'furnishing') {
 
+        if (value === 'Furnished' || value === 'Semi-furnished') {
+
+            $('#furnishingDropdown')
+                .removeClass('hidden')
+                .attr('x-show', 'true');
+
+        } else {
+
+            $('#furnishingDropdown')
+                .addClass('hidden');
+
+            $('#furnishing_items').val('');
+            $('.furnishing-item-checkbox').prop('checked', false);
+        }
+    }
+
+
+});
+// $(document).on('change', '.furnishing-item-checkbox', function () {
+
+//     let selected = [];
+
+//     $('.furnishing-item-checkbox:checked').each(function () {
+//         selected.push($(this).val());
+//     });
+
+//     $('#furnishing_items').val(JSON.stringify(selected));
+
+// });
     // ================================
     // FORM SUBMIT (AJAX)
     // ================================
@@ -117,10 +145,33 @@ function checkPurposeAndToggleRent() {
 
     let purpose = parseInt($('#purpose_id').val());
 
-   
+    // 👉 RENT = 4
     if (purpose === 4) {
+
         $('#rentSection').removeClass('hidden');
-    } else {
+
+        // show everything
+        $('#furnishingBlock').show();
+        $('#ageBlock').show();
+        $('#availableBlock').show();
+        $('#rentOnlyFields').show();
+    }
+
+    // 👉 PG = 5 (CHANGE ID if different)
+    else if (purpose === 5) {
+
+        $('#rentSection').removeClass('hidden');
+
+        // show only 3 sections
+        $('#furnishingBlock').show();
+        $('#ageBlock').show();
+        $('#availableBlock').show();
+
+        // hide rent-only fields
+        $('#rentOnlyFields').hide();
+    }
+
+    else {
         $('#rentSection').addClass('hidden');
     }
 }
@@ -136,7 +187,7 @@ $(document).ready(function () {
         let formData = form.serialize();
 
         let propertyId = $('#property_id').val();
-
+console.log($('#propertyProfileForm').serialize());
         $.ajax({
             url: `/property/${propertyId}/profile`,
             type: "POST",

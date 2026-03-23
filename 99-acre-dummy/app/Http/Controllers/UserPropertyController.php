@@ -102,12 +102,11 @@ class UserPropertyController extends Controller
 
 //Save property profile form 
 
-
 public function saveProfile(Request $request, $id)
 {
- $property = \App\Models\Property::findOrFail($id);
-$purposeSlug = $property->purpose->slug ?? null;
-   
+    $property = \App\Models\Property::findOrFail($id);
+    $purposeSlug = $property->purpose->slug ?? null;
+
     $rules = [
         'bedrooms' => 'required',
         'bathrooms' => 'required',
@@ -126,14 +125,26 @@ $purposeSlug = $property->purpose->slug ?? null;
         'ownership' => 'required',
     ];
 
+    // ✅ RENT-LEASE (ALL FIELDS)
     if ($purposeSlug === 'rent-lease') {
         $rules = array_merge($rules, [
             'property_age'   => 'required',
             'property_date'  => 'required|date',
-            'rent_out'        => 'required',
+            'rent_out'       => 'required',
             'agreement_type' => 'required',
             'broker_contact' => 'required',
             'furnishing'     => 'required',
+            'furnishing_items' => 'required|array',
+        ]);
+    }
+
+    // ✅ PG (ONLY FEW FIELDS)
+    if ($purposeSlug === 'pg') {
+        $rules = array_merge($rules, [
+            'property_age'   => 'required',
+            'property_date'  => 'required|date',
+            'furnishing'     => 'required',
+            'furnishing_items' => 'required|array',
         ]);
     }
 
@@ -141,14 +152,33 @@ $purposeSlug = $property->purpose->slug ?? null;
 
     $data = $validated;
 
-    if ($purposeSlug !== 'rent-lease') {
+    // ✅ HANDLE furnishing_items
+    if (!empty($validated['furnishing_items'])) {
+        $data['furnishing_items'] = implode(',', $validated['furnishing_items']);
+    } else {
+        $data['furnishing_items'] = null;
+    }
+
+    // ✅ CLEAN DATA BASED ON PURPOSE
+    if ($purposeSlug === 'rent-lease') {
+        // keep all
+    } elseif ($purposeSlug === 'pg') {
+        // ❌ remove rent-only fields
+        unset(
+            $data['rent_out'],
+            $data['agreement_type'],
+            $data['broker_contact']
+        );
+    } else {
+        
         unset(
             $data['property_age'],
             $data['property_date'],
             $data['rent_out'],
             $data['agreement_type'],
             $data['broker_contact'],
-            $data['furnishing']
+            $data['furnishing'],
+            $data['furnishing_items']
         );
     }
 

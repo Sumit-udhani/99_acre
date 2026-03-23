@@ -153,55 +153,69 @@
          </select>
       </div>
    </div>
-   <div id="rentSection" class="mt-6 hidden">
+  <div id="rentSection" class="mt-6 hidden">
 
-   <div class="mt-5">
-    <h3 class="font-medium mb-2 flex items-center gap-2">
-        Furnishing
-        <span class="text-red-500">*</span>
-    </h3>
+    {{-- FURNISHING --}}
+    <div class="mt-5" id="furnishingBlock">
+        <h3 class="font-medium mb-2 flex items-center gap-2">
+            Furnishing
+            <span class="text-red-500">*</span>
+        </h3>
 
-    <div class="flex gap-3 flex-wrap">
-        @foreach($furnishings as $item)
-        <button type="button"
-            data-group="furnishing"
-            data-value="{{ $item }}"
-            class="chip-btn">
-            {{ $item }}
-        </button>
-        @endforeach
+        <div class="flex gap-3 flex-wrap">
+            @foreach($furnishings as $item)
+            <button type="button"
+                data-group="furnishing"
+                data-value="{{ $item }}"
+                class="chip-btn furnishing-btn">
+                {{ $item }}
+            </button>
+            @endforeach
+        </div>
+
+        <input type="hidden" name="furnishing">
+
+        <div id="furnishingDropdown" class="mt-4 hidden">
+            <div class="w-64 rounded-md shadow-lg bg-white border p-3">
+                <div class="grid grid-cols-2 gap-2 max-h-64 overflow-y-auto">
+                    @foreach($furnishingItems as $item)
+                    <label class="flex items-center gap-2 text-sm">
+                        <input type="checkbox"
+                            name="furnishing_items[]"
+                            class="furnishing-item-checkbox"
+                            value="{{ $item }}">
+                        {{ $item }}
+                    </label>
+                    @endforeach
+                </div>
+            </div>
+        </div>
     </div>
 
-    <input type="hidden" name="furnishing">
-</div>
+    {{-- AGE --}}
+    <div id="ageBlock">
+        <h3 class="font-medium mb-2">Age of property</h3>
 
-   
-   {{-- AGE OF PROPERTY --}}
-<div>
-    <h3 class="font-medium mb-2">Age of property</h3>
+        <div class="flex gap-3 flex-wrap">
+            @php
+                $ages = ['0-1 years','1-5 years','5-10 years','10+ years'];
+            @endphp
 
-    <div class="flex gap-3 flex-wrap">
-        
-        @php
-            $ages = ['0-1 years','1-5 years','5-10 years','10+ years'];
-        @endphp
+            @foreach($ages as $item)
+            <button type="button"
+                data-group="property_age"
+                data-value="{{ $item }}"
+                class="chip-btn">
+                {{ $item }}
+            </button>
+            @endforeach
+        </div>
 
-        @foreach($ages as $item)
-        <button type="button"
-            data-group="property_age"
-            data-value="{{ $item }}"
-            class="chip-btn">
-            {{ $item }}
-        </button>
-        @endforeach
-
+        <input type="hidden" name="property_age">
     </div>
 
-    <input type="hidden" name="property_age">
-</div>
-
-    {{-- AVAILABLE FROM --}}
-    <div class="mt-4">
+    {{-- AVAILABLE --}}
+    <div class="mt-4" id="availableBlock">
         <h3 class="font-medium mb-2">Available from</h3>
 
         <x-text-input 
@@ -210,79 +224,69 @@
             class="w-1/2" />
     </div>
 
-  
+    {{-- RENT ONLY FIELDS --}}
+    <div id="rentOnlyFields">
 
-    {{-- AGREEMENT TYPE --}}
-   {{-- AGREEMENT TYPE --}}
-<div class="mt-4">
-    <h3 class="font-medium mb-2">Preferred agreement type</h3>
+        <div class="mt-4">
+            <h3 class="font-medium mb-2">Preferred agreement type</h3>
 
-    <div class="flex gap-3 flex-wrap">
+            <div class="flex gap-3 flex-wrap">
+                @php
+                    $agreements = ['Company lease agreement','Any'];
+                @endphp
 
-        @php
-            $agreements = [
-                'Company lease agreement',
-                'Any'
-            ];
-        @endphp
+                @foreach($agreements as $item)
+                <button type="button"
+                    data-group="agreement_type"
+                    data-value="{{ $item }}"
+                    class="chip-btn">
+                    {{ $item }}
+                </button>
+                @endforeach
+            </div>
 
-        @foreach($agreements as $item)
-        <button type="button"
-            data-group="agreement_type"
-            data-value="{{ $item }}"
-            class="chip-btn">
-            {{ $item }}
-        </button>
-        @endforeach
-
-    </div>
-
-    <input type="hidden" name="agreement_type">
-</div>
-
-    {{-- BROKER CONTACT --}}
-    <div class="mt-4">
-        <h3 class="font-medium mb-2 flex items-center gap-2">
-            Are you ok with brokers contacting you?
-        </h3>
-
-        <div class="flex gap-3">
-            <button type="button"
-                data-group="broker_contact"
-                data-value="yes"
-                class="chip-btn">
-                Yes
-            </button>
-
-            <button type="button"
-                data-group="broker_contact"
-                data-value="no"
-                class="chip-btn">
-                No
-            </button>
+            <input type="hidden" name="agreement_type">
         </div>
 
-        <input type="hidden" name="broker_contact">
-    </div>
+        <div class="mt-4">
+            <h3 class="font-medium mb-2">
+                Are you ok with brokers contacting you?
+            </h3>
 
-    <div class="mt-5">
-        <h3 class="font-medium mb-2 flex items-center gap-2">
-            Willing to rent out to
-            <span class="text-red-500">*</span>
-        </h3>
-    
-        <div class="flex gap-3 flex-wrap">
-            @foreach($rentout as $item)
-            <button type="button"
-                data-group="rent_out"
-                data-value="{{ $item }}"
-                class="chip-btn">
-                {{ $item }}
-            </button>
-            @endforeach
+            <div class="flex gap-3">
+                <button type="button"
+                    data-group="broker_contact"
+                    data-value="yes"
+                    class="chip-btn">Yes</button>
+
+                <button type="button"
+                    data-group="broker_contact"
+                    data-value="no"
+                    class="chip-btn">No</button>
+            </div>
+
+            <input type="hidden" name="broker_contact">
         </div>
-    
-        <input type="hidden" name="rent_out">
+
+        <div class="mt-5">
+            <h3 class="font-medium mb-2">
+                Willing to rent out to
+            </h3>
+
+            <div class="flex gap-3 flex-wrap">
+                @foreach($rentout as $item)
+                <button type="button"
+                    data-group="rent_out"
+                    data-value="{{ $item }}"
+                    class="chip-btn">
+                    {{ $item }}
+                </button>
+                @endforeach
+            </div>
+
+            <input type="hidden" name="rent_out">
+        </div>
+
     </div>
 </div>
    

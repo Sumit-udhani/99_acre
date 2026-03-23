@@ -12,6 +12,7 @@ class PropertyProfileOption extends Model
         'availability_status',
         'ownership',
         'furnishing',
-        'rent_out'
+        'rent_out',
+        'furnishing_items',
     ];
 }

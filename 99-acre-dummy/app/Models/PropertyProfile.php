@@ -25,7 +25,8 @@ class PropertyProfile extends Model
         'rent_out',
         'agreement_type',
         'broker_contact',
-        'furnishing'
+        'furnishing',
+        'furnishing_items'
     ];
     public function property(){
         return $this->belongsTo(Property::class);

@@ -60,18 +60,20 @@
                     <th>Floor No</th>
                     <th>Availability</th>
                     <th>Ownership</th>
-                 
 
-                
-                 
-                   
+
+
+
+
                     <th>Furnishing</th>
+                    <th>Furnishing Items</th>
+
                     <th>Property Age</th>
                     <th>Available From</th>
                     <th>Agreement Type</th>
                     <th>Broker Contact</th>
                     <th>Rent Out</th>
-                 
+
                     <th>Action</th>
                     @elseif($mode == 'property-profile-option')
                     <th>#</th>
@@ -81,6 +83,7 @@
                     <th>Ownership</th>
                     <th>Furnishing</th>
                     <th>Rentout</th>
+                    <th>Furnishing Items</th>
 
                     <th>Action</th>
                     @elseif($mode == 'normal')
@@ -209,16 +212,24 @@
                     <td>{{ $item->floor_no ?? '-' }}</td>
                     <td>{{ $item->availability_status ?? '-' }}</td>
                     <td>{{ $item->ownership ?? '-' }}</td>
-              
 
-                   
+
+
                     <td>{{ $item->furnishing ?? '-' }}</td>
+                    <td>
+                        @if(!empty($item->furnishing_items))
+                        {{ implode(', ', explode(',', $item->furnishing_items)) }}
+                        @else
+                        -
+                        @endif
+                    </td>
+
                     <td>{{ $item->property_age ?? '-' }}</td>
                     <td>{{ $item->property_date ?? '-' }}</td>
                     <td>{{ $item->agreement_type ?? '-' }}</td>
                     <td>{{ $item->broker_contact ?? '-' }}</td>
                     <td>{{ $item->rent_out ?? '-' }}</td>
-                   
+
                     <td>
                         <button class="btn btn-sm btn-warning"
                             data-toggle="modal"
@@ -245,6 +256,7 @@
                     <td>{{ $item->ownership ?? '-' }}</td>
                     <td>{{ $item->furnishing ?? '-' }}</td>
                     <td>{{ $item->rent_out ?? '-' }}</td>
+                    <td>{{ $item->furnishing_items ?? '-' }}</td>
 
                     <td>
                         <button class="btn btn-sm btn-warning"
@@ -527,8 +539,7 @@
                             name="furnishing"
                             class="form-control"
                             value="{{ $item->furnishing }}"
-                            placeholder="e.g. Ground, 1st, 2nd"
-                            required>
+                            placeholder="e.g. Ground, 1st, 2nd">
                     </div>
 
                     <div class="form-group mb-3">
@@ -537,8 +548,17 @@
                             name="rent_out"
                             class="form-control"
                             value="{{ $item->rent_out }}"
-                            placeholder="e.g. Ground, 1st, 2nd"
+                            placeholder="e.g. Ground, 1st, 2nd">
+                    </div>
+                    <div class="form-group mb-3">
+                        <label>Furnishing Items</label>
+                        <input type="text"
+                            name="furnishing_items"
+                            class="form-control"
+                            value="{{ $item->furnishing_items }}"
+                            placeholder="e.g. Ac,Tv"
                             required>
+
                     </div>
 
                     @elseif($mode == 'user')
@@ -857,7 +877,10 @@
                         <label>Rentout</label>
                         <input type="text" name="rent_out" class="form-control">
                     </div>
-
+                    <div class="form-group mb-2">
+                        <label>Furnishing Items</label>
+                        <input type="text" name="furnishing_items" class="form-control">
+                    </div>
                     @else
 
                     {{-- NORMAL CRUD MODE FIELDS --}}

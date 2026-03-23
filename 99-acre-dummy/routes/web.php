@@ -58,8 +58,13 @@ Route::get('/dashboard', function () {
     $floors = PropertyProfileOption::whereNotNull('floor_no')->pluck('floor_no');
     $availability = PropertyProfileOption::whereNotNull('availability_status')->pluck('availability_status');
     $ownerships = PropertyProfileOption::whereNotNull('ownership')->pluck('ownership');
-    $furnishings = PropertyProfileOption::whereNotNull('furnishing')
-        ->pluck('furnishing');
+   $furnishings = PropertyProfileOption::whereNotNull('furnishing')
+    ->orderByRaw("
+        FIELD(furnishing, 'Furnished', 'Semi-Furnished', 'Un-furnished')
+    ")
+    ->pluck('furnishing');
+    $furnishingItems = PropertyProfileOption::whereNotNull('furnishing_items')
+        ->pluck('furnishing_items');
     $rentout = PropertyProfileOption::whereNotNull('rent_out')
         ->pluck('rent_out');
     return view('dashboard', compact(
@@ -72,6 +77,7 @@ Route::get('/dashboard', function () {
         'availability',
         'ownerships',
         'furnishings',
+        'furnishingItems',
         'rentout'
     ));
 })->middleware(['auth', 'verified'])->name('dashboard');
