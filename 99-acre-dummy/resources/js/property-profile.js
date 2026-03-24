@@ -11,6 +11,37 @@ $(document).ready(function () {
     // ================================
     // ROOM BUTTONS (Bedrooms, Bathrooms, Balconies)
     // ================================
+$(document).on('propertyTypeChanged', function (e, typeName) {
+
+    const isStudio = typeName.toLowerCase().includes('rk') || 
+                     typeName.toLowerCase().includes('studio');
+
+    const bedroomBtns = $('.room-btn[data-field="bedrooms"]');
+    const bathroomBtns = $('.room-btn[data-field="bathrooms"]');
+
+    if (isStudio) {
+
+        bedroomBtns.each(function () {
+            if ($(this).data('value') != 1) {
+                $(this).prop('disabled', true).addClass('opacity-50 cursor-not-allowed');
+            } else {
+                $(this).prop('disabled', false).click();
+            }
+        });
+
+        bathroomBtns.each(function () {
+            if ($(this).data('value') != 1) {
+                $(this).prop('disabled', true).addClass('opacity-50 cursor-not-allowed');
+            } else {
+                $(this).prop('disabled', false).click();
+            }
+        });
+
+    } else {
+        $('.room-btn').prop('disabled', false).removeClass('opacity-50 cursor-not-allowed');
+    }
+
+});
     $(document).on('click', '.room-btn', function () {
 
         const $btn = $(this);
@@ -26,7 +57,51 @@ $(document).ready(function () {
         $(`input[name="${field}"]`).val(value);
 
     });
+$(document).ready(function () {
 
+    function updateFloorDropdown() {
+
+        let total = parseInt($('input[name="total_floors"]').val());
+        let selectedFloor = $('select[name="floor_no"]').data('selected');
+
+        let $dropdown = $('#floor_no');
+
+        // Clear and add static options
+        $dropdown.html(`
+            <option value="">Property on floor</option>
+            <option value="Basement">Basement</option>
+            <option value="Ground">Ground</option>
+        `);
+
+        // ❗ Validation: max 90
+        if (!total || total < 1) return;
+
+        if (total > 90) {
+            total = 90;
+            $('input[name="total_floors"]').val(90); // reset input
+        }
+
+        // Add dynamic floors
+        for (let i = 1; i <= total; i++) {
+            let selected = (selectedFloor == i) ? 'selected' : '';
+            $dropdown.append(`<option value="${i}" ${selected}>${i}</option>`);
+        }
+
+        // Handle Basement / Ground selection
+        if (selectedFloor === 'Basement' || selectedFloor === 'Ground') {
+            $dropdown.val(selectedFloor);
+        }
+    }
+
+    // 🔥 Run on page load
+    updateFloorDropdown();
+
+    // 🔥 Run when user types
+    $(document).on('input', 'input[name="total_floors"]', function () {
+        updateFloorDropdown();
+    });
+
+});
 
     // ================================
     // CHIP BUTTONS (Availability & Ownership)
@@ -101,15 +176,25 @@ $(document).on('click', '.chip-btn', function () {
 window.editBasicStep = function(el) {
 
     let propertyId = el.getAttribute('data-id');
+ let typeId = parseInt(el.getAttribute('data-type-id'));
 
     if (!propertyId) return;
-showStep('basic');
+
+    showStep('basic');
     goToBasic();
 
     $('#property_id').val(propertyId);
+    $('#property_type').val(typeId);
 
+    // ✅ CALL FUNCTION HERE
+    
     let updateUrl = `/property/${propertyId}/basic/update`;
     $('#basicPropertyForm').attr('action', updateUrl);
+   
+      setTimeout(() => {
+        checkPurposeAndToggleRent();
+    }, 300);
+    
 };
     window.editLocationStep = function() {
 
@@ -141,38 +226,109 @@ window.goToProfile = function(propertyId) {
     // ✅ IMPORTANT: re-check after step switch
     checkPurposeAndToggleRent();
 };
+// ROOM TYPE CLICK
+$(document).on('click', '.room-type-btn', function () {
+
+    $('.room-type-btn').removeClass('active');
+    $(this).addClass('active');
+
+    let value = $(this).data('value');
+
+    $('#room_type').val(value);
+
+    if (value === 'Sharing') {
+        $('#sharingCountBlock').removeClass('hidden');
+    } else {
+        $('#sharingCountBlock').addClass('hidden');
+
+        // reset
+        $('.share-count-btn').removeClass('active');
+        $('#room_type').val('Private');
+    }
+});
+
+
+// SHARE COUNT CLICK
+$(document).on('click', '.share-count-btn', function () {
+
+    $('.share-count-btn').removeClass('active');
+    $(this).addClass('active');
+
+    let count = $(this).data('value');
+
+    // combine → Sharing,3
+    $('#room_type').val('Sharing,' + count);
+});
+// ================= PARKING =================
+let covered = 0;
+let open = 0;
+
+const MAX_LIMIT = 20;
+
+$(document).on('click', '.parking-plus', function () {
+    let type = $(this).data('type');
+
+    if (type === 'covered') {
+        if (covered < MAX_LIMIT) {
+            covered++;
+            $('#coveredCount').text(covered);
+        }
+    } else {
+        if (open < MAX_LIMIT) {
+            open++;
+            $('#openCount').text(open);
+        }
+    }
+
+    updateParking();
+});
+
+$(document).on('click', '.parking-minus', function () {
+    let type = $(this).data('type');
+
+    if (type === 'covered' && covered > 0) {
+        covered--;
+        $('#coveredCount').text(covered);
+    } else if (type === 'open' && open > 0) {
+        open--;
+        $('#openCount').text(open);
+    }
+
+    updateParking();
+});
+
+function updateParking() {
+    let values = [];
+
+    if (covered > 0) values.push(`Covered:${covered}`);
+    if (open > 0) values.push(`Open:${open}`);
+
+    $('#parkingInput').val(values.join(','));
+}
 function checkPurposeAndToggleRent() {
 
     let purpose = parseInt($('#purpose_id').val());
 
-    // 👉 RENT = 4
     if (purpose === 4) {
-
         $('#rentSection').removeClass('hidden');
 
-        // show everything
-        $('#furnishingBlock').show();
-        $('#ageBlock').show();
-        $('#availableBlock').show();
+        $('#furnishingBlock, #ageBlock, #availableBlock').show();
         $('#rentOnlyFields').show();
+        $('#pgOnlyFields').hide();
     }
 
-    // 👉 PG = 5 (CHANGE ID if different)
     else if (purpose === 5) {
-
         $('#rentSection').removeClass('hidden');
 
-        // show only 3 sections
-        $('#furnishingBlock').show();
-        $('#ageBlock').show();
-        $('#availableBlock').show();
-
-        // hide rent-only fields
+        $('#furnishingBlock, #ageBlock, #availableBlock').show();
         $('#rentOnlyFields').hide();
+        $('#pgOnlyFields').removeClass('hidden'); // ✅ NEW
     }
 
-    else {
+   else if (purpose === 3) {
         $('#rentSection').addClass('hidden');
+        $('#pgOnlyFields').addClass('hidden'); // ✅ NEW
+
     }
 }
 // call on page load

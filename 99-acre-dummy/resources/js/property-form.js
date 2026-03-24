@@ -96,6 +96,8 @@ $(document).on('click','.type-btn',function(){
     $('#type_id').val(selectedTypeId);
 
     $('#subtype-label').text('Your '+$btn.data('name')+' type is ...');
+  const typeName = $btn.data('name');
+    $(document).trigger('propertyTypeChanged', [typeName]);
 
     resetLocations();
 
@@ -201,7 +203,16 @@ function filterTypes(){
 
 // PURPOSE RULES
 function applyPurposeRules(){
+ $('.subtypes-wrapper').hide();
+    $('.location-wrapper').hide();
 
+    // PG → hide everything
+    if (selectedPurpose === 'pg') {
+        return;
+    }
+     if (selectedPurpose === 'rent / lease') {
+        return;
+    }
     if(selectedPurpose === 'rent / lease' && selectedCategoryName === 'residential'){
         $types.filter('[data-name="plot / land"]').hide();
     }
@@ -282,11 +293,26 @@ window.editBasicStep = function(el) {
 
     }
 },
-            error: function (xhr) {
+           error: function (xhr) {
 
-                console.log(xhr.responseText);
+    // clear old errors
+    $('[id^="error-"]').html('');
 
-            }
+    if (xhr.status === 422) {
+
+        let errors = xhr.responseJSON.errors;
+
+        $.each(errors, function (field, messages) {
+
+            // show error under field
+            let errorHtml = `<ul class="text-sm text-red-600">
+                                ${messages.map(msg => `<li>${msg}</li>`).join('')}
+                             </ul>`;
+
+            $(`#error-${field}`).html(errorHtml);
+        });
+    }
+}
         });
 
     });

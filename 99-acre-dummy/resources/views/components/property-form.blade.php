@@ -85,7 +85,7 @@ for="category{{ $category->id }}">
 
 
 {{-- PROPERTY TYPES --}}
-<div class="types-wrapper mb-3">
+<div class="types-wrapper mb-3" >
 
 @foreach($types as $type)
 
@@ -102,7 +102,7 @@ data-category="{{ $type->category_id }}"
 @endforeach
 
 </div>
-
+<div id="error-type_id"></div>
 
 {{-- SUB TYPES --}}
 <div class="subtypes-wrapper mb-3" style="display:none;">
@@ -115,6 +115,7 @@ Your type is ...
 </div>
 
 </div>
+<div id="error-sub_type_id"></div>
 
 
 {{-- LOCATION TYPES --}}
@@ -127,6 +128,7 @@ Your shop is located inside ?
 <div class="location-list d-flex gap-2 flex-wrap">
 </div>
 
+<div id="error-location_type_id"></div>
 </div>
 
 

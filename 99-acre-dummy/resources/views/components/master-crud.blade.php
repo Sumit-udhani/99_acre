@@ -73,6 +73,11 @@
                     <th>Agreement Type</th>
                     <th>Broker Contact</th>
                     <th>Rent Out</th>
+                    <th>Available Gender</th>
+                    <th>Suitable For</th>
+                    <th>Parking</th>
+                    <th>Room Type</th>
+
 
                     <th>Action</th>
                     @elseif($mode == 'property-profile-option')
@@ -229,6 +234,22 @@
                     <td>{{ $item->agreement_type ?? '-' }}</td>
                     <td>{{ $item->broker_contact ?? '-' }}</td>
                     <td>{{ $item->rent_out ?? '-' }}</td>
+                    <td>{{ $item->available_gender ?? '-' }}</td>
+                    <td>
+                        @if(!empty($item->suitable_for))
+                        {{ implode(', ', explode(',', $item->suitable_for)) }}
+                        @else
+                        -
+                        @endif
+                    </td>
+                        <td>
+                        @if(!empty($item->parking))
+                        {{ implode(', ', explode(',', $item->parking)) }}
+                        @else
+                        -
+                        @endif
+                    </td>
+                    <td>{{ $item->room_type ?? '-' }}</td>
 
                     <td>
                         <button class="btn btn-sm btn-warning"

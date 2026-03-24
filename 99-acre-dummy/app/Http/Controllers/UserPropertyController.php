@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StorePropertyRequest;
 use App\Models\Property;
 use App\Models\PropertyCategory;
 use App\Models\PropertyProfile;
@@ -14,16 +15,16 @@ use Illuminate\Support\Facades\Auth as FacadesAuth;
 class UserPropertyController extends Controller
 {
     //
-    public function store(Request $request)
+    public function store(StorePropertyRequest  $request)
     {
-        $request->validate([
-            'purpose_id' => 'required',
-            'category_id' => 'required',
-            'type_id' => 'required',
-            'sub_type_id' => 'nullable',
-            'location_type_id' => 'nullable'
+        // $request->validate([
+        //     'purpose_id' => 'required',
+        //     'category_id' => 'required',
+        //     'type_id' => 'required',
+        //     'sub_type_id' => 'nullable',
+        //     'location_type_id' => 'nullable'
 
-        ]);
+        // ]);
 
         $property = Property::create([
             'user_id' => FacadesAuth::id(),
@@ -101,7 +102,6 @@ class UserPropertyController extends Controller
 }
 
 //Save property profile form 
-
 public function saveProfile(Request $request, $id)
 {
     $property = \App\Models\Property::findOrFail($id);
@@ -125,7 +125,7 @@ public function saveProfile(Request $request, $id)
         'ownership' => 'required',
     ];
 
-    // ✅ RENT-LEASE (ALL FIELDS)
+    // ✅ RENT
     if ($purposeSlug === 'rent-lease') {
         $rules = array_merge($rules, [
             'property_age'   => 'required',
@@ -138,13 +138,19 @@ public function saveProfile(Request $request, $id)
         ]);
     }
 
-    // ✅ PG (ONLY FEW FIELDS)
+    // ✅ PG
     if ($purposeSlug === 'pg') {
         $rules = array_merge($rules, [
             'property_age'   => 'required',
             'property_date'  => 'required|date',
             'furnishing'     => 'required',
             'furnishing_items' => 'required|array',
+
+            'available_gender' => 'required',
+            'suitable_for' => 'required|array',
+            'parking' => 'nullable|string',
+        'room_type'=>'nullable|string',
+           
         ]);
     }
 
@@ -152,25 +158,30 @@ public function saveProfile(Request $request, $id)
 
     $data = $validated;
 
-    // ✅ HANDLE furnishing_items
+    // ✅ furnishing_items
     if (!empty($validated['furnishing_items'])) {
         $data['furnishing_items'] = implode(',', $validated['furnishing_items']);
-    } else {
-        $data['furnishing_items'] = null;
     }
 
-    // ✅ CLEAN DATA BASED ON PURPOSE
+    // ✅ suitable_for (array → string)
+    if (!empty($validated['suitable_for'])) {
+        $data['suitable_for'] = implode(',', $validated['suitable_for']);
+    }
+
+    // ✅ parking already string from JS
+    $data['parking'] = $request->parking ?? null;
+    $data['room_type'] = $request->room_type ?? null;
+
+    // ✅ CLEAN DATA
     if ($purposeSlug === 'rent-lease') {
         // keep all
     } elseif ($purposeSlug === 'pg') {
-        // ❌ remove rent-only fields
         unset(
             $data['rent_out'],
             $data['agreement_type'],
             $data['broker_contact']
         );
     } else {
-        
         unset(
             $data['property_age'],
             $data['property_date'],
@@ -178,11 +189,16 @@ public function saveProfile(Request $request, $id)
             $data['agreement_type'],
             $data['broker_contact'],
             $data['furnishing'],
-            $data['furnishing_items']
+            $data['furnishing_items'],
+            $data['available_gender'],
+            $data['suitable_for'],
+            $data['parking'],
+            $data['room_type']
+
         );
     }
 
-    PropertyProfile::updateOrCreate(
+    \App\Models\PropertyProfile::updateOrCreate(
         ['property_id' => $id],
         $data
     );
@@ -191,6 +207,104 @@ public function saveProfile(Request $request, $id)
         'success' => true
     ]);
 }
+// public function saveProfile(Request $request, $id)
+// {
+//     $property = \App\Models\Property::findOrFail($id);
+//     $purposeSlug = $property->purpose->slug ?? null;
+
+//     $rules = [
+//         'bedrooms' => 'required',
+//         'bathrooms' => 'required',
+//         'balconies' => 'required',
+
+//         'carpet_area' => 'required|numeric',
+//         'area_unit' => 'required',
+
+//         'builtup_area' => 'nullable|numeric',
+//         'super_builtup_area' => 'nullable|numeric',
+
+//         'total_floors' => 'required|integer',
+//         'floor_no' => 'required',
+
+//         'availability_status' => 'required',
+//         'ownership' => 'required',
+//     ];
+
+//     // ✅ RENT-LEASE (ALL FIELDS)
+//     if ($purposeSlug === 'rent-lease') {
+//         $rules = array_merge($rules, [
+//             'property_age'   => 'required',
+//             'property_date'  => 'required|date',
+//             'rent_out'       => 'required',
+//             'agreement_type' => 'required',
+//             'broker_contact' => 'required',
+//             'furnishing'     => 'required',
+//             'furnishing_items' => 'required|array',
+//         ]);
+//     }
+
+//     // ✅ PG (ONLY FEW FIELDS)
+//     if ($purposeSlug === 'pg') {
+//         $rules = array_merge($rules, [
+//             'property_age'   => 'required',
+//             'property_date'  => 'required|date',
+//             'furnishing'     => 'required',
+//             'furnishing_items' => 'required|array',
+
+//             'available_gender'=>'required',
+//             'suitable_for'=>'required|array',
+//             'parking'=>'nullable|string'
+//         ]);
+//     }
+
+//     $validated = $request->validate($rules);
+
+//     $data = $validated;
+
+//     // ✅ HANDLE furnishing_items
+//     if (!empty($validated['furnishing_items'])) {
+//         $data['furnishing_items'] = implode(',', $validated['furnishing_items']);
+//     } 
+//     if (!empty($validated['suitable_for'])) {
+//         $data['suitable_for'] = implode(',', $validated['suitable_for']);
+//     }
+    
+//     else {
+//         $data['furnishing_items'] = null;
+//     }
+
+//     // ✅ CLEAN DATA BASED ON PURPOSE
+//     if ($purposeSlug === 'rent-lease') {
+//         // keep all
+//     } elseif ($purposeSlug === 'pg') {
+//         // ❌ remove rent-only fields
+//         unset(
+//             $data['rent_out'],
+//             $data['agreement_type'],
+//             $data['broker_contact']
+//         );
+//     } else {
+        
+//         unset(
+//             $data['property_age'],
+//             $data['property_date'],
+//             $data['rent_out'],
+//             $data['agreement_type'],
+//             $data['broker_contact'],
+//             $data['furnishing'],
+//             $data['furnishing_items']
+//         );
+//     }
+
+//     PropertyProfile::updateOrCreate(
+//         ['property_id' => $id],
+//         $data
+//     );
+
+//     return response()->json([
+//         'success' => true
+//     ]);
+// }
     public function updateBasic(Request $request, $id)
     {
         $request->validate([

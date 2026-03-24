@@ -160,3 +160,23 @@ background:#f5f5f5;
 .chip-btn.active {
     @apply bg-blue-600 text-white border-blue-600;
 }
+.share-count-btn {
+    padding: 6px 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 999px;
+    background: #fff;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.share-count-btn:hover {
+    border-color: #3b82f6;
+    color: #3b82f6;
+}
+
+.share-count-btn.active {
+    background: #e0f2fe;
+    border-color: #3b82f6;
+    color: #1d4ed8;
+}
