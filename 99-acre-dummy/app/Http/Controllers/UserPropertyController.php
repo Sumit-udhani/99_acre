@@ -106,11 +106,11 @@ public function saveProfile(Request $request, $id)
 {
     $property = \App\Models\Property::findOrFail($id);
     $purposeSlug = $property->purpose->slug ?? null;
-
+$typesSlug = $property->type->slug?? null;
     $rules = [
-        'bedrooms' => 'required',
-        'bathrooms' => 'required',
-        'balconies' => 'required',
+        'bedrooms' => 'nullable',
+        'bathrooms' => 'nullable',
+        'balconies' => 'nullable',
 
         'carpet_area' => 'required|numeric',
         'area_unit' => 'required',
@@ -123,6 +123,15 @@ public function saveProfile(Request $request, $id)
 
         'availability_status' => 'required',
         'ownership' => 'required',
+        'boundary_wall'=>'nullable',
+         'open_sides' =>'nullable',
+          'is_construction'=>'nullable',
+        'property_possesion'=>'nullable',
+
+        'quality_ratings'=>'nullable',
+        'no_of_washroom'=>'nullable',
+
+           
     ];
 
     // ✅ RENT
@@ -137,7 +146,14 @@ public function saveProfile(Request $request, $id)
             'furnishing_items' => 'required|array',
         ]);
     }
-
+if ($typesSlug === 'hospitality') {
+    $rules = array_merge($rules, [
+            'property_age'   => 'required',
+          
+            'furnishing'     => 'required',
+            'furnishing_items' => 'required|array',
+        ]);
+}
     // ✅ PG
     if ($purposeSlug === 'pg') {
         $rules = array_merge($rules, [
@@ -172,31 +188,48 @@ public function saveProfile(Request $request, $id)
     $data['parking'] = $request->parking ?? null;
     $data['room_type'] = $request->room_type ?? null;
 
-    // ✅ CLEAN DATA
-    if ($purposeSlug === 'rent-lease') {
-        // keep all
-    } elseif ($purposeSlug === 'pg') {
-        unset(
-            $data['rent_out'],
-            $data['agreement_type'],
-            $data['broker_contact']
-        );
-    } else {
-        unset(
-            $data['property_age'],
-            $data['property_date'],
-            $data['rent_out'],
-            $data['agreement_type'],
-            $data['broker_contact'],
-            $data['furnishing'],
-            $data['furnishing_items'],
-            $data['available_gender'],
-            $data['suitable_for'],
-            $data['parking'],
-            $data['room_type']
+   // ✅ CLEAN DATA
+if ($purposeSlug === 'rent-lease') {
+    // keep all
+} 
+elseif ($purposeSlug === 'pg') {
+    unset(
+        $data['rent_out'],
+        $data['agreement_type'],
+        $data['broker_contact']
+    );
+} 
+elseif ($typesSlug === 'hospitality') {
 
-        );
-    }
+    // ✅ KEEP ONLY required for hospitality
+    unset(
+        $data['property_date'],
+        $data['rent_out'],
+        $data['agreement_type'],
+        $data['broker_contact'],
+        $data['available_gender'],
+        $data['suitable_for'],
+        $data['parking'],
+        $data['room_type']
+    );
+
+} 
+else {
+    // ❌ REMOVE for normal SELL
+    unset(
+        $data['property_age'],
+        $data['property_date'],
+        $data['rent_out'],
+        $data['agreement_type'],
+        $data['broker_contact'],
+        $data['furnishing'],
+        $data['furnishing_items'],
+        $data['available_gender'],
+        $data['suitable_for'],
+        $data['parking'],
+        $data['room_type']
+    );
+}
 
     \App\Models\PropertyProfile::updateOrCreate(
         ['property_id' => $id],

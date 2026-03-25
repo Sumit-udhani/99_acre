@@ -53,7 +53,9 @@
     'furnishings'=> $furnishings,
     'furnishingItems'=>$furnishingItems,
     'rentout'=>$rentout,
-   
+   'possesions'=>$possesions,
+   'qualityRatings'=>$qualityRatings,
+    'washrooms'=>$washrooms
 ])
 </div>
 </div>

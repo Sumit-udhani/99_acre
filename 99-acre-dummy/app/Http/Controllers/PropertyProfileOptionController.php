@@ -34,9 +34,13 @@ class PropertyProfileOptionController extends Controller
             'floor_no' => 'nullable|string|max:50',
             'availability_status' => 'nullable|string|max:100',
             'ownership' => 'nullable|string|max:100',
-            'furnishing' => 'required|string|max:100',
-            'rent_out' => 'required|string|max:100',
-            'furnishing_items' => 'required|string|max:100',
+            'furnishing' => 'nullable|string|max:100',
+            'rent_out' => 'nullable|string|max:100',
+            'furnishing_items' => 'nullable|string|max:100',
+        'property_possesion'=>  'required|string|max:100',
+            'quality_ratings' => 'nullable|string|max:100',
+            'no_of_washroom' => 'nullable|string|max:100',
+          
         ]);
 
         PropertyProfileOption::create($request->only([
@@ -46,7 +50,10 @@ class PropertyProfileOptionController extends Controller
             'ownership',
             'furnishing',
             'rent_out',
-            'furnishing_items'
+            'furnishing_items',
+            'property_possesion',
+             'quality_ratings',
+        'no_of_washroom'
         ]));
 
         return back()->with('success', 'Option added');
@@ -84,8 +91,10 @@ class PropertyProfileOptionController extends Controller
             'ownership' => 'nullable|string|max:100',
             'furnishing' => 'nullable|string|max:100',
             'rent_out' => 'nullable|string|max:100',
-            'furnishing_items' => 'required|string|max:100',
-
+            'furnishing_items' => 'nullable|string|max:100',
+            'property_possesion' => 'required|string|max:100',
+            'quality_ratings' => 'nullable|string|max:100',
+            'no_of_washroom' => 'nullable|string|max:100',
         ]);
 
         $option->update($request->only([
@@ -95,7 +104,10 @@ class PropertyProfileOptionController extends Controller
             'ownership',
             'furnishing',
             'rent_out',
-            'furnishing_items'
+            'furnishing_items',
+            'property_possesion',
+             'quality_ratings',
+        'no_of_washroom'
         ]));
 
         return back()->with('success', 'Option Updated');

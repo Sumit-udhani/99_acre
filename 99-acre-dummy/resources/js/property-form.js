@@ -202,25 +202,30 @@ function filterTypes(){
 
 
 // PURPOSE RULES
-function applyPurposeRules(){
- $('.subtypes-wrapper').hide();
+function applyPurposeRules() {
+
+   
+
+    $('.subtypes-wrapper').hide();
     $('.location-wrapper').hide();
 
-    // PG → hide everything
+    // ✅ PG rules
     if (selectedPurpose === 'pg') {
-        return;
-    }
-     if (selectedPurpose === 'rent / lease') {
-        return;
-    }
-    if(selectedPurpose === 'rent / lease' && selectedCategoryName === 'residential'){
-        $types.filter('[data-name="plot / land"]').hide();
-    }
-
-    if(selectedPurpose === 'pg'){
         $types.filter('[data-name="plot / land"],[data-name="farmhouse"],[data-name="other"]').hide();
+        return;
     }
 
+    // ✅ RENT / LEASE rules
+    if (selectedPurpose === 'rent / lease') {
+
+        if (selectedCategoryName === 'residential') {
+            $types.filter('[data-name="plot / land"]').hide();
+        }
+
+        return;
+    }
+
+    // SELL → no restriction
 }
 
 

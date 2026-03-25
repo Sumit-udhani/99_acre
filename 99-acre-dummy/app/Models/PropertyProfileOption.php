@@ -14,5 +14,8 @@ class PropertyProfileOption extends Model
         'furnishing',
         'rent_out',
         'furnishing_items',
+        'property_possesion',
+         'quality_ratings',
+        'no_of_washroom'
     ];
 }

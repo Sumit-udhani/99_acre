@@ -25,8 +25,8 @@ class StorePropertyRequest extends FormRequest
         'purpose_id' => 'required',
         'category_id' => 'required',
         'type_id' => 'required',
-      'sub_type_id' => 'required_with:type_id|nullable|exists:property_sub_types,id',
-        'location_type_id' => 'required_with:type_id|nullable|exists:property_location_types,id',
+    //   'sub_type_id' => 'required_with:type_id|nullable|exists:property_sub_types,id',
+    //     'location_type_id' => 'required_with:type_id|nullable|exists:property_location_types,id',
     ];
     }
     public function messages(): array
@@ -36,8 +36,8 @@ class StorePropertyRequest extends FormRequest
         'category_id.required' => 'Please select category.',
         'type_id.required' => 'Please select property type.',
 
-        'sub_type_id.required_with' => 'Please select sub type.',
-        'location_type_id.required_with' => 'Please select location type.',
+        // 'sub_type_id.required_with' => 'Please select sub type.',
+        // 'location_type_id.required_with' => 'Please select location type.',
     ];
 }
 }

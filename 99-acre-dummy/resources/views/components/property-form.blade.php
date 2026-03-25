@@ -163,15 +163,24 @@ Start now
 <x-modal name="auth-modal" focusable maxWidth="md">
 
 <div class="p-6"
-x-data="{
-form: 'register'
-}">
+x-data="{ form: 'register' }">
 
-<h2 class="text-lg font-semibold mb-4">
-Register to Continue
-</h2>
+    <!-- TITLE -->
+    <h2 class="text-lg font-semibold mb-4" x-text="form === 'register' ? 'Register to Continue' : 'Login to Continue'"></h2>
 
-@include('auth.partials.register-form')
+    <!-- REGISTER FORM -->
+    <div x-show="form === 'register'">
+        @include('auth.partials.register-form')
+
+      
+    </div>
+
+    <!-- LOGIN FORM -->
+    <div x-show="form === 'login'">
+        @include('auth.partials.login-form')
+
+       
+    </div>
 
 </div>
 

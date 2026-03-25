@@ -1,5 +1,11 @@
 import $ from 'jquery';
 console.log('Property')
+console.log({
+    roomVisible: $('#room-section').is(':visible'),
+    rentVisible: $('#rentSection').is(':visible'),
+    hospitalityVisible: $('#hospitalitySection').is(':visible')
+});
+let selectedTypeName = '';
 $(document).ready(function () {
 
     // COMMON FUNCTION → set active class
@@ -13,10 +19,13 @@ $(document).ready(function () {
     // ================================
 $(document).on('propertyTypeChanged', function (e, typeName) {
 
-    const isStudio = typeName.toLowerCase().includes('rk') || 
+    selectedTypeName = typeName;
+const isStudio = typeName.toLowerCase().includes('rk') || 
                      typeName.toLowerCase().includes('studio');
 
-    const bedroomBtns = $('.room-btn[data-field="bedrooms"]');
+    const type = typeName.toLowerCase();
+    const isPlot = type.includes('plot') || type.includes('land');
+  const bedroomBtns = $('.room-btn[data-field="bedrooms"]');
     const bathroomBtns = $('.room-btn[data-field="bathrooms"]');
 
     if (isStudio) {
@@ -41,6 +50,61 @@ $(document).on('propertyTypeChanged', function (e, typeName) {
         $('.room-btn').prop('disabled', false).removeClass('opacity-50 cursor-not-allowed');
     }
 
+    const purpose = parseInt($('#purpose_id').val());
+    const isSell = purpose === 3;
+
+    checkPurposeAndToggleRent();
+
+    // 🔁 RESET FIRST (very important)
+    $('#plotLandSection').hide();
+  
+    $('#room-section').hide();
+
+    // 🟢 Plot logic
+    if (isSell && isPlot) {
+        $('#plotLandSection').show();
+    }
+
+    // 🟢 Hospitality logic
+   
+    // 🟢 Default → Room section
+    else {
+        $('#room-section').show();
+    }
+
+});
+// Toggle input
+$(document).on('click', '#addWashroom', function () {
+    $('#washroomInputWrap').toggleClass('hidden');
+
+    // reset chip selection
+    $('.option-btn[data-field="no_of_washroom"]').removeClass('active');
+});
+
+// When user types custom value
+$(document).on('input', '#customWashroom', function () {
+
+    let value = $(this).val();
+
+    if (value) {
+        $('input[name="no_of_washroom"]').val(value);
+    }
+});
+
+$(document).on('click', '.option-btn', function () {
+
+    const field = $(this).data('field');
+    const value = $(this).data('value');
+
+    const group = $(`.option-btn[data-field="${field}"]`);
+
+    setActive(group, $(this));
+        if (field === 'no_of_washroom') {
+                $('#washroomInputWrap').addClass('hidden');
+                $('#customWashroom').val('');
+            }
+
+    $(`input[name="${field}"]`).val(value);
 });
     $(document).on('click', '.room-btn', function () {
 
@@ -309,28 +373,38 @@ function checkPurposeAndToggleRent() {
 
     let purpose = parseInt($('#purpose_id').val());
 
-    if (purpose === 4) {
+    // 🔁 RESET FIRST
+    $('#rentSection').addClass('hidden');
+    $('#pgOnlyFields').addClass('hidden');
+    $('#rentOnlyFields').hide();
+
+    if (purpose === 4) { // Rent
+
         $('#rentSection').removeClass('hidden');
 
         $('#furnishingBlock, #ageBlock, #availableBlock').show();
+
         $('#rentOnlyFields').show();
-        $('#pgOnlyFields').hide();
     }
 
-    else if (purpose === 5) {
+    else if (purpose === 5) { // PG
+
         $('#rentSection').removeClass('hidden');
 
         $('#furnishingBlock, #ageBlock, #availableBlock').show();
+
         $('#rentOnlyFields').hide();
-        $('#pgOnlyFields').removeClass('hidden'); // ✅ NEW
+
+        $('#pgOnlyFields').removeClass('hidden'); // ✅ works now
     }
 
-   else if (purpose === 3) {
-        $('#rentSection').addClass('hidden');
-        $('#pgOnlyFields').addClass('hidden'); // ✅ NEW
+    else if (purpose === 3) { // Sell
 
+        $('#rentSection').addClass('hidden');
+        $('#pgOnlyFields').addClass('hidden');
     }
 }
+
 // call on page load
 $(document).ready(function () {
     checkPurposeAndToggleRent();

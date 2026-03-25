@@ -30,7 +30,13 @@ class PropertyProfile extends Model
         'available_gender',
         'suitable_for',
         'parking',
-        'room_type'
+        'room_type',
+        'boundary_wall',
+        'open_sides',
+        'is_construction',
+        'property_possesion',
+        'quality_ratings',
+        'no_of_washroom'
     ];
     public function property(){
         return $this->belongsTo(Property::class);

@@ -13,7 +13,11 @@ return new class extends Migration
     {
         Schema::table('property_profiles', function (Blueprint $table) {
             //
-            $table->text('room_type')->nullable()->after('parking');
+            $table->text('boundary_wall')->nullable()->after('room_type');
+            $table->text('open_sides')->nullable()->after('boundary_wall');
+            $table->text('is_construction')->nullable()->after('open_sides');
+            $table->text('property_possesion')->nullable()->after('is_construction');
+
 
         });
     }
@@ -25,7 +29,6 @@ return new class extends Migration
     {
         Schema::table('property_profiles', function (Blueprint $table) {
             //
-            
         });
     }
 };

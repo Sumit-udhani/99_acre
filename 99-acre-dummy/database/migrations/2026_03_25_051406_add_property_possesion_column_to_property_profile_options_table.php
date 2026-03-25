@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('property_profiles', function (Blueprint $table) {
+        Schema::table('property_profile_options', function (Blueprint $table) {
             //
-            $table->text('room_type')->nullable()->after('parking');
+            $table->text('property_possesion')->nullable()->after('furnishing_items');
 
         });
     }
@@ -23,9 +23,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('property_profiles', function (Blueprint $table) {
+        Schema::table('property_profile_options', function (Blueprint $table) {
             //
-            
         });
     }
 };

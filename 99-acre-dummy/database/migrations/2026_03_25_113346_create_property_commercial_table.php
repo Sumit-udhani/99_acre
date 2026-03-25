@@ -11,10 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('property_profiles', function (Blueprint $table) {
-            //
-            $table->text('room_type')->nullable()->after('parking');
-
+        Schema::create('property_commercial', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
         });
     }
 
@@ -23,9 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('property_profiles', function (Blueprint $table) {
-            //
-            
-        });
+        Schema::dropIfExists('property_commercial');
     }
 };

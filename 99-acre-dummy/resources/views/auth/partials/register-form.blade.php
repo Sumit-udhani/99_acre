@@ -42,7 +42,14 @@ type="password" name="password" :value="old('password')" required />
 <x-primary-button>
 {{ __('Register') }}
 </x-primary-button>
-
+<p class="text-sm text-gray-600">
+Already have an account?
+<a href="#"
+class="text-blue-600 hover:underline"
+@click.prevent="form='login'">
+Login
+</a>
+</p>
 
 
 </div>

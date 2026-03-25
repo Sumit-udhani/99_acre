@@ -42,7 +42,11 @@ $request->validate([
 $request->country_code == '+91' ? 'digits:10' : 'digits_between:9,10',
 'unique:users,phone'
 ],
-'password' => ['required', Rules\Password::defaults()],
+'password' => ['required',
+        'regex:/^\S+$/', Rules\Password::defaults()],
+],
+ [
+    'password.regex' => 'Password should not contain spaces.',
 ]);
 
 $user = User::create([

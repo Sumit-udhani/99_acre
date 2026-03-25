@@ -13,7 +13,8 @@
             <x-text-input
                 type="number"
                 name="carpet_area"
-                placeholder="Carpet Area"
+                placeholder="Carpet Area, Plot Area"
+                 min="0"
                 class="w-2/3" />
 
             <select name="area_unit"
@@ -23,6 +24,7 @@
                 @endforeach
             </select>
         </div>
+
 
         <div class="mt-2 text-sm text-blue-600">
 
@@ -41,6 +43,7 @@
                     <x-text-input
                         type="number"
                         name="builtup_area"
+                         min="0"
                         placeholder="Built-up Area"
                         class="w-2/3" />
 
@@ -59,6 +62,7 @@
                     <x-text-input
                         type="number"
                         name="super_builtup_area"
+                         min="0"
                         placeholder="Super Built-up Area"
                         class="w-2/3" />
 
@@ -73,9 +77,125 @@
 
         </div>
     </div>
+   <!-- <div id="hospitalitySection" style="display:none;">
 
+    <div class="mb-4">
+        <h3 class="font-medium mb-2">Quality Ranking</h3>
+
+        <div class="flex gap-3 flex-wrap">
+            @foreach($qualityRatings as $item)
+                <button type="button"
+                    class="option-btn chip-btn"
+                    data-field="quality_ratings"
+                    data-value="{{ $item }}">
+                    {{ $item }}
+                </button>
+            @endforeach
+        </div>
+
+        <input type="hidden" name="quality_ratings">
+    </div>
+
+
+    <div class="mb-4">
+        <h3 class="font-medium mb-2">No. of Washrooms</h3>
+
+        <div class="flex gap-3 flex-wrap">
+            @foreach($washrooms as $item)
+                <button type="button"
+                    class="option-btn chip-btn"
+                    data-field="no_of_washroom"
+                    data-value="{{ $item }}">
+                    {{ $item }}
+                </button>
+            @endforeach
+        </div>
+  <div class="text-sm text-blue-600 cursor-pointer mb-2" id="addWashroom">
+        + Add other
+    </div>
+
+    
+    <div id="washroomInputWrap" class="hidden">
+      <x-text-input type="number" id="customWashroom" name="no_of_washroom" placeholder="No of washrooms" class="s-2/3" />
+
+    <input type="hidden" name="no_of_washroom">
+</div>
+
+</div> -->
+
+
+<div id="plotLandSection" style="display:none;"> 
+
+    
+    <div class="mb-4">
+        <label class="fw-semibold">Is there a boundary wall around the property?</label>
+      
+
+        <div class="d-flex gap-2">
+          <button type="button"
+    class="btn option-btn chip-btn"
+    data-field="boundary_wall"
+    data-value="Yes">
+    Yes
+</button>
+
+<button type="button"
+    class="btn option-btn chip-btn"
+    data-field="boundary_wall"
+    data-value="No">
+    No
+</button>
+        </div>
+
+        <input type="hidden" name="boundary_wall">
+    </div>
+
+    <!-- Open Sides -->
+    <div class="mb-4">
+        <label class="fw-semibold">No. of open sides</label>
+      
+
+        <div class="d-flex gap-2">
+            @foreach([1,2,3,'3+'] as $num)
+                <button type="button" class="btn option-btn share-count-btn" data-field="open_sides" data-value="{{ $num }}">
+                    {{ $num }}
+                </button>
+            @endforeach
+        </div>
+
+        <input type="hidden" name="open_sides">
+    </div>
+
+    <!-- Construction -->
+    <div class="mb-4">
+        <label class="fw-semibold">Any construction done on this property?</label>
+      
+
+        <div class="d-flex gap-2">
+            <button type="button"  class="btn option-btn chip-btn" data-field="is_construction" data-value="Yes">Yes</button>
+            <button type="button"   class="btn option-btn chip-btn" data-field="is_construction" data-value="No">No</button>
+        </div>
+
+        <input type="hidden" name="is_construction">
+    </div>
+
+    <!-- Possession -->
+    <div class="mb-4">
+        <label class="fw-semibold">Possession By</label> <br>
+
+        <select name="property_possesion" class="form-control mt-2">
+            <option value="">Expected by</option>
+            @foreach($possesions as $pos)
+                <option value="{{ $pos }}">{{ $pos }}</option>
+            @endforeach
+        </select>
+
+        <div id="error-property_possesion"></div>
+    </div>
+
+</div>
     {{-- ROOM DETAILS --}}
-    <div>
+    <div id="room-section">
         <h3 class="font-medium mb-3">Add Room Details</h3>
 
         {{-- Bedrooms --}}
@@ -140,6 +260,7 @@
                 type="number"
                 name="total_floors"
                 placeholder="Total Floors"
+                 min="0"
                 class="w-full" />
 
             <select name="floor_no" id="floor_no"

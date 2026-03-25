@@ -48,43 +48,50 @@ Route::get('/get-location-types/{type}', function ($type) {
 
     return PropertyLocationType::where('property_type_id', $type)->get();
 });
-    Route::get('/dashboard', function () {
-        $purposes = PropertyPurpose::all();
-        $categories = PropertyCategory::all();
-        $types = PropertyType::all();
-        $steps = PropertyStep::where('active', 1)
-            ->orderBy('order')
-            ->get();
-        $areaUnits = PropertyProfileOption::whereNotNull('area_unit')->pluck('area_unit');
-        $floors = PropertyProfileOption::whereNotNull('floor_no')->pluck('floor_no');
-        $availability = PropertyProfileOption::whereNotNull('availability_status')->pluck('availability_status');
-        $ownerships = PropertyProfileOption::whereNotNull('ownership')->pluck('ownership');
+Route::get('/dashboard', function () {
+    $purposes = PropertyPurpose::all();
+    $categories = PropertyCategory::all();
+    $types = PropertyType::all();
+    $steps = PropertyStep::where('active', 1)
+        ->orderBy('order')
+        ->get();
+    $areaUnits = PropertyProfileOption::whereNotNull('area_unit')->pluck('area_unit');
+    $floors = PropertyProfileOption::whereNotNull('floor_no')->pluck('floor_no');
+    $availability = PropertyProfileOption::whereNotNull('availability_status')->pluck('availability_status');
+    $ownerships = PropertyProfileOption::whereNotNull('ownership')->pluck('ownership');
     $furnishings = PropertyProfileOption::whereNotNull('furnishing')
         ->orderByRaw("
             FIELD(furnishing, 'Furnished', 'Semi-Furnished', 'Un-furnished')
         ")
         ->pluck('furnishing');
-        $furnishingItems = PropertyProfileOption::whereNotNull('furnishing_items')
-            ->pluck('furnishing_items');
-        $rentout = PropertyProfileOption::whereNotNull('rent_out')
-            ->pluck('rent_out');
-            // $property = Property::with('type_id')->get();
-          
-        return view('dashboard', compact(
-            'purposes',
-            'categories',
-            'types',
-            'steps',
-            'areaUnits',
-            'floors',
-            'availability',
-            'ownerships',
-            'furnishings',
-            'furnishingItems',
-            'rentout',
-            
-        ));
-    })->middleware(['auth', 'verified'])->name('dashboard');
+    $furnishingItems = PropertyProfileOption::whereNotNull('furnishing_items')
+        ->pluck('furnishing_items');
+    $rentout = PropertyProfileOption::whereNotNull('rent_out')
+        ->pluck('rent_out');
+    // $property = Property::with('type_id')->get();
+    $possesions = PropertyProfileOption::whereNotNull('property_possesion')->pluck('property_possesion');
+    $qualityRatings = PropertyProfileOption::whereNotNull('quality_ratings')
+        ->pluck('quality_ratings');
+
+    $washrooms = PropertyProfileOption::whereNotNull('no_of_washroom')
+        ->pluck('no_of_washroom');
+    return view('dashboard', compact(
+        'purposes',
+        'categories',
+        'types',
+        'steps',
+        'areaUnits',
+        'floors',
+        'availability',
+        'ownerships',
+        'furnishings',
+        'furnishingItems',
+        'rentout',
+        'possesions',
+        'qualityRatings',
+        'washrooms'
+    ));
+})->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

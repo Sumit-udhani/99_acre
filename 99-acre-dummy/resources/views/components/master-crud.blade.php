@@ -76,8 +76,11 @@
                     <th>Available Gender</th>
                     <th>Suitable For</th>
                     <th>Parking</th>
+                    <th>Boundary wall</th>
+                    <th>Open sides</th>
+                    <th>Is Construction</th>
+                    <th>Property Possesion</th>
                     <th>Room Type</th>
-
 
                     <th>Action</th>
                     @elseif($mode == 'property-profile-option')
@@ -89,6 +92,9 @@
                     <th>Furnishing</th>
                     <th>Rentout</th>
                     <th>Furnishing Items</th>
+                    <th>Property possesion</th>
+                    <th>Quality Ratings</th>
+                    <th>No. of. Washroom</th>
 
                     <th>Action</th>
                     @elseif($mode == 'normal')
@@ -220,6 +226,7 @@
 
 
 
+
                     <td>{{ $item->furnishing ?? '-' }}</td>
                     <td>
                         @if(!empty($item->furnishing_items))
@@ -242,13 +249,17 @@
                         -
                         @endif
                     </td>
-                        <td>
+                    <td>
                         @if(!empty($item->parking))
                         {{ implode(', ', explode(',', $item->parking)) }}
                         @else
                         -
                         @endif
                     </td>
+                    <td>{{ $item->boundary_wall ?? '-' }}</td>
+                    <td>{{ $item->open_sides ?? '-' }}</td>
+                    <td>{{ $item->is_construction ?? '-' }}</td>
+                    <td>{{ $item->property_possesion ?? '-' }}</td>
                     <td>{{ $item->room_type ?? '-' }}</td>
 
                     <td>
@@ -278,6 +289,9 @@
                     <td>{{ $item->furnishing ?? '-' }}</td>
                     <td>{{ $item->rent_out ?? '-' }}</td>
                     <td>{{ $item->furnishing_items ?? '-' }}</td>
+                    <td>{{ $item->property_possesion ?? '-' }}</td>
+                    <td>{{ $item->quality_ratings ?? '-' }}</td>
+                    <td>{{ $item->no_of_washroom ?? '-' }}</td>
 
                     <td>
                         <button class="btn btn-sm btn-warning"
@@ -520,7 +534,7 @@
                             class="form-control"
                             value="{{ $item->area_unit }}"
                             placeholder="e.g. Sq.ft, Sq.yd"
-                            required>
+                            >
                     </div>
 
                     {{-- FLOOR NO --}}
@@ -531,7 +545,7 @@
                             class="form-control"
                             value="{{ $item->floor_no }}"
                             placeholder="e.g. Ground, 1st, 2nd"
-                            required>
+                            >
                     </div>
 
                     {{-- AVAILABILITY STATUS --}}
@@ -552,7 +566,7 @@
                             class="form-control"
                             value="{{ $item->ownership }}"
                             placeholder="e.g. Freehold, Leasehold"
-                            required>
+                            >
                     </div>
                     <div class="form-group mb-3">
                         <label>Furnishing</label>
@@ -578,10 +592,33 @@
                             class="form-control"
                             value="{{ $item->furnishing_items }}"
                             placeholder="e.g. Ac,Tv"
-                            required>
+                            >
 
                     </div>
-
+                    <div class="form-group mb-3">
+                        <label>Property Possesiom</label>
+                        <input type="text"
+                            name="property_possesion"
+                            class="form-control"
+                            value="{{ $item->property_possesion }}"
+                            placeholder="e.g. Immediate">
+                    </div>
+                     <div class="form-group mb-3">
+                        <label>Quality Ratings</label>
+                        <input type="text"
+                            name="quality_ratings"
+                            class="form-control"
+                            value="{{ $item->quality_ratings }}"
+                            placeholder="e.g. 1star,2star">
+                    </div>
+                     <div class="form-group mb-3">
+                        <label>No of washroom</label>
+                        <input type="text"
+                            name="no_of_washroom"
+                            class="form-control"
+                            value="{{ $item->no_of_washroom }}"
+                            placeholder="e.g. 1,2,3....">
+                    </div>
                     @elseif($mode == 'user')
 
                     {{-- USER FIELDS --}}
@@ -873,12 +910,12 @@
 
                     <div class="form-group mb-2">
                         <label>Area Unit</label>
-                        <input type="text" name="area_unit" class="form-control" required>
+                        <input type="text" name="area_unit" class="form-control" >
                     </div>
 
                     <div class="form-group mb-2">
                         <label>Floor No</label>
-                        <input type="text" name="floor_no" class="form-control" required>
+                        <input type="text" name="floor_no" class="form-control" >
                     </div>
 
                     <div class="form-group mb-2">
@@ -888,7 +925,7 @@
 
                     <div class="form-group mb-2">
                         <label>Ownership</label>
-                        <input type="text" name="ownership" class="form-control" required>
+                        <input type="text" name="ownership" class="form-control" >
                     </div>
                     <div class="form-group mb-2">
                         <label>Furnishing</label>
@@ -901,6 +938,17 @@
                     <div class="form-group mb-2">
                         <label>Furnishing Items</label>
                         <input type="text" name="furnishing_items" class="form-control">
+                    </div>
+                    <div class="form-group mb-2">
+                        <label>Property Possesion</label>
+                        <input type="text" name="property_possesion" class="form-control">
+                    </div>
+                        <div class="form-group mb-2">
+                        <label>Quality Ratings</label>
+                        <input type="text" name="quality_ratings" class="form-control">
+                    </div>    <div class="form-group mb-2">
+                        <label>No of Washroom</label>
+                        <input type="text" name="no_of_washroom" class="form-control">
                     </div>
                     @else
 
