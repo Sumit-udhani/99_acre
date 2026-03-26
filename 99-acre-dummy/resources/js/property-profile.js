@@ -1,10 +1,4 @@
 import $ from 'jquery';
-console.log('Property')
-console.log({
-    roomVisible: $('#room-section').is(':visible'),
-    rentVisible: $('#rentSection').is(':visible'),
-    hospitalityVisible: $('#hospitalitySection').is(':visible')
-});
 let selectedTypeName = '';
 $(document).ready(function () {
 
@@ -19,15 +13,32 @@ $(document).ready(function () {
     // ================================
 $(document).on('propertyTypeChanged', function (e, typeName) {
 
+    if (!typeName) return;
+
     selectedTypeName = typeName;
-const isStudio = typeName.toLowerCase().includes('rk') || 
-                     typeName.toLowerCase().includes('studio');
 
     const type = typeName.toLowerCase();
+
+  const category = $('#category_name').val(); 
+const $furnishing = $('#furnishingWrapper');
+const $ageBlock = $('#ageBlock');
+
+$('#rentSection').append($furnishing);
+$('#rentSection').append($ageBlock);
     const isPlot = type.includes('plot') || type.includes('land');
-  const bedroomBtns = $('.room-btn[data-field="bedrooms"]');
+    const isStudio = type.includes('rk') || type.includes('studio');
+    const isOffice = type.includes('office');
+const isHospitality = type.includes('hospitality');
+const isRetail = type.includes('retail');
+    const purpose = parseInt($('#purpose_id').val());
+    const isSell = purpose === 3;
+
+    const bedroomBtns = $('.room-btn[data-field="bedrooms"]');
     const bathroomBtns = $('.room-btn[data-field="bathrooms"]');
 
+    // =========================
+    // ✅ STUDIO LOGIC
+    // =========================
     if (isStudio) {
 
         bedroomBtns.each(function () {
@@ -50,27 +61,78 @@ const isStudio = typeName.toLowerCase().includes('rk') ||
         $('.room-btn').prop('disabled', false).removeClass('opacity-50 cursor-not-allowed');
     }
 
-    const purpose = parseInt($('#purpose_id').val());
-    const isSell = purpose === 3;
-
+    // =========================
+    // ✅ CALL PURPOSE LOGIC
+    // =========================
     checkPurposeAndToggleRent();
 
-    // 🔁 RESET FIRST (very important)
+    // =========================
+    // 🔁 RESET EVERYTHING FIRST
+    // =========================
     $('#plotLandSection').hide();
-  
     $('#room-section').hide();
+    $('#officeSection').addClass('hidden');
+$('#hospitalitySection').hide();
+$('#retailExtraSection').addClass('hidden');
+    // =========================
+    // 🟢 OFFICE LOGIC
+    // =========================
+    if (category === 'residential' && isStudio) {
+        $('#room-section').show();
+        return;
+    }
 
-    // 🟢 Plot logic
+    if (category === 'commercial' && isOffice) {
+        $('#officeSection').removeClass('hidden');
+          $('#officeSection').append($furnishing);
+
+    $furnishing.removeClass('hidden');
+        return;
+    } else {
+
+    // 👉 Normal flow (rent / pg)
+    if (parseInt($('#purpose_id').val()) === 4 || parseInt($('#purpose_id').val()) === 5) {
+        $furnishing.removeClass('hidden');
+    } else {
+        $furnishing.addClass('hidden');
+    }
+
+}
+if (category === 'commercial' && isHospitality) {
+
+    $('#hospitalitySection').show();
+
+    // 🔹 Move furnishing
+    $('#hospitalitySection').append($furnishing);
+    $furnishing.removeClass('hidden');
+
+    // 🔹 Move age block
+    $('#hospitalitySection').append($ageBlock);
+    $ageBlock.removeClass('hidden');
+
+    return;
+}
+   
+if (category === 'commercial' && isRetail) {
+
+    $('#room-section').hide(); // ❌ hide rooms
+
+    $('#retailExtraSection').removeClass('hidden'); // ✅ show washroom + parking
+
+    return;
+}
+// =========================
+    // 🟢 PLOT / LAND LOGIC
+    // =========================
     if (isSell && isPlot) {
         $('#plotLandSection').show();
+        return;
     }
 
-    // 🟢 Hospitality logic
-   
-    // 🟢 Default → Room section
-    else {
-        $('#room-section').show();
-    }
+    // =========================
+    // 🟢 DEFAULT (ROOM SECTION)
+    // =========================
+    $('#room-section').show();
 
 });
 // Toggle input
@@ -174,24 +236,34 @@ $(document).ready(function () {
 $(document).on('click', '.chip-btn', function () {
 
     const $btn = $(this);
-    const group = $btn.data('group');
+
+    // ✅ SUPPORT BOTH
+    const key = $btn.data('group') || $btn.data('field');
     const value = $btn.data('value');
 
-    const groupBtns = $(`.chip-btn[data-group="${group}"]`);
+    if (!key) {
+        console.warn('Missing data-group/data-field on chip-btn');
+        return;
+    }
+
+    // ✅ TARGET SAME GROUP BUTTONS
+    const groupBtns = $(`.chip-btn[data-group="${key}"], .chip-btn[data-field="${key}"]`);
 
     groupBtns.removeClass('active');
     $btn.addClass('active');
 
-    $(`input[name="${group}"]`).val(value);
+    // ✅ SET VALUE
+    $(`input[name="${key}"]`).val(value);
 
-    // ✅ SHOW DROPDOWN ONLY FOR furnishing / semi-furnished
-    if (group === 'furnishing') {
+    // =========================
+    // 🎯 SPECIAL CASE: FURNISHING
+    // =========================
+    if (key === 'furnishing') {
 
         if (value === 'Furnished' || value === 'Semi-furnished') {
 
             $('#furnishingDropdown')
-                .removeClass('hidden')
-                .attr('x-show', 'true');
+                .removeClass('hidden');
 
         } else {
 
@@ -202,7 +274,6 @@ $(document).on('click', '.chip-btn', function () {
             $('.furnishing-item-checkbox').prop('checked', false);
         }
     }
-
 
 });
 // $(document).on('change', '.furnishing-item-checkbox', function () {
@@ -404,7 +475,234 @@ function checkPurposeAndToggleRent() {
         $('#pgOnlyFields').addClass('hidden');
     }
 }
+function validateProfileForm() {
 
+    let isValid = true;
+
+    // 🔁 Clear old errors
+    $('[id^="error-"]').html('');
+
+    function showError(field, message) {
+        $(`#error-${field}`).html(message);
+        isValid = false;
+    }
+
+    const purpose = parseInt($('#purpose_id').val());
+
+    const carpet = $('input[name="carpet_area"]').val();
+    // const totalFloors = $('input[name="total_floors"]').val();
+    // const floorNo = $('select[name="floor_no"]').val();
+    // const availability = $('input[name="availability_status"]').val();
+    // const ownership = $('input[name="ownership"]').val();
+
+    // =========================
+    // BASIC VALIDATION
+    // =========================
+    if (!carpet) showError('carpet_area', 'Carpet area is required');
+
+ if ($('#room-section').is(':visible')) {
+
+        const bedrooms = $('input[name="bedrooms"]').val();
+        const bathrooms = $('input[name="bathrooms"]').val();
+        const balconies = $('input[name="balconies"]').val();
+
+        if (!bedrooms) showError('bedrooms', 'Select bedrooms');
+        if (!bathrooms) showError('bathrooms', 'Select bathrooms');
+        if (!balconies) showError('balconies', 'Select balconies');
+    }
+
+ if ($('#rentSection').is(':visible')) {
+
+        // 🔹 Furnishing
+        if ($('#furnishingWrapper').is(':visible')) {
+
+            const furnishing = $('input[name="furnishing"]').val();
+
+            if (!furnishing) {
+                showError('furnishing', 'Select furnishing');
+            }
+
+            // 🔹 Furnishing items (only if dropdown visible)
+            if ($('#furnishingDropdown').is(':visible')) {
+
+                const checkedItems = $('.furnishing-item-checkbox:checked').length;
+
+                if (checkedItems === 0) {
+                    showError('furnishing_items', 'Select at least one furnishing item');
+                }
+            }
+        }
+
+        // 🔹 Property Age
+        if ($('#ageBlock').is(':visible')) {
+
+            const age = $('input[name="property_age"]').val();
+
+            if (!age) showError('property_age', 'Select property age');
+        }
+
+        // 🔹 Available Date
+        if ($('#availableBlock').is(':visible')) {
+
+            const date = $('input[name="property_date"]').val();
+
+            if (!date) showError('property_date', 'Select available date');
+        }
+
+        // 🔹 Rent Only Fields
+        if ($('#rentOnlyFields').is(':visible')) {
+
+            const rentOut = $('input[name="rent_out"]').val();
+            const agreement = $('input[name="agreement_type"]').val();
+            const broker = $('input[name="broker_contact"]').val();
+
+            if (!rentOut) showError('rent_out', 'Select rent out option');
+            if (!agreement) showError('agreement_type', 'Select agreement type');
+            if (!broker) showError('broker_contact', 'Select broker option');
+        }
+    }
+
+   
+// =========================
+// ✅ PG SECTION VALIDATION
+// =========================
+if ($('#pgOnlyFields').is(':visible')) {
+
+    // 🔹 Room Type
+    if ($('#roomTypeBlock').is(':visible')) {
+
+        const roomType = $('input[name="room_type"]').val();
+
+        if (!roomType) {
+            showError('room_type', 'Select room type');
+        }
+
+        // 🔹 Sharing count (only if sharing selected)
+        if (roomType === 'Sharing' && $('#sharingCountBlock').is(':visible')) {
+
+            const sharingCount = $('#sharingCountBlock .active').data('value');
+
+            if (!sharingCount) {
+                showError('sharing_count', 'Select sharing capacity');
+            }
+        }
+    }
+
+    // 🔹 Available Gender
+    const gender = $('input[name="available_gender"]').val();
+
+    if (!gender) {
+        showError('available_gender', 'Select available for');
+    }
+
+    // 🔹 Suitable For (checkbox)
+    const suitableChecked = $('input[name="suitable_for[]"]:checked').length;
+
+    if (suitableChecked === 0) {
+        showError('suitable_for', 'Select at least one option');
+    }
+
+}
+// =========================
+// ✅ FLOOR SECTION VALIDATION
+// =========================
+       if ($('#floorSection').is(':visible')) {
+
+    const totalFloors = $('input[name="total_floors"]').val();
+    const floorNo = $('select[name="floor_no"]').val();
+
+    
+    if (!totalFloors && totalFloors !== "0") {
+        showError('total_floors', 'Enter total floors');
+     
+    }
+
+   
+    if (!floorNo) {
+        showError('floor_no', 'Select floor');
+       
+    }
+}
+
+// =========================
+// PLOT LAND VALIDATION
+// =========================
+if ($('#plotLandSection').is(':visible')) {
+
+    const boundary = $('input[name="boundary_wall"]').val();
+    const openSides = $('input[name="open_sides"]').val();
+    const construction = $('input[name="is_construction"]').val();
+    const possession = $('select[name="property_possesion"]').val();
+
+    if (!boundary) {
+        showError('boundary_wall', 'Select boundary wall option');
+    }
+
+    if (!openSides) {
+        showError('open_sides', 'Select open sides');
+    }
+
+    if (!construction) {
+        showError('is_construction', 'Select construction status');
+    }
+
+    if (!possession) {
+        showError('property_possesion', 'Select possession');
+    }
+}
+
+// =========================
+// ✅ AVAILABILITY VALIDATION
+// =========================
+// =========================
+// AVAILABILITY
+// =========================
+if ($('#availabilitySection').is(':visible')) {
+
+    const availability = $('input[name="availability_status"]').val();
+
+    if (!availability) {
+        showError('availability_status', 'Select availability status');
+    }
+}
+
+// =========================
+// OWNERSHIP
+// =========================
+if ($('#ownershipSection').is(':visible')) {
+
+    const ownership = $('input[name="ownership"]').val();
+
+    if (!ownership) {
+        showError('ownership', 'Select ownership');
+    }
+}
+
+// ✅ HOSPITALITY VALIDATION
+
+if ($('#hospitalitySection').is(':visible')) {
+
+    const quality = $('input[name="quality_ratings"]').val();
+    const washroom = $('input[name="no_of_washroom"]').val();
+    // const customWashroom = $('#customWashroom').val();
+
+    // 🔹 Quality Rating
+    if (!quality) {
+        showError('quality_ratings', 'Select quality rating');
+    }
+
+    // 🔹 Washroom logic
+    if (!washroom ) {
+        showError('no_of_washroom', 'Select  washrooms');
+    }
+}
+    return isValid;
+}
+
+$(document).on('input change', 'input, select', function () {
+    const name = $(this).attr('name');
+    $(`#error-${name}`).html('');
+});
 // call on page load
 $(document).ready(function () {
     checkPurposeAndToggleRent();
@@ -412,7 +710,9 @@ $(document).ready(function () {
     $('#propertyProfileForm').on('submit', function (e) {
 
         e.preventDefault();
-
+        if (!validateProfileForm()) {
+                return;
+            }
         let form = $(this);
         let formData = form.serialize();
 

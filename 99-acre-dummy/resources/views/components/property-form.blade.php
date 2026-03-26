@@ -70,7 +70,7 @@ id="category{{ $category->id }}"
 data-name="{{ strtolower($category->name) }}"
 value="{{ $category->id }}"
 >
-
+<input type="hidden" id="category_name" name="category_name">
 <label
 class="form-check-label"
 for="category{{ $category->id }}">

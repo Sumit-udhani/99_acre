@@ -134,7 +134,33 @@ $typesSlug = $property->type->slug?? null;
            
     ];
 
-    // ✅ RENT
+    if ($property->category->slug === 'commercial' && $typesSlug === 'office') {
+    $rules = array_merge($rules, [
+        'min_seats' => 'required|integer|min:0',
+        'max_seats' => 'nullable|integer|min:0',
+        'cabins' => 'nullable|integer|min:0',
+        'meeting_rooms' => 'nullable|integer|min:0',
+        'washrooms' => 'nullable|in:available,not_available',
+        'conference_room' => 'nullable|in:available,not_available',
+        'reception_area' => 'nullable|in:available,not_available',
+        'pantry_type' => 'nullable|in:private,shared,not_available',
+        'lifts'=> 'required',
+        'parking'=> 'required',
+           'furnishing'     => 'required',
+            'furnishing_items' => 'required|array',
+
+    ]);
+}
+   
+if ($property->category->slug === 'commercial' && $typesSlug === 'retail') {
+
+    $rules = array_merge($rules, [
+        'washrooms' => 'required|in:available,not_available',
+        'parking' => 'required|in:available,not_available',
+    ]);
+}
+
+// ✅ RENT
     if ($purposeSlug === 'rent-lease') {
         $rules = array_merge($rules, [
             'property_age'   => 'required',
@@ -169,8 +195,24 @@ if ($typesSlug === 'hospitality') {
            
         ]);
     }
+    $messages = [
+    'min_seats.required' => 'Minimum seats is required',
+    'min_seats.integer' => 'Minimum seats must be a number',
 
-    $validated = $request->validate($rules);
+    'max_seats.integer' => 'Maximum seats must be a number',
+
+    'cabins.integer' => 'Cabins must be a number',
+    'meeting_rooms.integer' => 'Meeting rooms must be a number',
+
+    'washrooms.in' => 'Invalid washroom option selected',
+    'conference_room.in' => 'Invalid conference room option',
+    'reception_area.in' => 'Invalid reception option',
+    'pantry_type.in' => 'Invalid pantry type selected',
+    'lifts'=>'lift is required',
+    'parking'=> 'parking is required'
+];
+
+    $validated = $request->validate($rules, $messages);
 
     $data = $validated;
 
@@ -209,7 +251,7 @@ elseif ($typesSlug === 'hospitality') {
         $data['broker_contact'],
         $data['available_gender'],
         $data['suitable_for'],
-        $data['parking'],
+        // $data['parking'],
         $data['room_type']
     );
 
@@ -222,8 +264,8 @@ else {
         $data['rent_out'],
         $data['agreement_type'],
         $data['broker_contact'],
-        $data['furnishing'],
-        $data['furnishing_items'],
+        // $data['furnishing'],
+        // $data['furnishing_items'],
         $data['available_gender'],
         $data['suitable_for'],
         $data['parking'],
@@ -235,7 +277,34 @@ else {
         ['property_id' => $id],
         $data
     );
+if ($property->category->slug === 'commercial' && $typesSlug === 'office') {
 
+    \App\Models\PropertyCommercial::updateOrCreate(
+        ['property_id' => $id],
+        [
+            'min_seats' => $request->min_seats,
+            'max_seats' => $request->max_seats,
+            'cabins' => $request->cabins,
+            'meeting_rooms' => $request->meeting_rooms,
+            'washrooms' => $request->washrooms,
+            'conference_room' => $request->conference_room,
+            'reception_area' => $request->reception_area,
+            'pantry_type' => $request->pantry_type,
+            'lifts'=> $request->lifts,
+            'parking'=>$request->parking
+        ]
+    );
+}
+ elseif ($typesSlug === 'retail') {
+
+        \App\Models\PropertyCommercial::updateOrCreate(
+            ['property_id' => $id],
+            [
+                'washrooms' => $request->washrooms,
+                'parking' => $request->parking,
+            ]
+        );
+    }
     return response()->json([
         'success' => true
     ]);

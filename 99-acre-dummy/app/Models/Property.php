@@ -43,4 +43,8 @@ class Property extends Model
 {
     return $this->belongsTo(PropertySubType::class, 'sub_type_id');
 }
+public function commercial()
+{
+    return $this->hasOne(PropertyCommercial::class);
+}
 }

@@ -1,5 +1,4 @@
 import $ from 'jquery';
-console.log("JS Loaded");
 $(function () {
 
 const $app = $('#propertyApp');
@@ -77,7 +76,7 @@ $(document).on('change','.category-radio',function(){
 
     selectedCategory = $(this).val();
     selectedCategoryName = $(this).data('name');
-
+$('#category_name').val(selectedCategoryName);
     filterPurposes();
     filterTypes();
 

@@ -14,9 +14,8 @@
                 type="number"
                 name="carpet_area"
                 placeholder="Carpet Area, Plot Area"
-                 min="0"
+                min="0"
                 class="w-2/3" />
-
             <select name="area_unit"
                 class="area-unit w-1/3 h-[42px] px-2 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                 @foreach($areaUnits as $unit)
@@ -24,6 +23,7 @@
                 @endforeach
             </select>
         </div>
+        <div class="text-red-500 text-sm mt-1" id="error-carpet_area"></div>
 
 
         <div class="mt-2 text-sm text-blue-600">
@@ -43,7 +43,7 @@
                     <x-text-input
                         type="number"
                         name="builtup_area"
-                         min="0"
+                        min="0"
                         placeholder="Built-up Area"
                         class="w-2/3" />
 
@@ -62,7 +62,7 @@
                     <x-text-input
                         type="number"
                         name="super_builtup_area"
-                         min="0"
+                        min="0"
                         placeholder="Super Built-up Area"
                         class="w-2/3" />
 
@@ -77,7 +77,135 @@
 
         </div>
     </div>
-   <!-- <div id="hospitalitySection" style="display:none;">
+
+    {{-- ================= OFFICE ONLY SECTION ================= --}}
+    <div id="officeSection" class="mt-6 hidden">
+
+        <h3 class="font-medium mb-3">Describe your office setup</h3>
+
+        {{-- Seats --}}
+        <div class="flex gap-3 mb-4">
+            <x-text-input
+                type="number"
+                name="min_seats"
+                placeholder="Min. no. of Seats"
+                class="w-1/2"
+                min="0" />
+
+            <x-text-input
+                type="number"
+                name="max_seats"
+                placeholder="Max. no. of Seats (optional)"
+                class="w-1/2"
+                min="0" />
+        </div>
+
+        {{-- Cabins --}}
+        <div class="mb-4">
+            <x-text-input
+                type="number"
+                name="cabins"
+                placeholder="No. of Cabins"
+                class="w-1/2"
+                min="0" />
+        </div>
+
+        {{-- Meeting Rooms --}}
+        <div class="mb-4">
+            <x-text-input
+                type="number"
+                name="meeting_rooms"
+                placeholder="No. of Meeting Rooms"
+                class="w-1/2"
+                min="0" />
+        </div>
+
+        {{-- Washrooms --}}
+        <div class="mb-4">
+            <h3 class="font-medium mb-2">Washrooms</h3>
+            <div class="flex gap-3">
+                <button type="button" class="chip-btn" data-field="washrooms" data-value="available">Available</button>
+                <button type="button" class="chip-btn" data-field="washrooms" data-value="not_available">Not Available</button>
+            </div>
+            <input type="hidden" name="washrooms">
+        </div>
+
+        {{-- Conference Room --}}
+        <div class="mb-4">
+            <h3 class="font-medium mb-2">Conference Room</h3>
+            <div class="flex gap-3">
+                <button type="button" class="chip-btn" data-field="conference_room" data-value="available">Available</button>
+                <button type="button" class="chip-btn" data-field="conference_room" data-value="not_available">Not Available</button>
+            </div>
+            <input type="hidden" name="conference_room">
+        </div>
+
+        {{-- Reception --}}
+        <div class="mb-4">
+            <h3 class="font-medium mb-2">Reception Area</h3>
+            <div class="flex gap-3">
+                <button type="button" class="chip-btn" data-field="reception_area" data-value="available">Available</button>
+                <button type="button" class="chip-btn" data-field="reception_area" data-value="not_available">Not Available</button>
+            </div>
+            <input type="hidden" name="reception_area">
+        </div>
+
+        {{-- Pantry --}}
+        <div class="mb-4">
+            <h3 class="font-medium mb-2">Pantry Type</h3>
+            <div class="flex gap-3">
+                <button type="button" class="chip-btn" data-field="pantry_type" data-value="private">Private</button>
+                <button type="button" class="chip-btn" data-field="pantry_type" data-value="shared">Shared</button>
+                <button type="button" class="chip-btn" data-field="pantry_type" data-value="not_available">Not Available</button>
+            </div>
+            <input type="hidden" name="pantry_type">
+        </div>
+
+        {{-- LIFTS --}}
+        <div class="mb-4">
+            <h3 class="font-medium mb-2">Lifts</h3>
+            <div class="flex gap-3">
+                <button type="button" class="chip-btn" data-field="lifts" data-value="available">Available</button>
+                <button type="button" class="chip-btn" data-field="lifts" data-value="not_available">Not Available</button>
+            </div>
+            <input type="hidden" name="lifts">
+        </div>
+
+        {{-- PARKING --}}
+        <div class="mb-4">
+            <h3 class="font-medium mb-2">Parking</h3>
+            <div class="flex gap-3">
+                <button type="button" class="chip-btn" data-field="parking" data-value="available">Available</button>
+                <button type="button" class="chip-btn" data-field="parking" data-value="not_available">Not Available</button>
+            </div>
+            <input type="hidden" name="parking">
+        </div>
+
+    </div>
+
+    {{-- Washrooms --}}
+        <div id="retailExtraSection" class="hidden">
+        <div class="mb-4">
+            <h3 class="font-medium mb-2">Washrooms</h3>
+            <div class="flex gap-3">
+                <button type="button" class="chip-btn" data-field="washrooms" data-value="available">Available</button>
+                <button type="button" class="chip-btn" data-field="washrooms" data-value="not_available">Not Available</button>
+            </div>
+            <input type="hidden" name="washrooms">
+        </div>
+
+        {{-- PARKING --}}
+        <div class="mb-4">
+            <h3 class="font-medium mb-2">Parking</h3>
+            <div class="flex gap-3">
+                <button type="button" class="chip-btn" data-field="parking" data-value="available">Available</button>
+                <button type="button" class="chip-btn" data-field="parking" data-value="not_available">Not Available</button>
+            </div>
+            <input type="hidden" name="parking">
+        </div>
+
+
+    <div id="hospitalitySection" style="display:none;">
 
     <div class="mb-4">
         <h3 class="font-medium mb-2">Quality Ranking</h3>
@@ -86,7 +214,7 @@
             @foreach($qualityRatings as $item)
                 <button type="button"
                     class="option-btn chip-btn"
-                    data-field="quality_ratings"
+                    data-group="quality_ratings"
                     data-value="{{ $item }}">
                     {{ $item }}
                 </button>
@@ -94,8 +222,9 @@
         </div>
 
         <input type="hidden" name="quality_ratings">
+          <div id="error-quality_ratings" class="text-red-500 text-sm"></div>
     </div>
-
+   
 
     <div class="mb-4">
         <h3 class="font-medium mb-2">No. of Washrooms</h3>
@@ -104,7 +233,7 @@
             @foreach($washrooms as $item)
                 <button type="button"
                     class="option-btn chip-btn"
-                    data-field="no_of_washroom"
+                     data-group="no_of_washroom"
                     data-value="{{ $item }}">
                     {{ $item }}
                 </button>
@@ -116,84 +245,94 @@
 
     
     <div id="washroomInputWrap" class="hidden">
-      <x-text-input type="number" id="customWashroom" name="no_of_washroom" placeholder="No of washrooms" class="s-2/3" />
+      <x-text-input type="number" id="customWashroom"  placeholder="No of washrooms" class="s-2/3" />
 
     <input type="hidden" name="no_of_washroom">
+        <!-- ✅ Error -->
+    </div>
+    <div id="error-no_of_washroom" class="text-red-500 text-sm"></div>
+
 </div>
+ </div>
 
-</div> -->
+    <div id="plotLandSection" style="display:none;">
 
 
-<div id="plotLandSection" style="display:none;"> 
+        <div class="mb-4">
+            <label class="fw-semibold">Is there a boundary wall around the property?</label>
 
-    
-    <div class="mb-4">
-        <label class="fw-semibold">Is there a boundary wall around the property?</label>
-      
 
-        <div class="d-flex gap-2">
-          <button type="button"
-    class="btn option-btn chip-btn"
-    data-field="boundary_wall"
-    data-value="Yes">
-    Yes
-</button>
+            <div class="d-flex gap-2">
+                <button type="button"
+                    class="btn option-btn chip-btn"
+                    data-group="boundary_wall"
+                    data-value="Yes">
+                    Yes
+                </button>
 
-<button type="button"
-    class="btn option-btn chip-btn"
-    data-field="boundary_wall"
-    data-value="No">
-    No
-</button>
+                <button type="button"
+                    class="btn option-btn chip-btn"
+                    data-group="boundary_wall"
+                    data-value="No">
+                    No
+                </button>
+            </div>
+
+            <input type="hidden" name="boundary_wall">
+
+            <div id="error-boundary_wall" class="text-red-500 text-sm"></div>
         </div>
 
-        <input type="hidden" name="boundary_wall">
-    </div>
+        <!-- Open Sides -->
+        <div class="mb-4">
+            <label class="fw-semibold">No. of open sides</label>
 
-    <!-- Open Sides -->
-    <div class="mb-4">
-        <label class="fw-semibold">No. of open sides</label>
-      
 
-        <div class="d-flex gap-2">
-            @foreach([1,2,3,'3+'] as $num)
-                <button type="button" class="btn option-btn share-count-btn" data-field="open_sides" data-value="{{ $num }}">
+            <div class="d-flex gap-2">
+                @foreach([1,2,3,'3+'] as $num)
+                <button type="button" class="btn option-btn share-count-btn chip-btn" data-group="open_sides"
+                    data-value="{{ $num }}">
                     {{ $num }}
                 </button>
-            @endforeach
+                @endforeach
+            </div>
+
+            <input type="hidden" name="open_sides">
+            <div id="error-open_sides" class="text-red-500 text-sm"></div>
+
         </div>
 
-        <input type="hidden" name="open_sides">
-    </div>
+        <!-- Construction -->
+        <div class="mb-4">
+            <label class="fw-semibold">Any construction done on this property?</label>
 
-    <!-- Construction -->
-    <div class="mb-4">
-        <label class="fw-semibold">Any construction done on this property?</label>
-      
 
-        <div class="d-flex gap-2">
-            <button type="button"  class="btn option-btn chip-btn" data-field="is_construction" data-value="Yes">Yes</button>
-            <button type="button"   class="btn option-btn chip-btn" data-field="is_construction" data-value="No">No</button>
+            <div class="d-flex gap-2">
+                <button type="button" class="btn option-btn chip-btn" data-group="is_construction"
+ data-value="Yes">Yes</button>
+                <button type="button" class="btn option-btn chip-btn" data-group="is_construction" data-value="No">No</button>
+            </div>
+
+            <input type="hidden" name="is_construction">
+            <div id="error-is_construction" class="text-red-500 text-sm"></div>
+
         </div>
 
-        <input type="hidden" name="is_construction">
-    </div>
+        <!-- Possession -->
+        <div class="mb-4">
+            <label class="fw-semibold">Possession By</label> <br>
 
-    <!-- Possession -->
-    <div class="mb-4">
-        <label class="fw-semibold">Possession By</label> <br>
-
-        <select name="property_possesion" class="form-control mt-2">
-            <option value="">Expected by</option>
-            @foreach($possesions as $pos)
+            <select name="property_possesion" class="form-control mt-2">
+                <option value="">Expected by</option>
+                @foreach($possesions as $pos)
                 <option value="{{ $pos }}">{{ $pos }}</option>
-            @endforeach
-        </select>
+                @endforeach
+            </select>
 
-        <div id="error-property_possesion"></div>
+            <div id="error-property_possesion" class="text-red-500 text-sm"></div>
+        </div>
+
     </div>
-
-</div>
     {{-- ROOM DETAILS --}}
     <div id="room-section">
         <h3 class="font-medium mb-3">Add Room Details</h3>
@@ -214,6 +353,7 @@
             </div>
             <input type="hidden" name="bedrooms">
         </div>
+        <div id="error-bedrooms" class="text-red-500 text-sm"></div>
 
         {{-- Bathrooms --}}
         <div class="mb-4">
@@ -231,6 +371,7 @@
             </div>
             <input type="hidden" name="bathrooms">
         </div>
+        <div id="error-bathrooms" class="text-red-500 text-sm"></div>
 
         {{-- Balconies --}}
         <div>
@@ -249,10 +390,12 @@
             <input type="hidden" name="balconies">
         </div>
     </div>
+    <div id="error-balconies" class="text-red-500 text-sm"></div>
+
     {{-- FURNISHING --}}
 
     {{-- FLOOR DETAILS --}}
-    <div>
+    <div id="floorSection">
         <h3 class="font-medium mb-3">Floor Details</h3>
 
         <div class="flex gap-3">
@@ -260,19 +403,22 @@
                 type="number"
                 name="total_floors"
                 placeholder="Total Floors"
-                 min="0"
+                min="0"
                 class="w-full" />
 
             <select name="floor_no" id="floor_no"
                 class="w-1/3 h-[42px] px-2 border-gray-300 rounded-md shadow-sm">
 
                 <option value="">Property on floor</option>
-
                 <option value="Basement">Basement</option>
                 <option value="Ground">Ground</option>
 
             </select>
         </div>
+
+        <!-- ✅ Error containers -->
+        <div id="error-total_floors" class="text-red-500 text-sm"></div>
+        <div id="error-floor_no" class="text-red-500 text-sm"></div>
     </div>
     <!-- ================= PG ONLY SECTION ================= -->
     <div id="pgOnlyFields" class="mt-6 hidden">
@@ -296,7 +442,7 @@
             </div>
 
             <input type="hidden" name="room_type" id="room_type">
-
+            <div id="error-room_type" class="text-red-500 text-sm"></div>
             {{-- SHARING COUNT --}}
             <div id="sharingCountBlock" class="mt-4 hidden">
                 <h3 class="font-medium mb-2">
@@ -314,6 +460,7 @@
                 </div>
             </div>
         </div>
+        <div id="error-sharing_count" class="text-red-500 text-sm"></div>
 
         <!-- RESERVED PARKING -->
         <div class="mt-4">
@@ -354,6 +501,7 @@
 
             <input type="hidden" name="available_gender">
         </div>
+        <div id="error-available_gender" class="text-red-500 text-sm"></div>
 
         <!-- SUITABLE FOR -->
         <div class="mt-5">
@@ -373,45 +521,48 @@
 
             </div>
         </div>
-
+        <div id="error-suitable_for" class="text-red-500 text-sm"></div>
     </div>
 
     <div id="rentSection" class="mt-6 hidden">
 
         {{-- FURNISHING --}}
-        <div class="mt-5" id="furnishingBlock">
-            <h3 class="font-medium mb-2 flex items-center gap-2">
-                Furnishing
-                <span class="text-red-500">*</span>
-            </h3>
+        <div id="furnishingWrapper" class="hidden">
+            <div class="mt-5" id="furnishingBlock">
+                <h3 class="font-medium mb-2 flex items-center gap-2">
+                    Furnishing
+                    <span class="text-red-500">*</span>
+                </h3>
+                <div class="flex gap-3 flex-wrap">
+                    @foreach($furnishings as $item)
+                    <button type="button"
+                        data-group="furnishing"
+                        data-value="{{ $item }}"
+                        class="chip-btn furnishing-btn">
+                        {{ $item }}
+                    </button>
+                    @endforeach
+                </div>
 
-            <div class="flex gap-3 flex-wrap">
-                @foreach($furnishings as $item)
-                <button type="button"
-                    data-group="furnishing"
-                    data-value="{{ $item }}"
-                    class="chip-btn furnishing-btn">
-                    {{ $item }}
-                </button>
-                @endforeach
-            </div>
+                <input type="hidden" name="furnishing">
+                <div id="error-furnishing" class="text-red-500 text-sm"></div>
 
-            <input type="hidden" name="furnishing">
-
-            <div id="furnishingDropdown" class="mt-4 hidden">
-                <div class="w-64 rounded-md shadow-lg bg-white border p-3">
-                    <div class="grid grid-cols-2 gap-2 max-h-64 overflow-y-auto">
-                        @foreach($furnishingItems as $item)
-                        <label class="flex items-center gap-2 text-sm">
-                            <input type="checkbox"
-                                name="furnishing_items[]"
-                                class="furnishing-item-checkbox"
-                                value="{{ $item }}">
-                            {{ $item }}
-                        </label>
-                        @endforeach
+                <div id="furnishingDropdown" class="mt-4 hidden">
+                    <div class="w-64 rounded-md shadow-lg bg-white border p-3">
+                        <div class="grid grid-cols-2 gap-2 max-h-64 overflow-y-auto">
+                            @foreach($furnishingItems as $item)
+                            <label class="flex items-center gap-2 text-sm">
+                                <input type="checkbox"
+                                    name="furnishing_items[]"
+                                    class="furnishing-item-checkbox"
+                                    value="{{ $item }}">
+                                {{ $item }}
+                            </label>
+                            @endforeach
+                        </div>
                     </div>
                 </div>
+                <div id="error-furnishing_items" class="text-red-500 text-sm"></div>
             </div>
         </div>
 
@@ -436,6 +587,7 @@
 
             <input type="hidden" name="property_age">
         </div>
+        <div id="error-property_age" class="text-red-500 text-sm"></div>
 
         {{-- AVAILABLE --}}
         <div class="mt-4" id="availableBlock">
@@ -446,6 +598,7 @@
                 name="property_date"
                 class="w-1/2" />
         </div>
+        <div id="error-property_date" class="text-red-500 text-sm"></div>
 
         {{-- RENT ONLY FIELDS --}}
         <div id="rentOnlyFields">
@@ -470,6 +623,7 @@
 
                 <input type="hidden" name="agreement_type">
             </div>
+            <div id="error-agreement_type" class="text-red-500 text-sm"></div>
 
             <div class="mt-4">
                 <h3 class="font-medium mb-2">
@@ -490,6 +644,7 @@
 
                 <input type="hidden" name="broker_contact">
             </div>
+            <div id="error-broker_contact" class="text-red-500 text-sm"></div>
 
             <div class="mt-5">
                 <h3 class="font-medium mb-2">
@@ -511,10 +666,11 @@
             </div>
 
         </div>
+        <div id="error-rent_out" class="text-red-500 text-sm"></div>
     </div>
 
     {{-- AVAILABILITY --}}
-    <div>
+    <div id="availabilitySection">
         <h3 class="font-medium mb-2">Availability Status</h3>
 
         <div class="flex gap-3">
@@ -529,11 +685,12 @@
         </div>
 
         <input type="hidden" name="availability_status">
-    </div>
 
-    {{-- OWNERSHIP --}}
-    {{-- OWNERSHIP --}}
-    <div>
+        <!-- ✅ Error -->
+        <div id="error-availability_status" class="text-red-500 text-sm"></div>
+    </div>
+    {{-- Ownership --}}
+    <div id="ownershipSection">
         <h3 class="font-medium mb-2">Ownership</h3>
 
         <div class="flex gap-3">
@@ -548,6 +705,9 @@
         </div>
 
         <input type="hidden" name="ownership">
+
+        <!-- ✅ Error -->
+        <div id="error-ownership" class="text-red-500 text-sm"></div>
     </div>
     {{-- SUBMIT --}}
     <div class="mt-6">
