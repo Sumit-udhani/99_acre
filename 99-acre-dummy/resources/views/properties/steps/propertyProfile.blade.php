@@ -99,7 +99,7 @@
                 class="w-1/2"
                 min="0" />
         </div>
-
+<div id="error-min_seats" class="text-red-500 text-sm"></div>
         {{-- Cabins --}}
         <div class="mb-4">
             <x-text-input
@@ -109,7 +109,7 @@
                 class="w-1/2"
                 min="0" />
         </div>
-
+<div id="error-min_seats" class="text-red-500 text-sm"></div>
         {{-- Meeting Rooms --}}
         <div class="mb-4">
             <x-text-input
@@ -119,7 +119,7 @@
                 class="w-1/2"
                 min="0" />
         </div>
-
+<div id="error-cabins" class="text-red-500 text-sm"></div>
         {{-- Washrooms --}}
         <div class="mb-4">
             <h3 class="font-medium mb-2">Washrooms</h3>
@@ -129,7 +129,7 @@
             </div>
             <input type="hidden" name="washrooms">
         </div>
-
+<div id="error-washrooms" class="text-red-500 text-sm"></div>
         {{-- Conference Room --}}
         <div class="mb-4">
             <h3 class="font-medium mb-2">Conference Room</h3>
@@ -139,7 +139,7 @@
             </div>
             <input type="hidden" name="conference_room">
         </div>
-
+<div id="error-washrooms" class="text-red-500 text-sm"></div>
         {{-- Reception --}}
         <div class="mb-4">
             <h3 class="font-medium mb-2">Reception Area</h3>
@@ -149,7 +149,7 @@
             </div>
             <input type="hidden" name="reception_area">
         </div>
-
+<div id="error-reception_area" class="text-red-500 text-sm"></div>
         {{-- Pantry --}}
         <div class="mb-4">
             <h3 class="font-medium mb-2">Pantry Type</h3>
@@ -160,7 +160,7 @@
             </div>
             <input type="hidden" name="pantry_type">
         </div>
-
+<div id="error-pantry_type" class="text-red-500 text-sm"></div>
         {{-- LIFTS --}}
         <div class="mb-4">
             <h3 class="font-medium mb-2">Lifts</h3>
@@ -170,7 +170,7 @@
             </div>
             <input type="hidden" name="lifts">
         </div>
-
+<div id="error-lifts" class="text-red-500 text-sm"></div>
         {{-- PARKING --}}
         <div class="mb-4">
             <h3 class="font-medium mb-2">Parking</h3>
@@ -180,6 +180,7 @@
             </div>
             <input type="hidden" name="parking">
         </div>
+<div id="error-parking" class="text-red-500 text-sm"></div>
 
     </div>
 
@@ -192,6 +193,8 @@
                 <button type="button" class="chip-btn" data-field="washrooms" data-value="not_available">Not Available</button>
             </div>
             <input type="hidden" name="washrooms">
+        <div id="error-washrooms" class="text-red-500 text-sm"></div>
+
         </div>
 
         {{-- PARKING --}}
@@ -202,6 +205,9 @@
                 <button type="button" class="chip-btn" data-field="parking" data-value="not_available">Not Available</button>
             </div>
             <input type="hidden" name="parking">
+            
+        </div>
+        <div id="error-parking" class="text-red-500 text-sm"></div>
         </div>
 
 
@@ -226,7 +232,7 @@
     </div>
    
 
-    <div class="mb-4">
+    <div class="mb-4" id="washroomBlock">
         <h3 class="font-medium mb-2">No. of Washrooms</h3>
 
         <div class="flex gap-3 flex-wrap">
@@ -254,6 +260,10 @@
 
 </div>
  </div>
+
+ <!-- Storage Section -->
+<div id="storageSection" class="hidden mt-6"></div>
+
 
     <div id="plotLandSection" style="display:none;">
 
@@ -709,6 +719,51 @@
         <!-- ✅ Error -->
         <div id="error-ownership" class="text-red-500 text-sm"></div>
     </div>
+    <div class="mt-6">
+    <h3 class="font-medium mb-3">Price Details</h3>
+
+    <div class="mt-6">
+    <h3 class="font-medium mb-3">Price Details</h3>
+
+    <div class="flex gap-3">
+
+        {{-- EXPECTED PRICE --}}
+        <div id="priceSection">
+        <div class="w-2/3">
+            <x-text-input
+                type="number"
+                 name="property_price"
+                placeholder="₹ Expected Price"
+                min="0"
+                id="expected_price"
+                class="w-full" />
+
+            <div id="error-expected_price" class="text-red-500 text-sm mt-1"></div>
+        </div>
+
+        {{-- PRICE PER UNIT --}}
+      <div class="w-1/3 flex">
+
+    {{-- DISPLAY ONLY FIELD --}}
+    <x-text-input
+        type="text"
+        id="price_display"
+        placeholder="₹ Price per"
+        class="w-full rounded-r-none bg-gray-100 text-gray-600 cursor-not-allowed"
+        readonly />
+
+    {{-- AREA UNIT --}}
+    <x-text-input
+        type="text"
+        id="price_area_unit"
+        class="w-[90px] text-center bg-gray-100 text-gray-600 cursor-not-allowed rounded-l-none"
+        readonly />
+</div>
+
+    </div>
+</div>
+<div id="error-expected_price" class="text-red-500 text-sm mt-1"></div>
+</div>
     {{-- SUBMIT --}}
     <div class="mt-6">
         <x-primary-button class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md">

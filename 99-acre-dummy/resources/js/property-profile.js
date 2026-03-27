@@ -22,14 +22,20 @@ $(document).on('propertyTypeChanged', function (e, typeName) {
   const category = $('#category_name').val(); 
 const $furnishing = $('#furnishingWrapper');
 const $ageBlock = $('#ageBlock');
+const $washroom = $('#washroomBlock');
 
 $('#rentSection').append($furnishing);
 $('#rentSection').append($ageBlock);
+$('#hospitalitySection').append($washroom);
     const isPlot = type.includes('plot') || type.includes('land');
     const isStudio = type.includes('rk') || type.includes('studio');
     const isOffice = type.includes('office');
 const isHospitality = type.includes('hospitality');
 const isRetail = type.includes('retail');
+const specialTypes = ['storage', 'industry'];
+
+const isSpecialType = specialTypes.some(t => type.includes(t));
+
     const purpose = parseInt($('#purpose_id').val());
     const isSell = purpose === 3;
 
@@ -74,7 +80,27 @@ const isRetail = type.includes('retail');
     $('#officeSection').addClass('hidden');
 $('#hospitalitySection').hide();
 $('#retailExtraSection').addClass('hidden');
-    // =========================
+   
+if (category === 'commercial' && isSpecialType) {
+
+    const $washroom = $('#washroomBlock');
+
+    $('#hospitalitySection').append($washroom);
+
+    $('#room-section').hide();
+    $('#floorSection').hide();
+    $('#plotLandSection').hide();
+    $('#officeSection').addClass('hidden');
+    $('#hospitalitySection').hide();
+    $('#retailExtraSection').addClass('hidden');
+
+    $('#storageSection').removeClass('hidden');
+    $('#storageSection').append($washroom);
+
+    return;
+}
+
+// =========================
     // 🟢 OFFICE LOGIC
     // =========================
     if (category === 'residential' && isStudio) {
@@ -181,6 +207,8 @@ $(document).on('click', '.option-btn', function () {
 
         // set hidden input value
         $(`input[name="${field}"]`).val(value);
+         $(`#error-${field}`).html('');
+
 
     });
 $(document).ready(function () {
@@ -237,7 +265,7 @@ $(document).on('click', '.chip-btn', function () {
 
     const $btn = $(this);
 
-    // ✅ SUPPORT BOTH
+    // ✅ SUPPORT BOTH data-group & data-field
     const key = $btn.data('group') || $btn.data('field');
     const value = $btn.data('value');
 
@@ -246,14 +274,17 @@ $(document).on('click', '.chip-btn', function () {
         return;
     }
 
-    // ✅ TARGET SAME GROUP BUTTONS
+    // ✅ SAME GROUP BUTTONS
     const groupBtns = $(`.chip-btn[data-group="${key}"], .chip-btn[data-field="${key}"]`);
 
     groupBtns.removeClass('active');
     $btn.addClass('active');
 
-    // ✅ SET VALUE
+    // ✅ SET VALUE IN HIDDEN INPUT
     $(`input[name="${key}"]`).val(value);
+
+    // ✅ 🔥 CLEAR ERROR WHEN USER SELECTS
+    $(`#error-${key}`).html('');
 
     // =========================
     // 🎯 SPECIAL CASE: FURNISHING
@@ -262,13 +293,11 @@ $(document).on('click', '.chip-btn', function () {
 
         if (value === 'Furnished' || value === 'Semi-furnished') {
 
-            $('#furnishingDropdown')
-                .removeClass('hidden');
+            $('#furnishingDropdown').removeClass('hidden');
 
         } else {
 
-            $('#furnishingDropdown')
-                .addClass('hidden');
+            $('#furnishingDropdown').addClass('hidden');
 
             $('#furnishing_items').val('');
             $('.furnishing-item-checkbox').prop('checked', false);
@@ -336,6 +365,87 @@ window.editBasicStep = function(el) {
     showStep('location');
 
 };
+$(document).ready(function () {
+
+    // =========================
+    // ✅ AREA UNIT SYNC
+    // =========================
+    function updateAreaUnit() {
+        const unit = $('select[name="area_unit"]').val();
+        $('#price_area_unit').val(unit || '');
+    }
+
+    updateAreaUnit();
+
+    $(document).on('change', 'select[name="area_unit"]', function () {
+        updateAreaUnit();
+    });
+
+    // =========================
+    // ✅ PRICE VALIDATION
+    // =========================
+    $(document).on('input', '#expected_price', function () {
+
+        let value = parseFloat($(this).val());
+
+        const $input = $(this);
+        const $error = $('#error-expected_price');
+
+        // 🔁 RESET
+        $input.removeClass('border-red-500');
+        $error.text('');
+
+        // ❌ NEGATIVE VALUE BLOCK
+        if (value < 0) {
+            $input.val('');
+            return;
+        }
+
+        // ❌ MIN VALIDATION (25000)
+        if (value && value < 25000) {
+            $input.addClass('border-red-500');
+            $error.text('Value is too less (minimum ₹25,000)');
+        }
+
+        if (value >= 25000) {
+    $input.removeClass('border-red-500');
+    $error.text('');
+}
+    });
+
+
+
+      function updatePriceDisplay() {
+
+        const price = parseFloat($('input[name="expected_price"]').val());
+        const area = parseFloat($('input[name="carpet_area"]').val());
+        const unit = $('select[name="area_unit"]').val();
+
+        // 🔹 Update unit
+        $('#price_area_unit').val(unit || '');
+
+        // 🔹 Calculate price per sqft
+        if (price && area && area > 0) {
+
+            const result = (price / area).toFixed(2);
+
+            $('#price_display').val(`₹ ${result}`);
+
+        } else {
+            $('#price_display').val('');
+        }
+    }
+
+    // 🔁 Run on change
+    $(document).on('input', 'input[name="expected_price"], input[name="carpet_area"]', function () {
+        updatePriceDisplay();
+    });
+
+    $(document).on('change', 'select[name="area_unit"]', function () {
+        updatePriceDisplay();
+    });
+});
+
 $(document).ready(function () {
 
     // SHOW BUILT-UP FIELD
@@ -490,14 +600,7 @@ function validateProfileForm() {
     const purpose = parseInt($('#purpose_id').val());
 
     const carpet = $('input[name="carpet_area"]').val();
-    // const totalFloors = $('input[name="total_floors"]').val();
-    // const floorNo = $('select[name="floor_no"]').val();
-    // const availability = $('input[name="availability_status"]').val();
-    // const ownership = $('input[name="ownership"]').val();
-
-    // =========================
-    // BASIC VALIDATION
-    // =========================
+   
     if (!carpet) showError('carpet_area', 'Carpet area is required');
 
  if ($('#room-section').is(':visible')) {
@@ -633,6 +736,10 @@ if ($('#plotLandSection').is(':visible')) {
     const openSides = $('input[name="open_sides"]').val();
     const construction = $('input[name="is_construction"]').val();
     const possession = $('select[name="property_possesion"]').val();
+const hospitalityFields = [
+    { name: 'quality_ratings', message: 'Select quality rating' },
+    { name: 'no_of_washroom', message: 'Select washrooms' }
+];
 
     if (!boundary) {
         showError('boundary_wall', 'Select boundary wall option');
@@ -682,21 +789,101 @@ if ($('#ownershipSection').is(':visible')) {
 
 if ($('#hospitalitySection').is(':visible')) {
 
-    const quality = $('input[name="quality_ratings"]').val();
-    const washroom = $('input[name="no_of_washroom"]').val();
-    // const customWashroom = $('#customWashroom').val();
+    hospitalityFields.forEach(field => {
 
-    // 🔹 Quality Rating
-    if (!quality) {
-        showError('quality_ratings', 'Select quality rating');
+        const value = $(`input[name="${field.name}"]`).val();
+
+        if (!value) {
+            showError(field.name, field.message);
+        }
+
+    });
+}
+if ($('#retailExtraSection').is(':visible')) {
+
+    const washrooms = $('input[name="washrooms"]').val(); 
+    const parking = $('input[name="parking"]').val();    
+
+    if (!washrooms) {
+        showError('washrooms', 'Select washroom field');
     }
 
-    // 🔹 Washroom logic
-    if (!washroom ) {
-        showError('no_of_washroom', 'Select  washrooms');
+    if (!parking) {
+        showError('parking', 'Select parking field'); 
     }
 }
-    return isValid;
+
+
+
+if ($('#washroomBlock').is(':visible') && !$('#hospitalitySection').is(':visible')) {
+
+    const washroom = $('input[name="no_of_washroom"]').val();
+
+    if (!washroom) {
+        showError('no_of_washroom', 'Select washrooms');
+    }
+}
+// =========================
+// 🏢 OFFICE SECTION VALIDATION
+// =========================
+if ($('#officeSection').is(':visible')) {
+
+    const minSeats = $('input[name="min_seats"]').val();
+  
+    const cabins = $('input[name="cabins"]').val();
+    const meetingRooms = $('input[name="meeting_rooms"]').val();
+
+    const washrooms = $('input[name="washrooms"]').val();
+    const conference = $('input[name="conference_room"]').val();
+    const reception = $('input[name="reception_area"]').val();
+    const pantry = $('input[name="pantry_type"]').val();
+    const lifts = $('input[name="lifts"]').val();
+    const parking = $('input[name="parking"]').val();
+
+    // 🔹 Seats
+    if (!minSeats && minSeats !== "0") {
+        showError('min_seats', 'Enter minimum seats');
+    }
+
+    // optional but logical
+ 
+
+    // 🔹 Optional numeric fields (only validate if needed)
+    if (!cabins && cabins !== "0") {
+        showError('cabins', 'Enter cabins');
+    }
+
+    if (!meetingRooms && meetingRooms !== "0") {
+        showError('meeting_rooms', 'Enter meeting rooms');
+    }
+
+    // 🔹 Chip fields
+    if (!washrooms) {
+        showError('washrooms', 'Select washrooms');
+    }
+
+    if (!conference) {
+        showError('conference_room', 'Select conference room');
+    }
+
+    if (!reception) {
+        showError('reception_area', 'Select reception area');
+    }
+
+    if (!pantry) {
+        showError('pantry_type', 'Select pantry type');
+    }
+
+    if (!lifts) {
+        showError('lifts', 'Select lifts');
+    }
+
+    if (!parking) {
+        showError('parking', 'Select parking');
+    }
+}
+
+return isValid;
 }
 
 $(document).on('input change', 'input, select', function () {

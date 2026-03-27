@@ -36,7 +36,8 @@ class PropertyProfile extends Model
         'is_construction',
         'property_possesion',
         'quality_ratings',
-        'no_of_washroom'
+        'no_of_washroom',
+        'property_price'
     ];
     public function property(){
         return $this->belongsTo(Property::class);

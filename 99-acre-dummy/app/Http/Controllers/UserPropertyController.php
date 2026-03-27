@@ -130,6 +130,7 @@ $typesSlug = $property->type->slug?? null;
 
         'quality_ratings'=>'nullable',
         'no_of_washroom'=>'nullable',
+        'property_price'=>'required|integer'
 
            
     ];
@@ -152,6 +153,14 @@ $typesSlug = $property->type->slug?? null;
     ]);
 }
    
+  if ($property->category->slug === 'commercial' && $typesSlug === 'storage'||'industry') {
+         $rules = array_merge($rules, [
+            
+        'total_floors' => 'nullable|integer',
+        'floor_no' => 'nullable',
+         ]);
+  }
+
 if ($property->category->slug === 'commercial' && $typesSlug === 'retail') {
 
     $rules = array_merge($rules, [
@@ -309,104 +318,7 @@ if ($property->category->slug === 'commercial' && $typesSlug === 'office') {
         'success' => true
     ]);
 }
-// public function saveProfile(Request $request, $id)
-// {
-//     $property = \App\Models\Property::findOrFail($id);
-//     $purposeSlug = $property->purpose->slug ?? null;
 
-//     $rules = [
-//         'bedrooms' => 'required',
-//         'bathrooms' => 'required',
-//         'balconies' => 'required',
-
-//         'carpet_area' => 'required|numeric',
-//         'area_unit' => 'required',
-
-//         'builtup_area' => 'nullable|numeric',
-//         'super_builtup_area' => 'nullable|numeric',
-
-//         'total_floors' => 'required|integer',
-//         'floor_no' => 'required',
-
-//         'availability_status' => 'required',
-//         'ownership' => 'required',
-//     ];
-
-//     // ✅ RENT-LEASE (ALL FIELDS)
-//     if ($purposeSlug === 'rent-lease') {
-//         $rules = array_merge($rules, [
-//             'property_age'   => 'required',
-//             'property_date'  => 'required|date',
-//             'rent_out'       => 'required',
-//             'agreement_type' => 'required',
-//             'broker_contact' => 'required',
-//             'furnishing'     => 'required',
-//             'furnishing_items' => 'required|array',
-//         ]);
-//     }
-
-//     // ✅ PG (ONLY FEW FIELDS)
-//     if ($purposeSlug === 'pg') {
-//         $rules = array_merge($rules, [
-//             'property_age'   => 'required',
-//             'property_date'  => 'required|date',
-//             'furnishing'     => 'required',
-//             'furnishing_items' => 'required|array',
-
-//             'available_gender'=>'required',
-//             'suitable_for'=>'required|array',
-//             'parking'=>'nullable|string'
-//         ]);
-//     }
-
-//     $validated = $request->validate($rules);
-
-//     $data = $validated;
-
-//     // ✅ HANDLE furnishing_items
-//     if (!empty($validated['furnishing_items'])) {
-//         $data['furnishing_items'] = implode(',', $validated['furnishing_items']);
-//     } 
-//     if (!empty($validated['suitable_for'])) {
-//         $data['suitable_for'] = implode(',', $validated['suitable_for']);
-//     }
-    
-//     else {
-//         $data['furnishing_items'] = null;
-//     }
-
-//     // ✅ CLEAN DATA BASED ON PURPOSE
-//     if ($purposeSlug === 'rent-lease') {
-//         // keep all
-//     } elseif ($purposeSlug === 'pg') {
-//         // ❌ remove rent-only fields
-//         unset(
-//             $data['rent_out'],
-//             $data['agreement_type'],
-//             $data['broker_contact']
-//         );
-//     } else {
-        
-//         unset(
-//             $data['property_age'],
-//             $data['property_date'],
-//             $data['rent_out'],
-//             $data['agreement_type'],
-//             $data['broker_contact'],
-//             $data['furnishing'],
-//             $data['furnishing_items']
-//         );
-//     }
-
-//     PropertyProfile::updateOrCreate(
-//         ['property_id' => $id],
-//         $data
-//     );
-
-//     return response()->json([
-//         'success' => true
-//     ]);
-// }
     public function updateBasic(Request $request, $id)
     {
         $request->validate([
