@@ -51,9 +51,9 @@ $user = $request->user();
         ]);
     }
 
-    dd();
+   
 
-  return redirect('/dashboard');
+  return redirect('http://ec2-13-48-75-11.eu-north-1.compute.amazonaws.com//dashboard');
 }
    
     public function destroy(Request $request): RedirectResponse
