@@ -52,7 +52,7 @@ $user = $request->user();
         ]);
     }
 
-   return redirect()->intended(route('dashboard'));
+  return redirect('/dashboard');
 }
     /**
      * Destroy an authenticated session.
