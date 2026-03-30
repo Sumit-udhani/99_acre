@@ -1,6 +1,6 @@
 @push('scripts')
 
-@vite('resources/js/property-location.js')
+
 <script
 src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google_maps.key') }}&libraries=places&callback=initMap"
 async

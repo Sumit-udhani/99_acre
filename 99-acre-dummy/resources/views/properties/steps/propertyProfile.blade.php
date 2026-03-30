@@ -1,4 +1,4 @@
-@vite('resources/js/property-profile.js')
+
 <form id="propertyProfileForm">
     @csrf
     <input type="hidden" id="property_id" name="property_id">
