@@ -41,7 +41,6 @@ $user = $request->user();
         return redirect()->route('admin.dashboard');
     }
 
-    // 🚫 Only normal users must be approved
     if (! $user->isApproved()) {
 
        Auth::logout();
@@ -52,11 +51,11 @@ $user = $request->user();
         ]);
     }
 
+    dd();
+
   return redirect('/dashboard');
 }
-    /**
-     * Destroy an authenticated session.
-     */
+   
     public function destroy(Request $request): RedirectResponse
     {
         Auth::guard('web')->logout();

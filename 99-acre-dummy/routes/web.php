@@ -49,7 +49,7 @@ Route::get('/get-location-types/{type}', function ($type) {
     return PropertyLocationType::where('property_type_id', $type)->get();
 });
 Route::get('/dashboard', function () {
-    dd('dashboard reached');
+    dd('dashboard USer');
     $purposes = PropertyPurpose::all();
     $categories = PropertyCategory::all();
     $types = PropertyType::all();
